@@ -202,11 +202,35 @@
   // =========================================================================
   // 4. LOGIC MÀN HÌNH CHÍNH MINI-APPS GRID DASHBOARD
   // =========================================================================
+  function switchTab(tabName) {
+    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+    document.querySelectorAll('.mobile-nav-item').forEach(btn => btn.classList.remove('active'));
+
+    const targetPane = document.getElementById('tab-' + tabName);
+    if (targetPane) targetPane.classList.add('active');
+
+    const targetNavBtn = document.getElementById('mNav' + tabName.charAt(0).toUpperCase() + tabName.slice(1));
+    if (targetNavBtn) targetNavBtn.classList.add('active');
+
+    if (tabName === 'dashboard') {
+      loadDashboardStats();
+    } else if (tabName === 'members') {
+      filterMembers();
+    } else if (tabName === 'checkin') {
+      loadCheckinDataForDate();
+    } else if (tabName === 'visitations') {
+      filterVisitations();
+    } else if (tabName === 'themes') {
+      loadQuarterlyThemesData();
+    }
+  }
+
   function openMiniAppGridDashboard() {
     document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.mobile-nav-item').forEach(btn => btn.classList.remove('active'));
 
-    document.getElementById('tab-grid-dashboard').classList.add('active');
+    const gridPane = document.getElementById('tab-grid-dashboard');
+    if (gridPane) gridPane.classList.add('active');
   }
 
   function openMiniApp(appTabName) {
