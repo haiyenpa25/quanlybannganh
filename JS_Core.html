@@ -58,8 +58,7 @@ class AppState {
 
 class ThemeManager {
   static init() {
-    const savedTheme = localStorage.getItem('mt_app_theme') || 'dark';
-    this.applyTheme(savedTheme);
+    this.applyTheme('dark');
   }
 
   static toggleTheme() {

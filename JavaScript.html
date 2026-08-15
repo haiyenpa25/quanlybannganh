@@ -925,49 +925,48 @@
     const quizCount = Math.min(Math.max(Number(r.bibleQuizCount || r.bibleScore || 0), 0), 5);
 
     return `
-      <div class="att-card-item ${!isPresent ? 'is-absent' : ''} ${r.isFrequent ? 'is-frequent' : ''}" id="attRow_${r.memberId}">
-        <!-- HÀNG 1: HỌ TÊN BAN VIÊN (100% HIỂN THỊ ĐẦY ĐỦ KHÔNG BỊ CẮT CHỮ/TRUNCATE) -->
-        <div class="att-card-top">
+      <div class="att-card-item ${!isPresent ? 'is-absent' : ''}" id="attRow_${r.memberId}" style="background: #1d273f; border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 14px; margin-bottom: 10px;">
+        <div class="att-card-top" style="display: flex; align-items: center; gap: 12px;">
           <button class="att-slim-check-btn ${isPresent ? 'present' : 'absent'}"
-                  title="${isPresent ? 'Đã điểm danh: CÓ MẶT (Bấm để chuyển VẮNG)' : 'Đã điểm danh: VẮNG (Bấm để chuyển CÓ MẶT)'}"
+                  style="width: 36px; height: 36px; border-radius: 50%; background: ${isPresent ? '#30d158' : 'transparent'}; border: 2px solid ${isPresent ? '#30d158' : 'rgba(255,255,255,0.2)'}; color: ${isPresent ? '#141c2e' : 'rgba(255,255,255,0.4)'}; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;"
                   onclick="toggleMemberAttendanceStatus('${r.memberId}')">
-            ${isPresent ? '✓' : '✕'}
+            ${isPresent ? '✓' : ''}
           </button>
 
-          <div class="att-card-name-block" onclick="toggleMemberAttendanceStatus('${r.memberId}')">
-            <div class="att-card-fullname">
+          <div class="att-card-name-block" style="flex: 1;" onclick="toggleMemberAttendanceStatus('${r.memberId}')">
+            <div class="att-card-fullname" style="font-size: 15px; font-weight: 800; color: #ffffff;">
               ${escapeHtml(r.fullName)}
-              ${r.isFrequent ? '<span style="color:#f59e0b; font-size:12px;" title="Thường đi nhóm">🌟</span>' : ''}
+              ${r.isFrequent ? '<span style="color:#f59e0b; font-size:12px;" title="Thường đi nhóm"> 🌟</span>' : ''}
             </div>
-            <div class="att-card-subinfo">
-              <span class="badge badge-group" style="font-size: 10.5px;">${escapeHtml(r.groupName)}</span>
+            <div class="att-card-subinfo" style="display: flex; gap: 6px; margin-top: 4px; align-items: center;">
+              <span class="badge badge-group" style="font-size: 10.5px; background: rgba(56,189,248,0.15); color: #38bdf8; padding: 2px 8px; border-radius: 10px;">${escapeHtml(r.groupName)}</span>
               <span>${getPositionBadge(r.position)}</span>
             </div>
           </div>
         </div>
 
-        <!-- HÀNG 2: CÁC NÚT ĐIỀU KHIỂN (CÂU GỐC & CÂU ĐỐ KT) -->
-        <div class="att-card-bottom">
+        <div class="att-card-bottom" style="display: flex; gap: 10px; margin-top: 12px; align-items: center;">
           <button class="att-slim-verse-btn ${isVerse ? 'active' : ''}"
+                  style="flex: 1; height: 38px; border-radius: 12px; background: ${isVerse ? 'rgba(229,140,103,0.2)' : '#121929'}; border: 1px solid ${isVerse ? '#e58c67' : 'rgba(255,255,255,0.08)'}; color: ${isVerse ? '#e58c67' : '#8e9cb5'}; font-size: 12.5px; font-weight: 700; cursor: pointer;"
                   ${!isPresent ? 'disabled style="opacity: 0.3;"' : ''}
                   onclick="toggleMemberVerseStatus('${r.memberId}')">
             📖 ${isVerse ? 'Thuộc câu gốc' : 'Chưa thuộc'}
           </button>
 
-          <div class="quiz-stepper" ${!isPresent ? 'style="opacity: 0.3; pointer-events: none;"' : ''}>
-            <button class="quiz-step-btn" onclick="adjustMemberQuizCount('${r.memberId}', -1)">-</button>
-            <div class="quiz-count-val" onclick="openScorePadModal('${r.memberId}')" title="Bấm để chọn số câu trả lời">
+          <div class="quiz-stepper" style="display: flex; align-items: center; background: #121929; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; height: 38px; padding: 0 4px;" ${!isPresent ? 'style="opacity: 0.3; pointer-events: none;"' : ''}>
+            <button class="quiz-step-btn" style="background: none; border: none; color: #8e9cb5; font-size: 16px; font-weight: 800; width: 28px; height: 28px; cursor: pointer;" onclick="adjustMemberQuizCount('${r.memberId}', -1)">-</button>
+            <div class="quiz-count-val" style="font-size: 12.5px; font-weight: 700; color: #38bdf8; padding: 0 6px; cursor: pointer;" onclick="openScorePadModal('${r.memberId}')">
               🧩 ${quizCount} câu
             </div>
-            <button class="quiz-step-btn" onclick="adjustMemberQuizCount('${r.memberId}', 1)">+</button>
+            <button class="quiz-step-btn" style="background: none; border: none; color: #8e9cb5; font-size: 16px; font-weight: 800; width: 28px; height: 28px; cursor: pointer;" onclick="adjustMemberQuizCount('${r.memberId}', 1)">+</button>
           </div>
         </div>
 
         ${!isPresent ? `
-          <div style="margin-top: 6px;">
-            <input type="text" class="input-control" style="width: 100%; font-size: 12px; padding: 4px 8px; height: 30px;"
+          <div style="margin-top: 8px;">
+            <input type="text" class="input-control" style="width: 100%; font-size: 12px; padding: 6px 12px; border-radius: 10px; background: #121929; color: #8e9cb5; border: 1px solid rgba(255,255,255,0.08);"
                    value="${escapeHtml(r.notes || '')}"
-                   placeholder="Ghi chú vắng (ví dụ: Đi công tác, có xin phép...)"
+                   placeholder="Ghi chú vắng..."
                    onchange="updateMemberNotes('${r.memberId}', this.value)">
           </div>
         ` : ''}
