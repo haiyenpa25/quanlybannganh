@@ -341,23 +341,6 @@
         <p class="screen-sub-desc">Lịch nhóm và điểm danh theo từng tuần.</p>
         <button class="floating-add-btn" onclick="openScheduleModal()" title="Tạo buổi nhóm">+</button>
       </div>
-      
-      <div class="card" style="display: none;">
-        <div class="card-header">
-          <div class="card-title">
-            <span>⚡</span> Điểm Danh Nhanh Buổi Nhóm
-          </div>
-          <div class="card-actions">
-            <button class="btn btn-secondary btn-sm" onclick="triggerArchiveYearlyData()" title="Kết chuyển dữ liệu năm cũ sang Sheet lưu trữ riêng để tăng tốc">
-              📂 Kết Chuyển Dữ Liệu Năm
-            </button>
-            <button class="btn btn-success" id="btnSaveCheckinBatch" onclick="saveCheckinSheetBatch()">
-              💾 Lưu Điểm Danh
-            </button>
-          </div>
-        </div>
-      </div>
-        </div>
 
         <!-- MULTI-LEVEL FILTER BAR (NĂM -> QUÝ -> THÁNG -> TỔ -> BUỔI NHÓM) -->
         <div class="filter-bar" style="margin-bottom: 12px; gap: 8px;">
@@ -610,18 +593,7 @@
         </div>
       </div>
       
-      <div class="card" style="display: none;">
-        <div class="card-header">
-          <div class="card-title">
-            <span>👥</span> Quản Lý Danh Sách Thành Viên & Chức Danh Ban
-          </div>
-          <div class="card-actions">
-            <button class="btn btn-secondary" onclick="exportMembersToCSV()">
-              📊 Xuất CSV
-            </button>
-          </div>
-        </div>
-      </div>
+
 
         <!-- MEMBER VIEW MODE BAR -->
         <div class="att-mode-bar" style="margin-bottom: 12px;">
