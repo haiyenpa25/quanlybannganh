@@ -1512,81 +1512,38 @@
         // GIAO DIỆN DI ĐỘNG (MOBILE ACCORDION CARDS - SIÊU SANG TRỌNG & RÕ NÉT)
         if (thead) thead.style.display = 'none'; // Ẩn header bảng thô cứng trên điện thoại
 
-        let html = '<div class="sch-mobile-container">';
+        let html = '<div class="sch-mobile-container" style="display: flex; flex-direction: column; gap: 10px;">';
         filtered.forEach((s, idx) => {
-          let displayDate = formatDisplayDate(s.meetingDate);
-          const isSpecial = s.isSpecial || s.topic.toUpperCase().includes('NGHỈ');
-          const isExpanded = expandedScheduleIds.has(s.scheduleId);
-
-          let dateStr = displayDate;
+          let dayNum = '16';
+          let monthStr = 'THG 8';
           if (s.meetingDate && s.meetingDate.includes('-')) {
             const p = s.meetingDate.split('-');
-            if (p.length === 3) dateStr = `${p[2]}/${p[1]}`;
+            if (p.length === 3) {
+              dayNum = parseInt(p[2], 10);
+              monthStr = `THG ${parseInt(p[1], 10)}`;
+            }
           }
 
+          const isActive = idx === 0;
+
           html += `
-            <div class="sch-mobile-card ${isSpecial ? 'special-card' : ''}">
-              <div class="sch-mobile-header" onclick="toggleScheduleRowExpand('${s.scheduleId}')">
-                <div class="sch-mobile-date-badge">
-                  <div class="day-str">${escapeHtml(dateStr)}</div>
-                  <div class="year-str">Tuần ${idx + 1}</div>
-                </div>
-
-                <div class="sch-mobile-info-col">
-                  <div class="sch-mobile-topic-text">
-                    ${escapeHtml(s.topic)}
-                    ${isSpecial ? '<span class="badge badge-warning" style="font-size: 10px; padding: 2px 5px; margin-left: 4px;">NGHỈ</span>' : ''}
-                  </div>
-                  <div class="sch-mobile-sub-text">
-                    ${s.assignedGroup ? `<span class="badge badge-group" style="font-size: 10px;">${escapeHtml(s.assignedGroup)}</span>` : ''}
-                    ${s.speakerLeader ? `<span>👤 ${escapeHtml(s.speakerLeader)}</span>` : ''}
-                  </div>
-                </div>
-
-                <div class="sch-mobile-actions-col" onclick="event.stopPropagation()">
-                  <button class="btn-zalo-pill" onclick="openSingleWeekZaloModal('${s.scheduleId}')" title="Xuất thông báo Zalo tuần này">
-                    📋 Zalo
-                  </button>
-                  <div class="sch-mobile-expand-toggle" onclick="toggleScheduleRowExpand('${s.scheduleId}')">
-                    ${isExpanded ? '▲' : '▼'}
-                  </div>
-                </div>
+            <div class="sch-card-item ${isActive ? 'active' : ''}" onclick="openScheduleModal('${s.scheduleId}')">
+              <div class="sch-date-square">
+                <div class="sch-date-num">${dayNum}</div>
+                <div class="sch-date-month">${monthStr}</div>
               </div>
-
-              ${isExpanded ? `
-                <div class="sch-sub-details">
-                  <div class="sch-detail-item">
-                    <strong>📖 Câu gốc tuần:</strong> ${escapeHtml(s.keyVerse || 'Chưa cập nhật')}
-                  </div>
-                  <div class="sch-detail-item">
-                    <strong>🧩 Đố Kinh Thánh:</strong> ${escapeHtml(s.bibleQuiz || 'Chưa cập nhật')}
-                  </div>
-                  <div class="sch-detail-item">
-                    <strong>🏢 Tổ phụ trách:</strong> ${s.assignedGroup ? `<span class="badge badge-group">${escapeHtml(s.assignedGroup)}</span>` : 'Chưa xếp'}
-                  </div>
-                  <div class="sch-detail-item">
-                    <strong>👤 Diễn giả / Phụ trách:</strong> ${s.speakerLeader ? `<span class="badge badge-pos-phoban">${escapeHtml(s.speakerLeader)}</span>` : 'Chưa cập nhật'}
-                  </div>
-
-                  <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
-                    <button class="btn btn-primary btn-sm" onclick="openSingleWeekZaloModal('${s.scheduleId}')">
-                      📋 Copy Mẫu Zalo Tuần Này
-                    </button>
-                    <button class="btn btn-secondary btn-sm" onclick="openScheduleSingleEditModal('${s.scheduleId}')">
-                      ✏️ Chỉnh Sửa Buổi Nhóm
-                    </button>
-                    <button class="btn btn-danger btn-sm" onclick="confirmDeleteScheduleSingle('${s.scheduleId}')">
-                      🗑️ Xóa
-                    </button>
-                  </div>
-                </div>
-              ` : ''}
+              <div class="sch-card-body">
+                <div class="sch-card-topic">${escapeHtml(s.topic)}</div>
+                <div class="sch-card-verse">CN, ${s.meetingDate ? formatDisplayDate(s.meetingDate) : ''} · ${escapeHtml(s.keyVerse || 'Chưa cập nhật')}</div>
+              </div>
+              <div class="sch-card-arrow">›</div>
             </div>
           `;
         });
         html += '</div>';
-
         tbody.innerHTML = `<tr><td colspan="4" style="padding: 0; border: none;">${html}</td></tr>`;
+
+
       } else {
         // GIAO DIỆN MÁY TÍNH (DESKTOP VIEW TABLE - RỘNG RÃI & SANG TRỌNG)
         if (thead) {
