@@ -1,0 +1,44 @@
+<script>
+/**
+ * JS_Settings.html - 1-Click Multi-Spreadsheet Deployment & Church/Department Settings Manager
+ */
+class SettingsManager {
+  static async handleOneClickSetup(event) {
+    if (event) event.preventDefault();
+
+    const sheetId = document.getElementById('setupSpreadsheetId')?.value.trim();
+    const churchName = document.getElementById('setupChurchName')?.value.trim() || "HỘI THÁNH TIN LÀNH THỦ ĐỨC";
+    const deptName = document.getElementById('setupDeptName')?.value.trim() || "BAN THẮNG TRÁNG";
+    const motto = document.getElementById('setupDeptMotto')?.value.trim() || "SỐNG VỚI CÂU GỐC & CẦU NGUYỆN LÊN CHÚA";
+
+    const btn = document.getElementById('btnSubmitOneClickSetup');
+    if (btn) setButtonLoading(btn, true, "Đang khởi tạo CSDL Sheet mới...");
+
+    try {
+      ToastManager.show("Đang tự động khởi tạo 8 tab CSDL cho Sheet mới...", "info");
+      const res = await ApiService.runGAS("setupNewSpreadsheetDatabase", sheetId, churchName, deptName, motto);
+      
+      if (res.success) {
+        ToastManager.show(res.error || "Khởi tạo CSDL thành công!", "success");
+        if (res.spreadsheetUrl) {
+          console.log("New Spreadsheet URL:", res.spreadsheetUrl);
+        }
+        setTimeout(() => location.reload(), 1500);
+      } else {
+        ToastManager.show("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      ToastManager.show("Lỗi khởi tạo: " + err.message, "error");
+    } finally {
+      if (btn) setButtonLoading(btn, false, "⚡ 1-Click Khởi Tạo CSDL & Triển Khai");
+    }
+  }
+
+  static updateAppBrandHeader(churchName, deptName) {
+    const brandTitleEl = document.querySelector('.header-title h1');
+    if (brandTitleEl && deptName) {
+      brandTitleEl.innerText = `${deptName} - ${churchName || 'ManagerTeams'}`;
+    }
+  }
+}
+</script>

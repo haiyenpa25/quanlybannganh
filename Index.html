@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ManagerTeams - Quản Lý Thành Viên & Ban Điều Hành</title>
+  
+  <!-- PWA METAS FOR MOBILE & IOS HOME SCREEN -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ManagerTeams">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="application-name" content="ManagerTeams">
+
+  <!-- APPLE TOUCH ICON (SVG BADGE DATA-URI) -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%231e3a8a'/%3E%3Cpath d='M256 80l-120 120h60v160h120V200h60L256 80z' fill='%23ffffff'/%3E%3Cpath d='M160 380h192v32H160z' fill='%23d97706'/%3E%3Ctext x='256' y='460' font-family='Arial' font-size='48' font-weight='bold' fill='%23ffffff' text-anchor='middle'%3EBAN NGÀNH%3C/text%3E%3C/svg%3E">
+
+  <!-- PWA MANIFEST DATA-URI -->
+  <link rel="manifest" href="data:application/manifest+json;utf8,%7B%22name%22%3A%22ManagerTeams%20-%20Quan%20Ly%20Ban%20Nganh%22%2C%22short_name%22%3A%22ManagerTeams%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231e3a8a%22%2C%22theme_color%22%3A%22%231e3a8a%22%7D">
+
+  <?!= include('Styles'); ?>
+</head>
+<body>
+
+  <!-- ================= MÀN HÌNH ĐĂNG NHẬP (FULLSCREEN LOGIN SCREEN) ================= -->
+  <div id="loginPageScreen" class="login-screen">
+    <div class="login-card">
+      <div class="login-logo">⛪</div>
+      <h2 class="login-title">QUẢN LÝ BAN THẮNG TRÁNG</h2>
+      <p class="login-subtitle">Đăng nhập tài khoản để vào hệ thống ManagerTeams</p>
+
+      <form id="loginForm" onsubmit="handleAccountLogin(event)">
+        <div class="form-group" style="margin-bottom: 14px; text-align: left;">
+          <label class="form-label">Tên đăng nhập:</label>
+          <input type="text" id="loginUsername" class="input-control" required placeholder="Nhập tên đăng nhập (binh, yen, duen...)" style="width: 100%;">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px; text-align: left;">
+          <label class="form-label">Mật khẩu:</label>
+          <input type="password" id="loginPassword" class="input-control" required placeholder="Nhập mật khẩu (mặc định 123456)" style="width: 100%;">
+        </div>
+
+        <button type="submit" id="btnLoginSubmit" class="btn btn-primary" style="width: 100%; height: 44px; font-size: 15px; font-weight: bold;">
+          🔑 ĐĂNG NHẬP HỆ THỐNG
+        </button>
+      </form>
+
+      <!-- DEMO ACCOUNTS QUICK SELECTION -->
+      <div class="quick-accounts-badge">
+        <div style="font-weight: bold; margin-bottom: 4px;">💡 Chọn nhanh tài khoản mặc định (Pass: 123456):</div>
+        <div>
+          <span class="quick-acc-tag" onclick="quickFillLogin('binh')">👤 binh (Trưởng ban)</span>
+          <span class="quick-acc-tag" onclick="quickFillLogin('yen')">👤 yen (Phó ban)</span>
+          <span class="quick-acc-tag" onclick="quickFillLogin('duen')">👤 duen (Thư ký)</span>
+          <span class="quick-acc-tag" onclick="quickFillLogin('tuan')">👤 tuan (Thủ quỹ)</span>
+          <span class="quick-acc-tag" onclick="quickFillLogin('nhung')">👤 nhung (Nghị viên)</span>
+          <span class="quick-acc-tag" onclick="quickFillLogin('hien')">👤 hien (Ban viên)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP APP HEADER (SLEEK iOS NATIVE APP BAR) -->
+  <header class="app-header" id="mainAppHeader" style="display: none;">
+    <div class="header-container">
+      <!-- LOGO + HOME LINK -->
+      <div class="header-brand" onclick="openMiniAppGridDashboard()" title="Về Màn Hình Chính Mini Apps">
+        <div class="header-icon">⛪</div>
+        <div class="header-title">
+          <h1>ManagerTeams</h1>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE ACTIONS: THEME TOGGLE + USER BADGE + QUICK LOGOUT -->
+      <div class="header-actions">
+        <button class="header-icon-btn" id="btnThemeToggle" onclick="ThemeManager.toggleTheme()" title="Đổi Giao Diện Sáng/Tối" style="background: rgba(255,255,255,0.1); color: var(--text-primary); border: 1px solid var(--border-strong);">
+          ☀️
+        </button>
+        <span class="header-pill-user" id="loggedInUserBadge" onclick="openMiniAppGridDashboard()" title="Tài khoản & Vai trò">
+          👤 Ban Điều Hành
+        </span>
+        <button class="header-icon-btn btn-logout" onclick="handleAccountLogout()" title="Đăng Xuất">
+          🚪
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS (CHỈ HIỂN THỊ KHI MỞ CHI TIẾT TÍNH NĂNG) -->
+  <div class="nav-tabs-bar" id="mainNavTabsBar" style="display: none;">
+    <div class="nav-container">
+      <button class="tab-btn" onclick="openMiniAppGridDashboard()">
+        📱 Grid Mini Apps
+      </button>
+      <button class="tab-btn active" id="tabNavDashboard" onclick="switchTab('dashboard')">
+        📊 Tổng Quan
+        <span class="tab-badge" id="alertCountBadge" style="display: none;">0</span>
+      </button>
+      <button class="tab-btn" id="tabNavCheckin" onclick="switchTab('checkin')">
+        ✅ Điểm Danh Tuần
+      </button>
+      <button class="tab-btn" id="tabNavSchedules" onclick="switchTab('schedules')">
+        📅 Chương Trình Quý
+      </button>
+      <button class="tab-btn" id="tabNavThemes" onclick="switchTab('themes')">
+        📖 Chủ Đề Quý & Năm
+      </button>
+      <button class="tab-btn" id="tabNavMembers" onclick="switchTab('members')">
+        👥 Thành Viên
+      </button>
+      <button class="tab-btn" id="tabNavVisitations" onclick="switchTab('visitations')">
+        📝 Thăm Viếng
+      </button>
+      <button class="tab-btn" id="tabNavGroups" onclick="switchTab('groups')">
+        🏡 Quản Lý Tổ
+      </button>
+      <button class="tab-btn" id="tabNavAccounts" onclick="switchTab('accounts')">
+        🔐 Quản Lý Tài Khoản
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="main-content" id="mainAppContent" style="display: none;">
+
+    <!-- ================= TAB 0: MINI-APP GRID DASHBOARD ================= -->
+    <div id="tab-grid-dashboard" class="tab-pane active">
+      <div class="card" style="background: transparent; border: none; box-shadow: none; padding: 0;">
+        <div style="margin-bottom: 16px;">
+          <h2 style="font-size: 20px; font-weight: 800; color: var(--accent);">📱 Mini Apps</h2>
+          <p style="font-size: 13px; color: var(--text-secondary);">Chọn ứng dụng để quản lý:</p>
+        </div>
+
+        <div class="bento-grid-container">
+          
+          <!-- MINI APP 1: ĐIỂM DANH TUẦN (BENTO FEATURED CARD) -->
+          <div class="bento-card miniapp-card featured" onclick="openMiniApp('checkin')">
+            <div>
+              <div class="miniapp-icon checkin" style="width: 52px; height: 52px; font-size: 26px;">✅</div>
+              <div class="miniapp-title">Điểm Danh Tuần</div>
+              <div class="miniapp-subtitle">Sổ điểm danh Chúa Nhật, thuộc câu gốc & 0-5 câu đố KT</div>
+            </div>
+            <div style="margin-top: 12px; font-size: 11.5px; font-weight: 700; background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); padding: 5px 11px; border-radius: 999px; display: inline-block; border: 1px solid rgba(255,255,255,0.2);">
+              ⚡ Thao tác 1-Touch
+            </div>
+          </div>
+
+          <!-- MINI APP 2: CHƯƠNG TRÌNH QUÝ -->
+          <div class="bento-card miniapp-card" onclick="openMiniApp('schedules')">
+            <div class="miniapp-icon schedules">📅</div>
+            <div>
+              <div class="miniapp-title">Chương Trình Quý</div>
+              <div class="miniapp-subtitle">Lịch 13 tuần & Xuất Zalo thông báo</div>
+            </div>
+          </div>
+
+          <!-- MINI APP 3: QUẢN LÝ THÀNH VIÊN -->
+          <div class="bento-card miniapp-card" onclick="openMiniApp('members')">
+            <div class="miniapp-icon members">👥</div>
+            <div>
+              <div class="miniapp-title">Quản Lý Thành Viên</div>
+              <div class="miniapp-subtitle">Sắp xếp Tên ABC, Phân Tổ, Chức Danh</div>
+            </div>
+          </div>
+
+          <!-- MINI APP 4: CHỦ ĐỀ QUÝ & NĂM -->
+          <div class="bento-card miniapp-card" onclick="openMiniApp('themes')">
+            <div class="miniapp-icon themes">📖</div>
+            <div>
+              <div class="miniapp-title">Chủ Đề Quý & Năm</div>
+              <div class="miniapp-subtitle">Quản lý câu gốc & đề tài năm</div>
+            </div>
+          </div>
+
+          <!-- MINI APP 5: NHẬT KÝ THĂM VIẾNG -->
+          <div class="bento-card miniapp-card" onclick="openMiniApp('visitations')">
+            <span class="miniapp-badge" id="gridBadgeVisitations" style="display: none;">0</span>
+            <div class="miniapp-icon visitations">📝</div>
+            <div>
+              <div class="miniapp-title">Nhật Ký Thăm Viếng</div>
+              <div class="miniapp-subtitle">Chăm sóc & thăm viếng ban viên vắng</div>
+            </div>
+          </div>
+
+          <!-- MINI APP 6: QUẢN LÝ TỔ -->
+          <div class="bento-card miniapp-card" onclick="openMiniApp('groups')">
+            <div class="miniapp-icon groups">🏡</div>
+            <div>
+              <div class="miniapp-title">Quản Lý Các Tổ</div>
+              <div class="miniapp-subtitle">Tổ nhóm nhỏ & Tổ trưởng</div>
+            </div>
+          </div>
+
+          <!-- MINI APP 7: QUẢN LÝ TÀI KHOẢN -->
+          <div class="bento-card miniapp-card" onclick="openMiniApp('accounts')">
+            <div class="miniapp-icon accounts">🔐</div>
+            <div>
+              <div class="miniapp-title">Quản Lý Tài Khoản</div>
+              <div class="miniapp-subtitle">Phân quyền & Đổi mật khẩu</div>
+            </div>
+          </div>
+
+          <!-- MINI APP 8: BÁO CÁO EMAIL -->
+          <div class="bento-card miniapp-card" onclick="triggerSendEmailReport()">
+            <div class="miniapp-icon reports">📧</div>
+            <div>
+              <div class="miniapp-title">Gửi Báo Cáo Email</div>
+              <div class="miniapp-subtitle">Tổng hợp & gửi email tự động</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 1: DASHBOARD & CẢNH BÁO ================= -->
+    <div id="tab-dashboard" class="tab-pane">
+      
+      <!-- THEME BANNER CARDS -->
+      <div class="theme-banner-container" id="dashboardThemeBanner">
+        <div class="theme-banner-card year-banner">
+          <div class="theme-banner-header">🌟 CHỦ ĐỀ CẢ NĂM</div>
+          <div class="theme-banner-title" id="dashYearThemeTitle">Đang tải chủ đề năm...</div>
+          <div class="theme-banner-verse" id="dashYearThemeVerse">--</div>
+        </div>
+
+        <div class="theme-banner-card">
+          <div class="theme-banner-header">📖 CHỦ ĐỀ QUÝ HIỆN TẠI</div>
+          <div class="theme-banner-title" id="dashQuarterThemeTitle">Đang tải chủ đề quý...</div>
+          <div class="theme-banner-verse" id="dashQuarterThemeVerse">--</div>
+        </div>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon members">👥</div>
+          <div class="stat-info">
+            <div class="stat-value" id="statTotalMembers">0</div>
+            <div class="stat-label">Tổng thành viên</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon alert">🚑</div>
+          <div class="stat-info">
+            <div class="stat-value" id="statAbsentAlert" style="color: var(--danger-color);">0</div>
+            <div class="stat-label">Vắng 3-4 tuần (Cần thăm)</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon birthday">🎂</div>
+          <div class="stat-info">
+            <div class="stat-value" id="statBirthday" style="color: var(--accent-color);">0</div>
+            <div class="stat-label">Sinh nhật tháng này</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon groups">🏡</div>
+          <div class="stat-info">
+            <div class="stat-value" id="statTotalGroups">0</div>
+            <div class="stat-label">Tổ sinh hoạt</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 1: CẢNH BÁO VẮNG 3-4 TUẦN -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" style="color: var(--danger-color);">
+            <span>🚑</span> Danh Sách Cần Thăm Viếng (Vắng 3 - 4 tuần trở lên)
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openQuickAttendanceModal()">
+            ⚡ Điểm danh nhanh hôm nay
+          </button>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Họ và Tên</th>
+                <th>Chức Danh</th>
+                <th>Tổ</th>
+                <th>Số Điện Thoại</th>
+                <th>Ngày Nhóm Cuối</th>
+                <th>Số Ngày Vắng</th>
+                <th>Địa Chỉ</th>
+                <th>Thao Tác Thăm Viếng</th>
+              </tr>
+            </thead>
+            <tbody id="absentAlertTableBody">
+              <tr>
+                <td colspan="8" class="empty-state">Đang tải dữ liệu cảnh báo...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CARD 2: CẢNH BÁO SINH NHẬT -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" style="color: #b45309;">
+            <span>🎂</span> Thành Viên Có Sinh Nhật Trong Tháng
+          </div>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Họ và Tên</th>
+                <th>Ngày Sinh</th>
+                <th>Tuổi</th>
+                <th>Chức Danh</th>
+                <th>Tổ</th>
+                <th>Số Điện Thoại</th>
+              </tr>
+            </thead>
+            <tbody id="birthdayTableBody">
+              <tr>
+                <td colspan="6" class="empty-state">Đang tải danh sách sinh nhật...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= TAB 2: ĐIỂM DANH NHANH TRÊN ĐIỆN THOẠI ================= -->
+    <div id="tab-checkin" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>⚡</span> Điểm Danh Nhanh Buổi Nhóm
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-secondary btn-sm" onclick="triggerArchiveYearlyData()" title="Kết chuyển dữ liệu năm cũ sang Sheet lưu trữ riêng để tăng tốc">
+              📂 Kết Chuyển Dữ Liệu Năm
+            </button>
+            <button class="btn btn-success" id="btnSaveCheckinBatch" onclick="saveCheckinSheetBatch()">
+              💾 Lưu Điểm Danh
+            </button>
+          </div>
+        </div>
+
+        <!-- MULTI-LEVEL FILTER BAR (NĂM -> QUÝ -> THÁNG -> TỔ -> BUỔI NHÓM) -->
+        <div class="filter-bar" style="margin-bottom: 12px; gap: 8px;">
+          <div style="display: flex; gap: 6px; align-items: center; width: 100%; flex-wrap: wrap;">
+            <label class="form-label" style="margin: 0; font-size: 12px;">Năm:</label>
+            <select id="checkinYearSelect" class="input-control" style="width: 82px;" onchange="onCheckinYearChange()">
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
+              <option value="2027">2027</option>
+            </select>
+
+            <label class="form-label" style="margin: 0; font-size: 12px; margin-left: 4px;">Quý:</label>
+            <select id="checkinQuarterSelect" class="input-control" style="width: 92px;" onchange="onCheckinQuarterChange()">
+              <option value="Quý I">Quý I</option>
+              <option value="Quý II">Quý II</option>
+              <option value="Quý III">Quý III</option>
+              <option value="Quý IV">Quý IV</option>
+              <option value="ALL">Cả Quý</option>
+            </select>
+
+            <label class="form-label" style="margin: 0; font-size: 12px; margin-left: 4px;">Tháng:</label>
+            <select id="checkinMonthSelect" class="input-control" style="width: 115px;" onchange="onCheckinMonthChange()">
+              <option value="ALL">🗓️ Tất Cả</option>
+              <!-- Populated dynamically -->
+            </select>
+
+            <label class="form-label" style="margin: 0; font-size: 12px; margin-left: 4px;">Tổ:</label>
+            <select id="checkinGroupFilterSelect" class="input-control" style="flex: 1; min-width: 130px;" onchange="onCheckinGroupFilterChange()">
+              <option value="ALL">🏢 Tất Cả Các Tổ</option>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+
+          <div style="display: flex; gap: 6px; align-items: center; width: 100%;">
+            <label class="form-label" style="margin: 0; min-width: 75px; font-weight: 700;">Buổi Nhóm:</label>
+            <select id="checkinSessionSelect" class="input-control" style="flex: 1;" onchange="onCheckinSessionSelectChange()">
+              <option value="">-- Đang tải danh sách buổi nhóm --</option>
+            </select>
+            <input type="date" id="checkinMeetingDate" class="input-control" style="width: 130px;" onchange="loadCheckinDataForDate()">
+          </div>
+        </div>
+
+        <!-- WEEKLY TOPIC BANNER -->
+        <div class="att-topic-banner" id="attTopicBanner">
+          <div class="att-topic-title">
+            <span>📖</span> <span id="attTopicTitle">Chưa có thông tin bài học buổi nhóm</span>
+          </div>
+          <div class="att-topic-verse" id="attTopicVerse">Mời chọn ngày đi nhóm để tải chủ đề & câu gốc tuần này</div>
+        </div>
+
+        <!-- LIVE STATS BANNER -->
+        <div id="groupAnalyticsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px;">
+        </div>
+
+        <!-- VIEW MODE SWITCHER BAR -->
+        <div class="att-mode-bar">
+          <button class="att-mode-btn active" id="btnAttModeFrequent" onclick="switchAttViewMode('frequent')">
+            <span>🌟</span> Thường Xuyên
+          </button>
+          <button class="att-mode-btn" id="btnAttModeGroup" onclick="switchAttViewMode('group')">
+            <span>🏢</span> Chia Theo Tổ
+          </button>
+          <button class="att-mode-btn" id="btnAttModeAbc" onclick="switchAttViewMode('abc')">
+            <span>🔤</span> Theo Tên ABC
+          </button>
+        </div>
+
+        <!-- QUICK ACTIONS & BULK TOOLBAR -->
+        <div class="att-quick-actions-bar" style="flex-wrap: wrap; gap: 6px;">
+          <input type="text" id="attSearchInput" class="input-control" style="flex: 1; min-width: 160px;"
+                 placeholder="🔎 Tìm tên ban viên..." oninput="renderAttendanceList()">
+          
+          <button class="btn btn-secondary btn-sm" onclick="bulkSetAttendanceStatus(true)" title="Chuyển tất cả ban viên đang lọc thành CÓ MẶT">
+            ⚡ Có Mặt
+          </button>
+          <button class="btn btn-warning btn-sm" onclick="bulkSetAttendanceAbsent()" title="Chuyển tất cả ban viên đang lọc thành VẮNG">
+            ❌ Vắng
+          </button>
+          <button class="btn btn-success btn-sm" onclick="bulkSetVerseStatus(true)" title="Đánh dấu tất cả ban viên có mặt THUỘC BÀI">
+            📖 Thuộc Bài
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="openCheckinBatchGroupModal()" title="Phân bổ lại Tổ hàng loạt cho các ban viên được chọn">
+            🔀 Đổi Tổ
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="bulkDeleteSelectedAttendance()" title="Xóa lượt điểm danh ngày này của các ban viên được chọn">
+            🗑️ Xóa
+          </button>
+        </div>
+
+        <!-- MOBILE CARDS / LIST CONTAINER -->
+        <div id="attCardsContainer" class="att-cards-container">
+          <div class="empty-state">Đang tải sổ điểm danh...</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================= TAB 3: CHƯƠNG TRÌNH NHÓM QUÝ ================= -->
+    <div id="tab-schedules" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📅</span> Lịch Chương Trình Thờ Phượng & Sinh Hoạt Quý
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-warning" onclick="openPrintableSyllabusModal()">
+              🖨️ Xem / In Tờ Chương Trình
+            </button>
+
+            <button class="btn btn-secondary" onclick="exportSchedulesToCSV()">
+              📊 Xuất Excel / CSV
+            </button>
+            <button class="btn btn-success" id="btnSaveScheduleBatch" onclick="saveAllSchedulesBatch()">
+              💾 Lưu Thay Đổi Cả Quý
+            </button>
+          </div>
+        </div>
+
+        <!-- VIEW MODE TOGGLE BAR -->
+        <div class="att-mode-bar" style="margin-bottom: 12px;">
+          <button class="att-mode-btn active" id="btnSchModeView" onclick="toggleScheduleEditMode(false)">
+            <span>👁️</span> Chế Độ Xem Sạch Đẹp (Khuyên Dùng)
+          </button>
+          <button class="att-mode-btn" id="btnSchModeEdit" onclick="toggleScheduleEditMode(true)">
+            <span>⚡</span> Nhập Trực Tiếp Trực Quan (Grid Edit)
+          </button>
+        </div>
+
+        <!-- FILTER & CONFIG BAR -->
+        <div class="filter-bar">
+          <div style="display: flex; gap: 6px; align-items: center; width: 100%; flex-wrap: wrap;">
+            <label class="form-label" style="margin: 0; min-width: 35px;">Năm:</label>
+            <select id="scheduleYearSelect" class="input-control" style="width: 80px;" onchange="loadScheduleTab()">
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
+              <option value="2027">2027</option>
+            </select>
+
+            <label class="form-label" style="margin: 0; min-width: 35px; margin-left: 6px;">Quý:</label>
+            <select id="scheduleQuarterSelect" class="input-control" style="width: 90px;" onchange="loadScheduleTab()">
+              <option value="Quý I">Quý I</option>
+              <option value="Quý II">Quý II</option>
+              <option value="Quý III">Quý III</option>
+              <option value="Quý IV">Quý IV</option>
+            </select>
+
+            <label class="form-label" style="margin: 0; min-width: 45px; margin-left: 6px;">Tháng:</label>
+            <select id="scheduleMonthSelect" class="input-control" style="flex: 1; min-width: 130px;" onchange="onScheduleMonthFilterChange()">
+              <option value="ALL">🗓️ Tất Cả Tháng Trong Quý</option>
+              <!-- Populate dynamically based on Quarter -->
+            </select>
+          </div>
+
+          <div style="display: flex; gap: 6px; align-items: center; width: 100%;">
+            <label class="form-label" style="margin: 0; min-width: 65px;">Tên Ban:</label>
+            <input type="text" id="cfgDepartmentName" class="input-control" value="BAN THANH TRÁNG" onchange="saveDepartmentConfigUI()">
+          </div>
+
+          <div style="display: flex; gap: 6px; align-items: center; width: 100%;">
+            <label class="form-label" style="margin: 0; min-width: 65px;">Thứ Nhóm:</label>
+            <select id="cfgMeetingDay" class="input-control" onchange="saveDepartmentConfigUI()">
+              <option value="Chúa Nhật">Chúa Nhật</option>
+              <option value="Thứ Bảy">Thứ Bảy</option>
+              <option value="Thứ Sáu">Thứ Sáu</option>
+            </select>
+
+            <label class="form-label" style="margin: 0; min-width: 65px; margin-left: 10px;">Giờ Nhóm:</label>
+            <input type="text" id="cfgMeetingTime" class="input-control" value="16h00 chiều" onchange="saveDepartmentConfigUI()">
+          </div>
+        </div>
+
+        <!-- WEEKLY SCHEDULES TABLE CONTAINER (KHÔNG CUỘN NGANG) -->
+        <div style="width: 100%; overflow-x: hidden;">
+          <table class="table-no-scroll" id="mainSchedulesTable" style="width: 100%; table-layout: fixed; border-collapse: collapse;">
+            <thead id="schedulesTableHead">
+              <!-- Rendered dynamically by renderSchedulesTable -->
+            </thead>
+            <tbody id="schedulesTableBody">
+              <tr>
+                <td colspan="4" class="empty-state">Đang tải lịch chương trình tuần...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+
+        <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <button class="btn btn-secondary btn-sm" onclick="addNewScheduleRow()">
+            ➕ Thêm 1 Buổi Nhóm Mới
+          </button>
+          <span style="font-size: 12px; color: var(--text-muted);">
+            * Chỉnh sửa trực tiếp trên bảng rồi bấm <strong>"Lưu Thay Đổi Cả Quý"</strong>!
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================= TAB 4: QUẢN LÝ CHỦ ĐỀ QUÝ & NĂM ================= -->
+    <div id="tab-themes" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📖</span> Bảng Chủ Đề Các Quý & Chủ Đề Năm
+          </div>
+          <div class="card-actions">
+            <select id="themeYearFilter" class="input-control" onchange="filterThemesByYear()">
+            </select>
+            <button class="btn btn-success" onclick="openThemeModal()">
+              ➕ Thêm / Sửa Chủ Đề
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th style="width: 40px; text-align: center;">STT</th>
+                <th style="width: 80px;">QUÝ</th>
+                <th style="width: 160px;">CHỦ ĐỀ</th>
+                <th style="width: 130px;">CÂU GỐC</th>
+                <th>NỘI DUNG CÂU GỐC</th>
+                <th style="width: 140px;">BÀI HÁT CHỦ ĐỀ</th>
+                <th style="width: 100px;">THAO TÁC</th>
+              </tr>
+            </thead>
+            <tbody id="themesTableBody">
+              <tr>
+                <td colspan="7" class="empty-state">Đang tải danh sách chủ đề...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================= TAB 5: QUẢN LÝ THÀNH VIÊN ================= -->
+    <div id="tab-members" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>👥</span> Quản Lý Danh Sách Thành Viên & Chức Danh Ban
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-secondary" onclick="exportMembersToCSV()">
+              📊 Xuất CSV
+            </button>
+            <button class="btn btn-success" onclick="openMemberModal()">
+              ➕ Thêm Mới
+            </button>
+            <button class="btn btn-primary" onclick="openQuickAttendanceModal()">
+              ⚡ Điểm Danh
+            </button>
+          </div>
+        </div>
+
+        <!-- MEMBER VIEW MODE BAR -->
+        <div class="att-mode-bar" style="margin-bottom: 12px;">
+          <button class="att-mode-btn active" id="btnMemberModeAbc" onclick="switchMemberViewMode('abc')">
+            <span>🔤</span> Xếp ABC
+          </button>
+          <button class="att-mode-btn" id="btnMemberModeGroup" onclick="switchMemberViewMode('group')">
+            <span>🏢</span> Phân Theo Tổ
+          </button>
+          <button class="att-mode-btn" id="btnMemberModePosition" onclick="switchMemberViewMode('position')">
+            <span>👑</span> Chức Danh
+          </button>
+          <button class="att-mode-btn" id="btnMemberModeBirthday" onclick="switchMemberViewMode('birthday')">
+            <span>🎂</span> Sinh Nhật Tháng
+          </button>
+        </div>
+
+        <!-- SEARCH & FILTER BAR -->
+        <div class="filter-bar">
+          <input type="text" id="memberSearchInput" class="input-control search-input" 
+                 placeholder="🔎 Tìm theo tên, SĐT, chức danh, địa chỉ..." oninput="filterMembers()">
+          
+          <select id="memberPositionFilter" class="input-control" onchange="filterMembers()">
+            <option value="">-- Tất cả Chức Danh --</option>
+            <option value="Trưởng ban">Trưởng ban</option>
+            <option value="Phó ban">Phó ban</option>
+            <option value="Thư ký">Thư ký</option>
+            <option value="Thủ quỹ">Thủ quỹ</option>
+            <option value="Nghị viên">Nghị viên</option>
+            <option value="Ban viên">Ban viên</option>
+          </select>
+
+          <select id="memberGroupFilter" class="input-control" onchange="filterMembers()">
+            <option value="">-- Tất cả các Tổ --</option>
+          </select>
+
+          <select id="memberStatusFilter" class="input-control" onchange="filterMembers()">
+            <option value="">-- Tất cả Trạng Thái --</option>
+            <option value="Đang sinh hoạt">Đang sinh hoạt</option>
+            <option value="Cần thăm viếng">Cần thăm viếng</option>
+            <option value="Tạm ngưng">Tạm ngưng</option>
+          </select>
+        </div>
+
+        <!-- MEMBERS TABLE -->
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAllMembers" onchange="toggleSelectAllMembers(this)"></th>
+                <th>Họ và Tên</th>
+                <th>Chức Danh</th>
+                <th>Tuổi (Ngày Sinh)</th>
+                <th>Số ĐT</th>
+                <th>Tổ</th>
+                <th>Lần Nhóm Cuối</th>
+                <th>Trạng Thái</th>
+                <th>Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody id="membersTableBody">
+              <tr>
+                <td colspan="9" class="empty-state">Đang tải danh sách thành viên...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FLOATING BATCH ACTIONS BAR -->
+        <div id="memberBatchBar" class="floating-batch-bar" style="display: none;">
+          <div>
+            <span>Đã chọn <strong id="selectedBatchCount">0</strong> ban viên</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-warning btn-sm" onclick="promptBatchChangeGroup()">
+              🔀 Chuyển Tổ
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="promptBatchChangeStatus()">
+              🏷️ Đổi Trạng Thái
+            </button>
+            <button class="btn btn-success btn-sm" onclick="copySelectedMemberPhones()">
+              📋 Copy SĐT Zalo
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================= TAB 6: NHẬT KÝ THĂM VIẾNG ================= -->
+    <div id="tab-visitations" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📝</span> Nhật Ký Thăm Viếng & Chăm Sóc Thành Viên
+          </div>
+          <button class="btn btn-warning" onclick="openAddVisitationModal()">
+            ➕ Ghi Nhận Lượt Thăm Mới
+          </button>
+        </div>
+
+        <!-- MULTI-LEVEL FILTER BAR FOR VISITATIONS -->
+        <div class="filter-bar" style="margin-bottom: 14px; gap: 8px;">
+          <div style="display: flex; gap: 6px; align-items: center; width: 100%; flex-wrap: wrap;">
+            <label class="form-label" style="margin: 0; font-size: 12px;">Hình thức:</label>
+            <select id="visTypeFilter" class="input-control" style="flex: 1; min-width: 130px;" onchange="filterVisitations()">
+              <option value="ALL">🗓️ Tất Cả Hình Thức</option>
+              <option value="Tại nhà / Trực tiếp">🏡 Tại nhà / Trực tiếp</option>
+              <option value="Điện thoại / Zalo">📞 Điện thoại / Zalo</option>
+              <option value="Thăm bệnh">🏥 Thăm bệnh</option>
+              <option value="Thăm sinh nhật">🎂 Thăm sinh nhật</option>
+            </select>
+
+            <label class="form-label" style="margin: 0; font-size: 12px; margin-left: 4px;">Thời gian:</label>
+            <select id="visTimeFilter" class="input-control" style="width: 125px;" onchange="filterVisitations()">
+              <option value="ALL">📅 Tất Cả</option>
+              <option value="THIS_MONTH">Tháng Này</option>
+              <option value="30_DAYS">30 Ngày Gần Đây</option>
+              <option value="2026">Năm 2026</option>
+            </select>
+
+            <label class="form-label" style="margin: 0; font-size: 12px; margin-left: 4px;">Tổ:</label>
+            <select id="visGroupFilter" class="input-control" style="width: 130px;" onchange="filterVisitations()">
+              <option value="ALL">🏢 Tất Cả Các Tổ</option>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+
+          <div style="display: flex; gap: 6px; align-items: center; width: 100%;">
+            <input type="text" id="visSearchInput" class="input-control" style="flex: 1;"
+                   placeholder="🔎 Gõ tên ban viên hoặc người đi thăm để tìm..." oninput="filterVisitations()">
+          </div>
+        </div>
+
+        <div id="visitationTimelineContainer">
+          <div class="empty-state">Đang tải nhật ký thăm viếng...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 7: QUẢN LÝ TỔ ================= -->
+    <div id="tab-groups" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🏡</span> Danh Sách Các Tổ (Nhóm Nhỏ)
+          </div>
+          <button class="btn btn-success" onclick="openGroupModal()">
+            ➕ Tạo Tổ Mới
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Mã Tổ</th>
+                <th>Tên Tổ / Nhóm</th>
+                <th>Tổ Trưởng</th>
+                <th>Số Điện Thoại</th>
+                <th>Số Thành Viên</th>
+                <th>Ghi Chú</th>
+                <th>Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody id="groupsTableBody">
+              <tr>
+                <td colspan="7" class="empty-state">Đang tải danh sách Tổ...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================= TAB 8: QUẢN LÝ TÀI KHOẢN (ACCOUNTS MANAGER) ================= -->
+    <div id="tab-accounts" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🔐</span> Danh Sách Tài Khoản & Phân Quyền Ban Điều Hành
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-warning" onclick="openChangePasswordModal()">
+              🔑 Đổi Mật Khẩu
+            </button>
+            <button class="btn btn-success" onclick="openAccountModal()">
+              ➕ Thêm Tài Khoản Mới
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr style="background-color: #e0e7ff;">
+                <th>Tên Đăng Nhập</th>
+                <th>Họ và Tên Hợp Lệ</th>
+                <th>Chức Danh Phân Quyền</th>
+                <th>Trạng Thái</th>
+                <th>Ngày Tạo</th>
+                <th>Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody id="accountsTableBody">
+              <tr>
+                <td colspan="6" class="empty-state">Đang tải danh sách tài khoản...</td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+
+    <!-- ================= TAB 9: CÀI ĐẶT ĐƠN VỊ & TRIỂN KHAI SHEET 1-CLICK ================= -->
+    <div id="tab-settings" class="tab-pane">
+      <div class="card" style="margin-bottom: 16px;">
+        <div class="card-header">
+          <div class="card-title">
+            <span>⛪</span> Cấu Hình Tên Hội Thánh & Ban Ngành
+          </div>
+        </div>
+        <div style="padding: 16px;">
+          <form onsubmit="saveDepartmentConfigUI(event)">
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label class="form-label">Tên Hội Thánh <span class="required">*</span></label>
+                <input type="text" id="cfgChurchName" class="input-control" value="HỘI THÁNH TIN LÀNH THỦ ĐỨC" placeholder="Ví dụ: HỘI THÁNH TIN LÀNH THỦ ĐỨC">
+              </div>
+
+              <div class="form-group full-width">
+                <label class="form-label">Tên Ban Ngành <span class="required">*</span></label>
+                <input type="text" id="cfgDeptName" class="input-control" value="BAN THẮNG TRÁNG" placeholder="Ví dụ: BAN THẮNG TRÁNG, BAN THANH NIÊN...">
+              </div>
+
+              <div class="form-group full-width">
+                <label class="form-label">Khẩu Hiệu / Định Hướng Năm</label>
+                <input type="text" id="cfgDeptMotto" class="input-control" value="SỐNG VỚI CÂU GỐC & CẦU NGUYỆN LÊN CHÚA" placeholder="Ví dụ: SỐNG VỚI CÂU GỐC & CẦU NGUYỆN LÊN CHÚA">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Thứ Nhóm</label>
+                <select id="cfgMeetingDaySelect" class="input-control">
+                  <option value="Chúa Nhật">Chúa Nhật</option>
+                  <option value="Thứ Bảy">Thứ Bảy</option>
+                  <option value="Thứ Sáu">Thứ Sáu</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Giờ Nhóm Tuần</label>
+                <input type="text" id="cfgMeetingTimeInput" class="input-control" value="16h00 chiều">
+              </div>
+            </div>
+
+            <div style="margin-top: 14px; text-align: right;">
+              <button type="button" class="btn btn-success" onclick="saveDepartmentConfigUI()">
+                💾 Lưu Cấu Hình Đơn Vị
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- 1-CLICK MULTI-SPREADSHEET DEPLOYMENT TOOL -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>⚡</span> Công Cụ Triển Khai 1-Click Cho File Sheet Mới
+          </div>
+        </div>
+        <div style="padding: 16px;">
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.6;">
+            💡 <strong>Hướng dẫn triển khai cho Ban/Hội Thánh mới:</strong> Tạo 1 file Google Sheet mới trắng trong Google Drive $\rightarrow$ Sao chép ID từ URL đường dẫn $\rightarrow$ Dán vào bên dưới và bấm nút <strong>"Khởi Tạo CSDL"</strong>. Hệ thống sẽ tự động sinh đủ 8 tab CSDL đắt giá với định dạng cột tiêu chuẩn!
+          </p>
+
+          <form onsubmit="SettingsManager.handleOneClickSetup(event)">
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label class="form-label">ID Google Sheet Mới (Hoặc để trống nếu dùng Sheet hiện tại):</label>
+                <input type="text" id="setupSpreadsheetId" class="input-control" placeholder="Ví dụ: 1BxiMVs0XRA5nFMdKbBUI6H6B5M0sX...">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Tên Hội Thánh Triển Khai</label>
+                <input type="text" id="setupChurchName" class="input-control" placeholder="Nhập tên Hội Thánh mới">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Tên Ban Ngành Triển Khai</label>
+                <input type="text" id="setupDeptName" class="input-control" placeholder="Ví dụ: BAN THANH NIÊN">
+              </div>
+
+              <div class="form-group full-width">
+                <label class="form-label">Khẩu Hiệu Sinh Hoạt</label>
+                <input type="text" id="setupDeptMotto" class="input-control" placeholder="Khẩu hiệu sinh hoạt ban...">
+              </div>
+            </div>
+
+            <div style="margin-top: 16px;">
+              <button type="submit" id="btnSubmitOneClickSetup" class="btn btn-primary" style="height: 44px; font-weight: bold; width: 100%;">
+                ⚡ 1-Click Khởi Tạo CSDL & Triển Khai Ngay
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= MODAL: THÊM / SỬA TÀI KHOẢN ================= -->
+  <div id="accountModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 id="accountModalTitle">Thêm Tài Khoản Mới</h3>
+        <button class="modal-close" onclick="closeAccountModal()">&times;</button>
+      </div>
+      <form id="accountForm" onsubmit="handleSaveAccount(event)">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label class="form-label">Tên Đăng Nhập (Username) <span class="required">*</span></label>
+              <input type="text" id="formAccUsername" class="input-control" required placeholder="Ví dụ: binh, yen, duen...">
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Mật Khẩu <span class="required">*</span></label>
+              <input type="text" id="formAccPassword" class="input-control" required placeholder="Mặc định: 123456" value="123456">
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Họ Tên Đầy Đủ</label>
+              <input type="text" id="formAccFullName" class="input-control" placeholder="Nhập họ tên đầy đủ">
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Chức Danh Ban Điều Hành <span class="required">*</span></label>
+              <select id="formAccPosition" class="input-control" required>
+                <option value="Trưởng ban">Trưởng ban</option>
+                <option value="Phó ban">Phó ban</option>
+                <option value="Thư ký">Thư ký</option>
+                <option value="Thủ quỹ">Thủ quỹ</option>
+                <option value="Nghị viên">Nghị viên</option>
+                <option value="Ban viên">Ban viên</option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Trạng Thái Tài Khoản</label>
+              <select id="formAccStatus" class="input-control">
+                <option value="Hoạt động">Hoạt động</option>
+                <option value="Bị khóa">Bị khóa</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeAccountModal()">Hủy</button>
+          <button type="submit" id="btnSaveAccount" class="btn btn-primary">Lưu Tài Khoản</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: ĐỔI MẬT KHẨU TÀI KHOẢN ================= -->
+  <div id="changePasswordModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 400px;">
+      <div class="modal-header">
+        <h3>🔑 Đổi Mật Khẩu Tài Khoản</h3>
+        <button class="modal-close" onclick="closeChangePasswordModal()">&times;</button>
+      </div>
+      <form id="changePasswordForm" onsubmit="handleChangePasswordSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label">Tài khoản đang đăng nhập:</label>
+            <input type="text" id="changePassUsername" class="input-control" readonly style="background: #f1f5f9; font-weight: bold;">
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label">Mật khẩu hiện tại <span class="required">*</span></label>
+            <input type="password" id="changePassOld" class="input-control" required placeholder="Nhập mật khẩu hiện tại">
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label">Mật khẩu mới <span class="required">*</span></label>
+            <input type="password" id="changePassNew" class="input-control" required placeholder="Nhập mật khẩu mới">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeChangePasswordModal()">Hủy</button>
+          <button type="submit" id="btnSubmitChangePass" class="btn btn-warning">Đổi Mật Khẩu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: HƯỚNG DẪN CÀI ĐẶT APP PWA ================= -->
+  <div id="pwaInstallModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3>📲 Thêm App Vào Màn Hình Chính</h3>
+        <button class="modal-close" onclick="closePWAModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="pwaInstructionAndroid" style="display: none;">
+          <p style="font-size: 14px; margin-bottom: 12px; color: var(--text-dark);">
+            Bấm nút <strong>"Xác Nhận Cài Đặt"</strong> bên dưới để thêm ứng dụng <strong>ManagerTeams</strong> trực tiếp vào màn hình chính điện thoại Android của bạn!
+          </p>
+        </div>
+
+        <div id="pwaInstructionIOS">
+          <p style="font-size: 14px; font-weight: 600; color: var(--primary-color); margin-bottom: 10px;">
+            📱 Hướng dẫn thêm vào Màn hình chính trên iPhone / iPad (Safari):
+          </p>
+          <ol style="font-size: 13.5px; line-height: 1.6; padding-left: 20px; color: var(--text-dark);">
+            <li>Bấm vào biểu tượng <strong>Chia sẻ (Share <span style="font-size: 16px;">⎋</span>)</strong> ở thanh công cụ trình duyệt Safari (phía dưới hoặc phía trên màn hình).</li>
+            <li>Cuộn xuống và chọn <strong>"Thêm vào Màn hình chính" (Add to Home Screen ➕)</strong>.</li>
+            <li>Bấm <strong>"Thêm" (Add)</strong> ở góc trên bên phải.</li>
+          </ol>
+          <div style="background: var(--primary-light); padding: 10px 14px; border-radius: var(--radius-sm); margin-top: 12px; font-size: 12.5px; color: var(--primary-color);">
+            🎉 Ứng dụng sẽ xuất hiện trên màn hình chính như một App điện thoại thực thụ!
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closePWAModal()">Đóng</button>
+        <button class="btn btn-success" id="btnPwaAndroidTrigger" style="display: none;" onclick="triggerAndroidPWAInstall()">
+          📲 Xác Nhận Cài Đặt
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: XEM & IN TỜ CHƯƠNG TRÌNH QUÝ ================= -->
+  <div id="printableSyllabusModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 900px;">
+      <div class="modal-header">
+        <h3>🖨️ Xem & In Tờ Chương Trình Sinh Hoạt Quý</h3>
+        <button class="modal-close" onclick="closePrintableSyllabusModal()">&times;</button>
+      </div>
+      <div class="modal-body" style="background: #e2e8f0; padding: 12px;">
+        
+        <div class="printable-paper" id="printablePaperArea">
+          <div class="printable-title" id="printDeptTitle">
+            CHƯƠNG TRÌNH THỜ PHƯỢNG CHÚA & SINH HOẠT BAN THANH TRÁNG
+          </div>
+          <div class="printable-subtitle" id="printQuarterTitle">
+            QUÝ I NĂM 2026
+          </div>
+          <div class="printable-meeting-time" id="printMeetingTime">
+            (Vào lúc 16h00 chiều Chúa Nhật hàng tuần)
+          </div>
+
+          <div class="printable-theme-box">
+            <div class="printable-theme-name" id="printThemeName">Chủ đề: GIỮ VỮNG</div>
+            <div class="printable-key-verse" id="printKeyVerse">Câu gốc: Giô-suê 1:8</div>
+            <div class="printable-verse-content" id="printKeyVerseContent">
+              "Quyển sách luật pháp này chớ xa miệng ngươi, hãy suy ngẫm ngày và đêm, hầu cho cẩn thận làm theo mọi điều đã chép ở trong;"
+            </div>
+          </div>
+
+          <table class="printable-table">
+            <thead>
+              <tr>
+                <th style="width: 65px;">NGÀY</th>
+                <th style="width: 220px;">ĐỀ TÀI</th>
+                <th style="width: 120px;">CÂU GỐC</th>
+                <th style="width: 130px;">ĐỐ KT</th>
+                <th style="width: 110px;">TỔ PHỤ TRÁCH</th>
+                <th>PHỤ TRÁCH</th>
+              </tr>
+            </thead>
+            <tbody id="printTableBody">
+            </tbody>
+          </table>
+
+          <div class="printable-footer" id="printFooterNotice">
+            Chương trình này thay lời mời, xin các Anh/Chị thêm lời cầu nguyện và tham dự đầy đủ.
+          </div>
+          <div class="printable-signature" id="printSignature">
+            Ban Điều Hành-2026
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closePrintableSyllabusModal()">Đóng</button>
+        <button type="button" class="btn btn-primary" onclick="printSyllabusNow()">🖨️ In / Tải PDF</button>
+        <button type="button" class="btn btn-success" onclick="copySyllabusForZalo()">📋 Copy Gửi Zalo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEDICATED PRINT CONTAINER -->
+  <div id="dedicatedPrintContainer">
+    <div class="printable-paper" id="dedicatedPrintPaper">
+    </div>
+  </div>
+
+  <!-- ================= MODAL: THÊM / SỬA CHỦ ĐỀ QUÝ & NĂM ================= -->
+  <div id="themeModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="themeModalTitle">Thêm / Chỉnh Sửa Chủ Đề</h3>
+        <button class="modal-close" onclick="closeThemeModal()">&times;</button>
+      </div>
+      <form id="themeForm" onsubmit="handleSaveTheme(event)">
+        <div class="modal-body">
+          <input type="hidden" id="formThemeId">
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Năm <span class="required">*</span></label>
+              <input type="number" id="formThemeYear" class="input-control" required placeholder="2026">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Quý / Kỳ <span class="required">*</span></label>
+              <select id="formThemeQuarter" class="input-control" required>
+                <option value="Quý I">Quý I</option>
+                <option value="Quý II">Quý II</option>
+                <option value="Quý III">Quý III</option>
+                <option value="Quý IV">Quý IV</option>
+                <option value="Cả Năm">Cả Năm (Chủ đề Năm)</option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Tên Chủ Đề <span class="required">*</span></label>
+              <input type="text" id="formThemeName" class="input-control" required placeholder="Ví dụ: GIỮ VỮNG, QUYẾT TÂM, ĐẮC THẮNG...">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Câu Gốc (Đoạn Kinh Thánh)</label>
+              <input type="text" id="formKeyVerse" class="input-control" placeholder="Ví dụ: Giô-suê 1:8, I Giăng 5:4">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Bài Hát Chủ Đề</label>
+              <input type="text" id="formThemeSong" class="input-control" placeholder="Tên bài hát chủ đề">
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Nội Dung Câu Gốc Kinh Thánh</label>
+              <textarea id="formKeyVerseContent" class="input-control" rows="3" placeholder="Nhập trích dẫn đầy đủ của câu gốc Kinh Thánh..."></textarea>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Ghi Chú Bổ Sung</label>
+              <textarea id="formThemeNotes" class="input-control" rows="2" placeholder="Ghi chú về diễn giả, chương trình sinh hoạt quý..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeThemeModal()">Hủy</button>
+          <button type="submit" id="btnSaveTheme" class="btn btn-primary">Lưu Chủ Đề</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: THÊM / SỬA THÀNH VIÊN ================= -->
+  <div id="memberModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="memberModalTitle">Thêm Thành Viên Mới</h3>
+        <button class="modal-close" onclick="closeMemberModal()">&times;</button>
+      </div>
+      <form id="memberForm" onsubmit="handleSaveMember(event)">
+        <div class="modal-body">
+          <input type="hidden" id="formMemberId">
+
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label class="form-label">Họ và Tên <span class="required">*</span></label>
+              <input type="text" id="formFullName" class="input-control" required placeholder="Nhập họ và tên đầy đủ">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Chức Danh Ban Điều Hành</label>
+              <select id="formPosition" class="input-control">
+                <option value="Ban viên">Ban viên</option>
+                <option value="Trưởng ban">Trưởng ban</option>
+                <option value="Phó ban">Phó ban</option>
+                <option value="Thư ký">Thư ký</option>
+                <option value="Thủ quỹ">Thủ quỹ</option>
+                <option value="Nghị viên">Nghị viên</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Nhiệm Kỳ</label>
+              <input type="text" id="formTenure" class="input-control" placeholder="2025-2027">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ngày Sinh (YYYY-MM-DD)</label>
+              <input type="date" id="formDateOfBirth" class="input-control">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Số Điện Thoại</label>
+              <input type="tel" id="formPhone" class="input-control" placeholder="0901234567">
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Địa Chỉ Nhà</label>
+              <input type="text" id="formAddress" class="input-control" placeholder="Số nhà, Tên đường, Quận/Huyện">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Thuộc Tổ (Nhóm Nhỏ)</label>
+              <select id="formGroupId" class="input-control">
+                <option value="">-- Chọn Tổ --</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Trạng Thái Sinh Hoạt</label>
+              <select id="formStatus" class="input-control">
+                <option value="Đang sinh hoạt">Đang sinh hoạt</option>
+                <option value="Cần thăm viếng">Cần thăm viếng</option>
+                <option value="Tạm ngưng">Tạm ngưng</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ngày Báp-têm</label>
+              <input type="date" id="formBaptismDate" class="input-control">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Tên Vợ / Chồng</label>
+              <input type="text" id="formSpouseName" class="input-control" placeholder="Họ tên vợ hoặc chồng">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ngày Bắt Đầu Sinh Hoạt</label>
+              <input type="date" id="formJoinDate" class="input-control">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ngày Đi Nhóm Gần Nhất</label>
+              <input type="date" id="formLastAttendanceDate" class="input-control">
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Ghi Chú Đặc Biệt</label>
+              <textarea id="formNotes" class="input-control" rows="3" placeholder="Nhu cầu cầu nguyện, sức khỏe, thăm viếng..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeMemberModal()">Hủy</button>
+          <button type="submit" id="btnSaveMember" class="btn btn-primary">Lưu Thành Viên</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: GHI NHẬN THĂM VIẾNG ================= -->
+  <div id="visitationModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="visitationModalTitle">📝 Ghi Nhận Lượt Thăm Viếng</h3>
+        <button class="modal-close" onclick="closeVisitationModal()">&times;</button>
+      </div>
+      <form id="visitationForm" onsubmit="handleSaveVisitation(event)">
+        <input type="hidden" id="formVisLogId">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label class="form-label">Thành Viên Được Thăm <span class="required">*</span></label>
+              <select id="formVisMemberId" class="input-control" required onchange="updateVisMemberName()">
+                <option value="">-- Chọn thành viên --</option>
+              </select>
+              <input type="hidden" id="formVisMemberName">
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Người Đi Thăm (Bấm chọn nhanh BDH / Tổ trưởng)</label>
+              <input type="text" id="formVisitorName" class="input-control" required placeholder="Gõ tên hoặc bấm chọn nhanh bên dưới...">
+              <div id="quickVisitorChips" style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px;">
+                <!-- Populated dynamically with BDH & Group Leader chips -->
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ngày Thăm Viếng</label>
+              <input type="date" id="formVisitDate" class="input-control" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Hình Thức Thăm Viếng</label>
+              <select id="formVisitType" class="input-control">
+                <option value="Gặp trực tiếp tại nhà">🏡 Gặp trực tiếp tại nhà</option>
+                <option value="Gọi điện thoại / Zalo">📞 Gọi điện thoại / Zalo</option>
+                <option value="Gặp riêng tại Nhà thờ">⛪ Gặp riêng tại Nhà thờ</option>
+                <option value="Gặp cà phê tâm sự">☕ Gặp cà phê tâm sự</option>
+                <option value="Thăm bệnh">🏥 Thăm bệnh</option>
+                <option value="Thăm sinh nhật">🎂 Thăm sinh nhật</option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Nhu Cầu Cầu Nguyện & Tình Trạng</label>
+              <textarea id="formPrayerRequests" class="input-control" rows="2" placeholder="Ghi nhận các vấn đề cầu nguyện..."></textarea>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Kết Quả & Ghi Chú</label>
+              <textarea id="formResultNotes" class="input-control" rows="2" placeholder="Kết quả cuộc gặp, hướng hỗ trợ..."></textarea>
+            </div>
+
+            <div class="form-group full-width" style="flex-direction: row; align-items: center; gap: 8px;">
+              <input type="checkbox" id="formUpdateAttendance" checked>
+              <label for="formUpdateAttendance" style="font-size: 13px; font-weight: 600;">
+                ✅ Cập nhật trạng thái thành viên sang "Đang sinh hoạt / Đang thăm"
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeVisitationModal()">Hủy</button>
+          <button type="submit" id="btnSaveVisitation" class="btn btn-warning">Lưu Nhật Ký Thăm Viếng</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: THÊM / SỬA TỔ ================= -->
+  <div id="groupModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="groupModalTitle">Tạo Tổ Mới</h3>
+        <button class="modal-close" onclick="closeGroupModal()">&times;</button>
+      </div>
+      <form id="groupForm" onsubmit="handleSaveGroup(event)">
+        <div class="modal-body">
+          <input type="hidden" id="formGroupIdInput">
+
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label class="form-label">Tên Tổ / Nhóm <span class="required">*</span></label>
+              <input type="text" id="formGroupName" class="input-control" required placeholder="Ví dụ: Tổ 1 - Yêu Thương">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Họ Tên Tổ Trưởng</label>
+              <input type="text" id="formLeaderName" class="input-control" placeholder="Tên Tổ trưởng">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Số Điện Thoại Tổ Trưởng</label>
+              <input type="tel" id="formLeaderPhone" class="input-control" placeholder="0901234567">
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Ghi Chú Tổ</label>
+              <textarea id="formGroupNotes" class="input-control" rows="3" placeholder="Địa điểm sinh hoạt tổ, thời gian..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeGroupModal()">Hủy</button>
+          <button type="submit" id="btnSaveGroup" class="btn btn-primary">Lưu Tổ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: ĐIỂM DANH NHANH ================= -->
+  <div id="quickAttModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>⚡ Điểm Danh Ngày Đi Nhóm</h3>
+        <button class="modal-close" onclick="closeQuickAttModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label">Chọn Ngày Đi Nhóm:</label>
+          <input type="date" id="quickAttDate" class="input-control">
+        </div>
+        <p style="font-size: 13px; color: var(--text-muted);">
+          * Đã chọn <strong id="selectedMemberCount">0</strong> thành viên để cập nhật ngày đi nhóm.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeQuickAttModal()">Hủy</button>
+        <button class="btn btn-success" id="btnSubmitQuickAtt" onclick="handleQuickAttendanceSubmit()">
+          Xác Nhận Cập Nhật
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= POPUP: CHỌN SỐ CÂU ĐỐ KINH THÁNH (0 - 5 CÂU) ================= -->
+  <div id="scorePadOverlay" class="score-pad-overlay" style="display: none;" onclick="closeScorePadOverlay(event)">
+    <div class="score-pad-box" onclick="event.stopPropagation()">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <h4 style="margin: 0; font-size: 16px; font-weight: 800; color: var(--primary-color);">
+          🧩 Số Câu Đố Kinh Thánh Trả Lời Được
+        </h4>
+        <button class="modal-close" onclick="closeScorePadOverlay()">&times;</button>
+      </div>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;" id="scorePadMemberName">
+        Chọn số câu (tối đa 5 câu)
+      </p>
+      <div class="score-pad-grid" style="grid-template-columns: repeat(6, 1fr);">
+        <button class="score-pad-item" onclick="selectScoreFromPad(0)">0 câu</button>
+        <button class="score-pad-item" onclick="selectScoreFromPad(1)">1 câu</button>
+        <button class="score-pad-item" onclick="selectScoreFromPad(2)">2 câu</button>
+        <button class="score-pad-item" onclick="selectScoreFromPad(3)">3 câu</button>
+        <button class="score-pad-item" onclick="selectScoreFromPad(4)">4 câu</button>
+        <button class="score-pad-item" style="background-color: #dbeafe; color: #1e40af; border-color: #93c5fd;" onclick="selectScoreFromPad(5)">5 câu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: HỒ SƠ BAN VIÊN THÔNG MINH ================= -->
+  <div id="memberProfileModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 650px;">
+      <div class="modal-header" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: #ffffff;">
+        <div>
+          <h3 id="profFullName" style="margin: 0; color: #ffffff;">Họ và Tên Ban Viên</h3>
+          <div style="margin-top: 4px; font-size: 13px; opacity: 0.9;" id="profSubTitle">
+            Chức danh • Tổ
+          </div>
+        </div>
+        <button class="modal-close" style="color: #ffffff;" onclick="closeMemberProfileModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="profModalBody">
+        <div class="empty-state">Đang tải thông tin hồ sơ ban viên...</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeMemberProfileModal()">Đóng Hồ Sơ</button>
+        <button class="btn btn-primary" id="btnEditProfMember" onclick="">✏️ Chỉnh Sửa Thông Tin</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: CHỈNH SỬA BUỔI NHÓM ================= -->
+  <div id="scheduleSingleEditModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 550px;">
+      <div class="modal-header">
+        <h3 id="schModalHeaderTitle">✏️ Chỉnh Sửa Buổi Nhóm</h3>
+        <button class="modal-close" onclick="closeScheduleSingleEditModal()">&times;</button>
+      </div>
+      <form id="singleScheduleForm" onsubmit="handleSaveSingleSchedule(event)">
+        <div class="modal-body">
+          <input type="hidden" id="editSchId">
+          
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label">Ngày Nhóm (YYYY-MM-DD):</label>
+            <input type="date" id="editSchDate" class="input-control" required>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label">Đề Tài Bài Học / Loại Sinh Hoạt:</label>
+            <input type="text" id="editSchTopic" class="input-control" placeholder="Ví dụ: THẢO LUẬN KINH THÁNH..." required>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label">Câu Gốc Tuần:</label>
+            <input type="text" id="editSchKeyVerse" class="input-control" placeholder="Ví dụ: Ê-phê-sô 6:18...">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label">Đố Kinh Thánh & Người Đố:</label>
+            <input type="text" id="editSchQuiz" class="input-control" placeholder="Ví dụ: Xuất-ê-díp-tô-ký 1-5 (Anh Duy Nguyên)...">
+          </div>
+
+          <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="form-group">
+              <label class="form-label">Tổ Phụ Trách:</label>
+              <input type="text" id="editSchGroup" class="input-control" placeholder="Ví dụ: Tổ 3 (Phao-lô)...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phụ Trách (Diễn Giả):</label>
+              <input type="text" id="editSchSpeaker" class="input-control" placeholder="Ví dụ: Chị Thu Hiền...">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeScheduleSingleEditModal()">Hủy</button>
+          <button type="submit" class="btn btn-primary">💾 Lưu Buổi Nhóm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: PREVIEW XUẤT ZALO TUẦN ================= -->
+  <div id="zaloSinglePreviewModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 580px;">
+      <div class="modal-header" style="background-color: #0068ff; color: #ffffff;">
+        <h3 style="margin: 0; color: #ffffff;">💬 Mẫu Thông Báo Zalo Tuần Nhóm</h3>
+        <button class="modal-close" style="color: #ffffff;" onclick="closeZaloSinglePreviewModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">
+          * Mẫu thông báo đã tự động bóc tách <strong>Chủ đề Năm, Chủ đề Quý, Đề tài, Diễn giả, Tổ phụ trách, Đố KT & Câu gốc</strong> chuẩn Hội Thánh:
+        </p>
+        <div class="zalo-preview-box" id="zaloSinglePreviewText">
+          Đang tạo nội dung Zalo...
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeZaloSinglePreviewModal()">Đóng</button>
+        <button class="btn btn-primary" style="background-color: #0068ff; border-color: #0068ff;" onclick="copyZaloTextFromModal()">
+          📋 Sao Chép Nội Dung Zalo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING BOTTOM MOBILE NAV BAR (FITTS'S LAW - NATURAL THUMB ZONE 2026) -->
+  <nav class="mobile-bottom-nav" id="mainMobileBottomNav">
+    <button class="mobile-nav-item active" id="mNavGrid" onclick="openMiniAppGridDashboard()">
+      <span class="nav-icon">
+        <svg class="app-icon icon-lg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+      </span>
+      <span>Apps</span>
+    </button>
+    <button class="mobile-nav-item" id="mNavCheckin" onclick="switchTab('checkin')">
+      <span class="nav-icon">
+        <svg class="app-icon icon-lg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+      <span>Điểm Danh</span>
+    </button>
+    <button class="mobile-nav-item" id="mNavSchedules" onclick="switchTab('schedules')">
+      <span class="nav-icon">
+        <svg class="app-icon icon-lg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+      </span>
+      <span>Lịch Quý</span>
+    </button>
+    <button class="mobile-nav-item" id="mNavMembers" onclick="switchTab('members')">
+      <span class="nav-icon">
+        <svg class="app-icon icon-lg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </span>
+      <span>Thành Viên</span>
+    </button>
+    <button class="mobile-nav-item" id="mNavVisitations" onclick="switchTab('visitations')">
+      <span class="nav-icon">
+        <svg class="app-icon icon-lg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+      </span>
+      <span>Thăm Viếng</span>
+    </button>
+    <button class="mobile-nav-item" id="mNavDashboard" onclick="switchTab('dashboard')">
+      <span class="nav-icon">
+        <svg class="app-icon icon-lg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+      </span>
+      <span>Tổng Quan</span>
+    </button>
+  </nav>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- INCLUDE MODULAR OOP JAVASCRIPT COMPONENTS -->
+  <?!= include('JS_Core'); ?>
+  <?!= include('JS_Components'); ?>
+  <?!= include('JS_Settings'); ?>
+  <?!= include('JavaScript'); ?>
+</body>
+</html>

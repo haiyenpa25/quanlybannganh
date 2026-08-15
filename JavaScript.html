@@ -1,0 +1,3560 @@
+<script>
+  // =========================================================================
+  // 1. PROMISE WRAPPER CHO GOOGLE.SCRIPT.RUN (TUÂN THỦ LUUY.MD)
+  // =========================================================================
+  function runGAS(functionName, ...args) {
+    return new Promise((resolve, reject) => {
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        reject(new Error("Môi trường chạy không phải Google Apps Script!"));
+        return;
+      }
+
+      google.script.run
+        .withSuccessHandler((response) => resolve(response))
+        .withFailureHandler((error) => reject(error))
+        [functionName](...args);
+    });
+  }
+
+  // =========================================================================
+  // UI/UX PRO MAX SKILL - SVG VECTOR ICON GENERATOR
+  // =========================================================================
+  function getSvgIcon(name, extraClass = '') {
+    const cls = `app-icon ${extraClass}`.trim();
+    switch (name) {
+      case 'home':
+        return `<svg class="${cls}" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`;
+      case 'check':
+        return `<svg class="${cls}" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><polyline points="20 6 9 17 4 12"/></svg>`;
+      case 'users':
+        return `<svg class="${cls}" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
+      case 'calendar':
+        return `<svg class="${cls}" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>`;
+      case 'grid':
+        return `<svg class="${cls}" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>`;
+      case 'eye':
+        return `<svg class="${cls}" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`;
+      case 'edit':
+        return `<svg class="${cls}" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>`;
+      case 'trash':
+        return `<svg class="${cls}" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>`;
+      case 'phone':
+        return `<svg class="${cls}" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`;
+      case 'heart':
+        return `<svg class="${cls}" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
+      case 'bell':
+        return `<svg class="${cls}" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>`;
+      case 'book':
+        return `<svg class="${cls}" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>`;
+      case 'zap':
+        return `<svg class="${cls}" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+      default:
+        return '';
+    }
+  }
+
+  // =========================================================================
+  // 2. BIẾN TRẠNG THÁI TOÀN CỤC & AUTHENTICATION STATE
+  // =========================================================================
+  let currentUser = null;
+  let allMembers = [];
+  let allGroups = [];
+  let allVisitations = [];
+  let allThemes = [];
+  let allAccounts = [];
+  let currentSchedules = [];
+  let currentAttendanceRecords = [];
+  let currentAttViewMode = 'frequent'; // 'frequent' | 'group' | 'abc'
+  let currentActiveScoreMemberId = null;
+  let deferredPwaPrompt = null;
+  let deptConfig = {
+    departmentName: 'BAN THANH TRÁNG',
+    meetingDay: 'Chúa Nhật',
+    meetingTime: '16h00 chiều',
+    footerNotice: 'Chương trình này thay lời mời, xin các Anh/Chị thêm lời cầu nguyện và tham dự đầy đủ.'
+  };
+  let selectedMemberIds = new Set();
+  let expandedMemberIds = new Set();
+  let expandedAbsentIds = new Set();
+  let expandedGroupIds = new Set();
+  let expandedThemeIds = new Set();
+
+  function toggleMemberRowExpand(id) {
+    if (expandedMemberIds.has(id)) expandedMemberIds.delete(id);
+    else expandedMemberIds.add(id);
+    filterMembers();
+  }
+
+  function toggleAbsentRowExpand(id) {
+    if (expandedAbsentIds.has(id)) expandedAbsentIds.delete(id);
+    else expandedAbsentIds.add(id);
+    renderAbsentAlertTable(allMembers);
+  }
+
+  function toggleGroupRowExpand(id) {
+    if (expandedGroupIds.has(id)) expandedGroupIds.delete(id);
+    else expandedGroupIds.add(id);
+    renderGroupsTable(allGroups);
+  }
+
+  function toggleThemeRowExpand(id) {
+    if (expandedThemeIds.has(id)) expandedThemeIds.delete(id);
+    else expandedThemeIds.add(id);
+    filterThemesByYear();
+  }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPwaPrompt = e;
+    const btnAndroid = document.getElementById('btnPwaAndroidTrigger');
+    if (btnAndroid) btnAndroid.style.display = 'inline-flex';
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('quickAttDate').value = todayStr;
+    document.getElementById('checkinMeetingDate').value = todayStr;
+    document.getElementById('formLastAttendanceDate').value = todayStr;
+    document.getElementById('formJoinDate').value = todayStr;
+    document.getElementById('formVisitDate').value = todayStr;
+    document.getElementById('formThemeYear').value = new Date().getFullYear();
+
+    registerBlobServiceWorker();
+    checkExistingSession();
+  });
+
+  // =========================================================================
+  // 3. LOGIC ĐĂNG NHẬP TÀI KHOẢN & PHIÊN LƯU THÔNG TIN
+  // =========================================================================
+  function checkExistingSession() {
+    const savedUserStr = sessionStorage.getItem('mt_user_session');
+    if (savedUserStr) {
+      try {
+        currentUser = JSON.parse(savedUserStr);
+        onLoginSuccess();
+        return;
+      } catch (err) {
+        sessionStorage.removeItem('mt_user_session');
+      }
+    }
+
+    document.getElementById('loginPageScreen').style.display = 'flex';
+    document.getElementById('mainAppHeader').style.display = 'none';
+    document.getElementById('mainNavTabsBar').style.display = 'none';
+    document.getElementById('mainAppContent').style.display = 'none';
+  }
+
+  function quickFillLogin(username) {
+    document.getElementById('loginUsername').value = username;
+    document.getElementById('loginPassword').value = '123456';
+  }
+
+  async function handleAccountLogin(event) {
+    event.preventDefault();
+    const btn = document.getElementById('btnLoginSubmit');
+    const u = document.getElementById('loginUsername').value.trim();
+    const p = document.getElementById('loginPassword').value.trim();
+
+    setButtonLoading(btn, true, "Đang kiểm tra...");
+
+    try {
+      const res = await runGAS("verifyAccountLogin", u, p);
+      if (res.success && res.user) {
+        currentUser = res.user;
+        sessionStorage.setItem('mt_user_session', JSON.stringify(currentUser));
+        showToast(`🎉 Đăng nhập thành công! Xin chào ${currentUser.fullName} (${currentUser.position})`, "success");
+        onLoginSuccess();
+      } else {
+        showToast(res.error || "Tên đăng nhập hoặc mật khẩu không đúng!", "error");
+      }
+    } catch (err) {
+      showToast("Lỗi đăng nhập: " + err.message, "error");
+    } finally {
+      setButtonLoading(btn, false, "🔑 ĐĂNG NHẬP HỆ THỐNG");
+    }
+  }
+
+  function onLoginSuccess() {
+    document.getElementById('loginPageScreen').style.display = 'none';
+    document.getElementById('mainAppHeader').style.display = 'block';
+    document.getElementById('mainNavTabsBar').style.display = 'block';
+    document.getElementById('mainAppContent').style.display = 'block';
+
+    // Show mobile bottom nav (Dark Mode iOS)
+    const bottomNav = document.getElementById('mainMobileBottomNav');
+    if (bottomNav) bottomNav.classList.add('visible');
+
+    const userBadge = document.getElementById('loggedInUserBadge');
+    userBadge.innerText = `👤 ${currentUser.fullName} (${currentUser.position})`;
+
+    loadAllData();
+    openMiniAppGridDashboard();
+  }
+
+  function handleAccountLogout() {
+    if (!confirm("Bạn có chắc chắn muốn đăng xuất khỏi hệ thống không?")) return;
+    sessionStorage.removeItem('mt_user_session');
+    currentUser = null;
+    checkExistingSession();
+    showToast("Đã đăng xuất tài khoản thành công!", "info");
+  }
+
+  // =========================================================================
+  // 4. LOGIC MÀN HÌNH CHÍNH MINI-APPS GRID DASHBOARD
+  // =========================================================================
+  function openMiniAppGridDashboard() {
+    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+    document.getElementById('tab-grid-dashboard').classList.add('active');
+  }
+
+  function openMiniApp(appTabName) {
+    switchTab(appTabName);
+  }
+
+  // =========================================================================
+  // 5. QUẢN LÝ TÀI KHOẢN BAN ĐIỀU HÀNH
+  // =========================================================================
+  async function loadAccountsTab() {
+    try {
+      const res = await runGAS("getAccountsData");
+      if (res && res.success) {
+        allAccounts = res.data || [];
+        renderAccountsTable(allAccounts);
+      }
+    } catch (err) {
+      console.error("Lỗi loadAccountsTab:", err);
+    }
+  }
+
+  function renderAccountsTable(accounts) {
+    const tbody = document.getElementById('accountsTableBody');
+
+    if (accounts.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Chưa có tài khoản nào. Bấm "Thêm Tài Khoản Mới" để tạo!</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = accounts.map(a => `
+      <tr>
+        <td><strong style="color: var(--primary-color); font-size: 15px;">👤 ${escapeHtml(a.username)}</strong></td>
+        <td><strong>${escapeHtml(a.fullName || '-')}</strong></td>
+        <td>${getPositionBadge(a.position)}</td>
+        <td><span class="badge ${a.status === 'Bị khóa' ? 'badge-alert' : 'badge-active'}">${escapeHtml(a.status)}</span></td>
+        <td style="font-size: 12px; color: var(--text-muted);">${escapeHtml(formatDisplayDate(a.createdAt))}</td>
+        <td>
+          <div style="display: flex; gap: 6px;">
+            <button class="btn btn-secondary btn-sm" onclick="editAccount('${escapeHtml(a.username)}')">✏️ Sửa</button>
+            <button class="btn btn-danger btn-sm" onclick="confirmDeleteAccount('${escapeHtml(a.username)}')">🗑️ Xóa</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function openAccountModal() {
+    document.getElementById('accountForm').reset();
+    document.getElementById('formAccUsername').readOnly = false;
+    document.getElementById('accountModalTitle').innerText = 'Thêm Tài Khoản Mới';
+    document.getElementById('accountModal').classList.add('active');
+  }
+
+  function editAccount(username) {
+    const a = allAccounts.find(item => item.username === username);
+    if (!a) return;
+
+    document.getElementById('formAccUsername').value = a.username;
+    document.getElementById('formAccUsername').readOnly = true;
+    document.getElementById('formAccPassword').value = a.password || '123456';
+    document.getElementById('formAccFullName').value = a.fullName;
+    document.getElementById('formAccPosition').value = a.position || 'Ban viên';
+    document.getElementById('formAccStatus').value = a.status || 'Hoạt động';
+
+    document.getElementById('accountModalTitle').innerText = 'Chỉnh Sửa Tài Khoản';
+    document.getElementById('accountModal').classList.add('active');
+  }
+
+  function closeAccountModal() {
+    document.getElementById('accountModal').classList.remove('active');
+  }
+
+  async function handleSaveAccount(event) {
+    event.preventDefault();
+    const btn = document.getElementById('btnSaveAccount');
+    setButtonLoading(btn, true, "Đang lưu...");
+
+    const accData = {
+      username: document.getElementById('formAccUsername').value.trim(),
+      password: document.getElementById('formAccPassword').value.trim(),
+      fullName: document.getElementById('formAccFullName').value.trim(),
+      position: document.getElementById('formAccPosition').value,
+      status: document.getElementById('formAccStatus').value
+    };
+
+    try {
+      const res = await runGAS("saveAccount", accData);
+      if (res.success) {
+        showToast(res.error || "Lưu tài khoản thành công!", "success");
+        closeAccountModal();
+        loadAccountsTab();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi lưu tài khoản: " + err.message, "error");
+    } finally {
+      setButtonLoading(btn, false, "Lưu Tài Khoản");
+    }
+  }
+
+  async function confirmDeleteAccount(username) {
+    if (!confirm(`Bạn có chắc chắn muốn xóa tài khoản "${username}" không?`)) return;
+    try {
+      showToast("Đang xóa tài khoản...", "info");
+      const res = await runGAS("deleteAccount", username);
+      if (res.success) {
+        showToast(res.error || "Đã xóa tài khoản thành công!", "success");
+        loadAccountsTab();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi xóa: " + err.message, "error");
+    }
+  }
+
+  function openChangePasswordModal() {
+    if (!currentUser) return;
+    document.getElementById('changePasswordForm').reset();
+    document.getElementById('changePassUsername').value = currentUser.username;
+    document.getElementById('changePasswordModal').classList.add('active');
+  }
+
+  function closeChangePasswordModal() {
+    document.getElementById('changePasswordModal').classList.remove('active');
+  }
+
+  async function handleChangePasswordSubmit(event) {
+    event.preventDefault();
+    const btn = document.getElementById('btnSubmitChangePass');
+    const oldPass = document.getElementById('changePassOld').value.trim();
+    const newPass = document.getElementById('changePassNew').value.trim();
+
+    setButtonLoading(btn, true, "Đang đổi mật khẩu...");
+
+    try {
+      const res = await runGAS("changeAccountPassword", currentUser.username, oldPass, newPass);
+      if (res.success) {
+        showToast(res.error || "Đổi mật khẩu thành công!", "success");
+        closeChangePasswordModal();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi đổi mật khẩu: " + err.message, "error");
+    } finally {
+      setButtonLoading(btn, false, "Đổi Mật Khẩu");
+    }
+  }
+
+  // =========================================================================
+  // 6. PWA LOGIC
+  // =========================================================================
+  function promptPWAInstall() {
+    if (deferredPwaPrompt) {
+      document.getElementById('pwaInstructionAndroid').style.display = 'block';
+      document.getElementById('pwaInstructionIOS').style.display = 'none';
+      document.getElementById('btnPwaAndroidTrigger').style.display = 'inline-flex';
+    } else {
+      document.getElementById('pwaInstructionAndroid').style.display = 'none';
+      document.getElementById('pwaInstructionIOS').style.display = 'block';
+      document.getElementById('btnPwaAndroidTrigger').style.display = 'none';
+    }
+
+    document.getElementById('pwaInstallModal').classList.add('active');
+  }
+
+  function closePWAModal() {
+    document.getElementById('pwaInstallModal').classList.remove('active');
+  }
+
+  async function triggerAndroidPWAInstall() {
+    if (!deferredPwaPrompt) return;
+    deferredPwaPrompt.prompt();
+    const { outcome } = await deferredPwaPrompt.userChoice;
+    if (outcome === 'accepted') {
+      showToast("🎉 Đã thêm ManagerTeams vào Màn hình chính thành công!", "success");
+    }
+    deferredPwaPrompt = null;
+    closePWAModal();
+  }
+
+  function registerBlobServiceWorker() {
+    if ('serviceWorker' in navigator) {
+      const swCode = `
+        self.addEventListener('install', (e) => { self.skipWaiting(); });
+        self.addEventListener('activate', (e) => { e.waitUntil(self.clients.claim()); });
+        self.addEventListener('fetch', (e) => { });
+      `;
+      const blob = new Blob([swCode], { type: 'text/javascript' });
+      const blobUrl = URL.createObjectURL(blob);
+      navigator.serviceWorker.register(blobUrl).catch(() => {});
+    }
+  }
+
+  // =========================================================================
+  // 7. TẢI DỮ LIỆU TỪ BACKEND
+  // =========================================================================
+  async function loadAllData() {
+    try {
+      showToast("Đang tải dữ liệu hệ thống...", "info");
+
+      const [statsRes, membersRes, groupsRes, visitsRes, themesRes, configRes] = await Promise.all([
+        runGAS("getDashboardStats"),
+        runGAS("getMembersData"),
+        runGAS("getGroupsData"),
+        runGAS("getVisitationLogs"),
+        runGAS("getQuarterlyThemes"),
+        runGAS("getDepartmentConfig")
+      ]);
+
+      if (configRes && configRes.success && configRes.data) {
+        deptConfig = configRes.data;
+        document.getElementById('cfgDepartmentName').value = deptConfig.departmentName || 'BAN THANH TRÁNG';
+        document.getElementById('cfgMeetingDay').value = deptConfig.meetingDay || 'Chúa Nhật';
+        document.getElementById('cfgMeetingTime').value = deptConfig.meetingTime || '16h00 chiều';
+      }
+
+      if (groupsRes && groupsRes.success) {
+        allGroups = groupsRes.data || [];
+        renderGroupsTable(allGroups);
+        populateGroupDropdowns(allGroups);
+      }
+
+      if (membersRes && membersRes.success) {
+        allMembers = membersRes.data || [];
+        filterMembers();
+        renderAbsentAlertTable(allMembers);
+        renderBirthdayTable(allMembers);
+        populateVisMemberDropdown(allMembers);
+      }
+
+      if (visitsRes && visitsRes.success) {
+        allVisitations = visitsRes.data || [];
+        renderVisitationTimeline(allVisitations);
+      }
+
+      if (themesRes && themesRes.success) {
+        allThemes = themesRes.data || [];
+        populateThemeYearFilter(allThemes);
+        filterThemesByYear();
+        renderDashboardThemeBanners(allThemes);
+      }
+
+      if (statsRes && statsRes.success) {
+        renderDashboard(statsRes.data);
+      }
+
+      await loadScheduleTab();
+      initCheckinFilters();
+      updateCheckinSessionDropdown();
+      await loadCheckinDataForDate();
+      await loadAccountsTab();
+
+    } catch (err) {
+      console.error("Lỗi loadAllData:", err);
+      showToast("Không thể kết nối đến máy chủ: " + err.message, "error");
+    }
+  }
+
+  async function initDatabaseSetup() {
+    if (!confirm("Bạn có chắc chắn muốn kiểm tra & đồng bộ lại tiêu đề các bảng Google Sheet không?")) return;
+    try {
+      showToast("Đang kiểm tra CSDL...", "info");
+      const res = await runGAS("setupManagerTeamsDatabase");
+      if (res.success) {
+        showToast(res.data, "success");
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi: " + err.message, "error");
+    }
+  }
+
+  // =========================================================================
+  // 8. IN CHƯƠNG TRÌNH QUÝ
+  // =========================================================================
+  function openPrintableSyllabusModal() {
+    const year = document.getElementById('scheduleYearSelect').value || '2026';
+    const quarter = document.getElementById('scheduleQuarterSelect').value || 'Quý I';
+
+    document.getElementById('printDeptTitle').innerText = `CHƯƠNG TRÌNH THỜ PHƯỢNG CHÚA & SINH HOẠT ${deptConfig.departmentName || 'BAN THANH TRÁNG'}`;
+    document.getElementById('printQuarterTitle').innerText = `${quarter.toUpperCase()} NĂM ${year}`;
+    document.getElementById('printMeetingTime').innerText = `(Vào lúc ${deptConfig.meetingTime || '16h00 chiều'} ${deptConfig.meetingDay || 'Chúa Nhật'} hàng tuần)`;
+
+    const quarterTheme = allThemes.find(t => t.year === year && t.quarter === quarter);
+    if (quarterTheme) {
+      document.getElementById('printThemeName').innerText = `Chủ đề: ${quarterTheme.themeName}`;
+      document.getElementById('printKeyVerse').innerText = `Câu gốc: ${quarterTheme.keyVerse}`;
+      document.getElementById('printKeyVerseContent').innerText = quarterTheme.keyVerseContent ? `"${quarterTheme.keyVerseContent}"` : '';
+    } else {
+      document.getElementById('printThemeName').innerText = `Chủ đề: GIỮ VỮNG`;
+      document.getElementById('printKeyVerse').innerText = `Câu gốc: Giô-suê 1:8`;
+      document.getElementById('printKeyVerseContent').innerText = `"Quyển sách luật pháp này chớ xa miệng ngươi, hãy suy ngẫm ngày và đêm, hầu cho cẩn thận làm theo mọi điều đã chép ở trong;"`;
+    }
+
+    const printTbody = document.getElementById('printTableBody');
+    const rows = document.querySelectorAll('tr.sch-row');
+
+    if (rows.length === 0) {
+      printTbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Chưa có dữ liệu chương trình.</td></tr>`;
+    } else {
+      let html = '';
+      rows.forEach(r => {
+        let dateVal = r.querySelector('.sch-date').value;
+        const topic = r.querySelector('.sch-topic').value;
+        const keyverse = r.querySelector('.sch-keyverse').value;
+        const quiz = r.querySelector('.sch-quiz').value;
+        const group = r.querySelector('.sch-group').value;
+        const speaker = r.querySelector('.sch-speaker').value;
+
+        const isSpecial = topic.toUpperCase().includes('NGHỈ');
+
+        if (isSpecial) {
+          html += `
+            <tr class="special-row">
+              <td style="text-align: center; font-weight: bold;">${escapeHtml(dateVal)}</td>
+              <td colspan="5" style="text-align: center; font-weight: bold; letter-spacing: 2px;">${escapeHtml(topic)}</td>
+            </tr>
+          `;
+        } else {
+          html += `
+            <tr>
+              <td style="text-align: center; font-weight: bold;">${escapeHtml(dateVal)}</td>
+              <td><strong>${escapeHtml(topic)}</strong></td>
+              <td>${escapeHtml(keyverse)}</td>
+              <td>${escapeHtml(quiz)}</td>
+              <td style="text-align: center;">${escapeHtml(group)}</td>
+              <td>${escapeHtml(speaker)}</td>
+            </tr>
+          `;
+        }
+      });
+      printTbody.innerHTML = html;
+    }
+
+    document.getElementById('printFooterNotice').innerText = deptConfig.footerNotice || 'Chương trình này thay lời mời, xin các Anh/Chị thêm lời cầu nguyện và tham dự đầy đủ.';
+    document.getElementById('printSignature').innerText = `Ban Điều Hành-${year}`;
+
+    document.getElementById('printableSyllabusModal').classList.add('active');
+  }
+
+  function closePrintableSyllabusModal() {
+    document.getElementById('printableSyllabusModal').classList.remove('active');
+  }
+
+  function printSyllabusNow() {
+    const paperArea = document.getElementById('printablePaperArea');
+    const printPaper = document.getElementById('dedicatedPrintPaper');
+    
+    if (!paperArea || !printPaper) return;
+    
+    printPaper.innerHTML = paperArea.innerHTML;
+    window.print();
+  }
+
+  function copySyllabusForZalo() {
+    const year = document.getElementById('scheduleYearSelect').value || '2026';
+    const quarter = document.getElementById('scheduleQuarterSelect').value || 'Quý I';
+    const quarterTheme = allThemes.find(t => t.year === year && t.quarter === quarter);
+
+    let text = `⛪ ${deptConfig.departmentName || 'BAN THANH TRÁNG'}\n`;
+    text += `📌 CHƯƠNG TRÌNH SINH HOẠT ${quarter.toUpperCase()} NĂM ${year}\n`;
+    text += `⏰ ${deptConfig.meetingTime} ${deptConfig.meetingDay} hàng tuần\n`;
+    if (quarterTheme) {
+      text += `📖 Chủ đề: ${quarterTheme.themeName}\n`;
+      text += `✝️ Câu gốc: ${quarterTheme.keyVerse}\n`;
+    }
+    text += `-----------------------------------\n`;
+
+    const rows = document.querySelectorAll('tr.sch-row');
+    rows.forEach((r, idx) => {
+      const dateVal = r.querySelector('.sch-date').value;
+      const topic = r.querySelector('.sch-topic').value;
+      const keyverse = r.querySelector('.sch-keyverse').value;
+      const speaker = r.querySelector('.sch-speaker').value;
+
+      text += `🗓️ ${dateVal}: ${topic}`;
+      if (keyverse) text += ` (${keyverse})`;
+      if (speaker) text += ` - HD: ${speaker}`;
+      text += `\n`;
+    });
+
+    text += `-----------------------------------\n`;
+    text += `🙏 ${deptConfig.footerNotice || 'Xin quý Anh/Chị thêm lời cầu nguyện và tham dự đầy đủ.'}\n`;
+    text += `Ban Điều Hành-${year}`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      showToast("📋 Đã sao chép chương trình nhóm gửi Zalo thành công!", "success");
+    }).catch(err => {
+      showToast("Lỗi copy: " + err.message, "error");
+    });
+  }
+
+  async function triggerSendEmailReport() {
+    const email = prompt("Nhập địa chỉ Email người nhận báo cáo (Ban Điều Hành):");
+    if (!email) return;
+
+    try {
+      showToast("Đang tạo và gửi Email báo cáo...", "info");
+      const res = await runGAS("sendExecutiveSummaryEmail", email);
+      if (res.success) {
+        showToast(res.error || "Đã gửi Email báo cáo thành công!", "success");
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi gửi email: " + err.message, "error");
+    }
+  }
+  // =========================================================================
+  // 9. LOGIC ĐIỂM DANH TUẦN (BỘ LỌC ĐA TẦNG NĂM -> QUÝ -> THÁNG -> TỔ -> BUỔI NHÓM)
+  // =========================================================================
+  function initCheckinFilters() {
+    const now = new Date();
+    const currentYear = now.getFullYear().toString();
+    const currentMonth = now.getMonth() + 1;
+
+    let currentQuarter = 'Quý I';
+    if (currentMonth >= 4 && currentMonth <= 6) currentQuarter = 'Quý II';
+    else if (currentMonth >= 7 && currentMonth <= 9) currentQuarter = 'Quý III';
+    else if (currentMonth >= 10 && currentMonth <= 12) currentQuarter = 'Quý IV';
+
+    const yearSelect = document.getElementById('checkinYearSelect');
+    const quarterSelect = document.getElementById('checkinQuarterSelect');
+
+    if (yearSelect && !yearSelect.value) yearSelect.value = currentYear;
+    if (quarterSelect && !quarterSelect.value) quarterSelect.value = currentQuarter;
+
+    populateCheckinMonthDropdown(currentMonth);
+  }
+
+  function populateCheckinMonthDropdown(defaultMonth) {
+    const quarterVal = document.getElementById('checkinQuarterSelect')?.value || 'Quý I';
+    const monthSelect = document.getElementById('checkinMonthSelect');
+    if (!monthSelect) return;
+
+    let months = [];
+    if (quarterVal === 'Quý I') months = [1, 2, 3];
+    else if (quarterVal === 'Quý II') months = [4, 5, 6];
+    else if (quarterVal === 'Quý III') months = [7, 8, 9];
+    else if (quarterVal === 'Quý IV') months = [10, 11, 12];
+    else months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+    let html = '<option value="ALL">🗓️ Tất Cả Tháng</option>';
+    months.forEach(m => {
+      html += `<option value="${m}">Tháng ${m}</option>`;
+    });
+    monthSelect.innerHTML = html;
+
+    if (defaultMonth && months.includes(defaultMonth)) {
+      monthSelect.value = defaultMonth;
+    } else {
+      monthSelect.value = 'ALL';
+    }
+  }
+
+  function onCheckinYearChange() {
+    populateCheckinMonthDropdown();
+    updateCheckinSessionDropdown();
+  }
+
+  function onCheckinQuarterChange() {
+    populateCheckinMonthDropdown();
+    updateCheckinSessionDropdown();
+  }
+
+  function onCheckinMonthChange() {
+    // Chỉ cập nhật danh sách buổi nhóm, KHÔNG tự ý reset ô chọn tháng
+    updateCheckinSessionDropdown();
+  }
+
+  function onCheckinGroupFilterChange() {
+    renderAttendanceList();
+  }
+
+  function extractMonthFromDate(dateVal) {
+    if (!dateVal) return null;
+    const str = String(dateVal).trim();
+    if (str.includes('-')) {
+      const parts = str.split('-');
+      if (parts.length >= 2) return parseInt(parts[1], 10);
+    }
+    if (str.includes('/')) {
+      const parts = str.split('/');
+      if (parts.length >= 2) return parseInt(parts[1], 10);
+    }
+    const d = new Date(str);
+    if (!isNaN(d.getTime())) return d.getMonth() + 1;
+    return null;
+  }
+
+  function updateCheckinSessionDropdown() {
+    const selectedYear = document.getElementById('checkinYearSelect')?.value || new Date().getFullYear().toString();
+    const selectedQuarter = document.getElementById('checkinQuarterSelect')?.value || 'Quý I';
+    const selectedMonth = document.getElementById('checkinMonthSelect')?.value || 'ALL';
+    const sessionSelect = document.getElementById('checkinSessionSelect');
+    if (!sessionSelect) return;
+
+    // Lọc từ currentSchedules
+    let filtered = currentSchedules.filter(s => {
+      const matchYear = !selectedYear || String(s.year) === String(selectedYear);
+      const matchQuarter = !selectedQuarter || selectedQuarter === 'ALL' || s.quarter === selectedQuarter;
+      
+      let matchMonth = true;
+      if (selectedMonth !== 'ALL' && s.meetingDate) {
+        const m = extractMonthFromDate(s.meetingDate);
+        if (m !== null) {
+          matchMonth = String(m) === String(selectedMonth);
+        }
+      }
+      return matchYear && matchQuarter && matchMonth;
+    });
+
+    if (filtered.length === 0) {
+      sessionSelect.innerHTML = '<option value="">-- Không có buổi nhóm nào thuộc khoảng lọc đã chọn --</option>';
+      return;
+    }
+
+    let html = '';
+    filtered.forEach((s, idx) => {
+      let dateDisplay = formatDisplayDate(s.meetingDate);
+      let label = `🗓️ ${dateDisplay}: ${s.topic}`;
+      if (s.speakerLeader) label += ` (${s.speakerLeader})`;
+      if (s.assignedGroup) label += ` - ${s.assignedGroup}`;
+      html += `<option value="${s.meetingDate}">${label}</option>`;
+    });
+
+    sessionSelect.innerHTML = html;
+    
+    // Tự động chọn buổi nhóm đầu tiên hoặc gần hôm nay nhất
+    const todayStr = new Date().toISOString().split('T')[0];
+    const closestSession = filtered.find(s => s.meetingDate >= todayStr) || filtered[0];
+    if (closestSession) {
+      sessionSelect.value = closestSession.meetingDate;
+      onCheckinSessionSelectChange();
+    }
+  }
+
+  function onCheckinSessionSelectChange() {
+    const sessionSelect = document.getElementById('checkinSessionSelect');
+    if (!sessionSelect) return;
+
+    const selectedDate = sessionSelect.value;
+    if (!selectedDate) return;
+
+    const dateInput = document.getElementById('checkinMeetingDate');
+    if (dateInput) dateInput.value = selectedDate;
+
+    loadCheckinDataForDate();
+  }
+
+  async function loadCheckinDataForDate() {
+    const dateInput = document.getElementById('checkinMeetingDate');
+    if (!dateInput) return;
+    const dateStr = dateInput.value;
+    if (!dateStr) return;
+
+    const cardsContainer = document.getElementById('attCardsContainer');
+    if (cardsContainer) {
+      cardsContainer.innerHTML = `<div class="empty-state">Đang tải danh sách điểm danh ngày ${formatDisplayDate(dateStr)}...</div>`;
+    }
+
+    try {
+      const attRes = await runGAS("getWeeklyAttendanceForDate", dateStr);
+
+      if (attRes && attRes.success && attRes.data) {
+        currentAttendanceRecords = attRes.data.records || [];
+        
+        // Cập nhật banner bài học
+        const topicObj = attRes.data.weeklyTopic;
+        const topicTitleEl = document.getElementById('attTopicTitle');
+        const topicVerseEl = document.getElementById('attTopicVerse');
+        if (topicObj && topicObj.title) {
+          if (topicTitleEl) topicTitleEl.innerText = `Chủ đề: ${topicObj.title}`;
+          if (topicVerseEl) topicVerseEl.innerText = `Câu gốc: ${topicObj.verse || 'Chưa cập nhật'}`;
+        } else {
+          if (topicTitleEl) topicTitleEl.innerText = `Điểm danh ngày: ${formatDisplayDate(dateStr)}`;
+          if (topicVerseEl) topicVerseEl.innerText = `Mẹo: Gõ tên để tìm nhanh hoặc bấm nút chọn tất cả có mặt`;
+        }
+
+        renderAttendanceList();
+      } else {
+        if (cardsContainer) cardsContainer.innerHTML = `<div class="empty-state">Không thể tải dữ liệu điểm danh.</div>`;
+        showToast((attRes && attRes.error) || "Không thể tải điểm danh cho ngày này", "error");
+      }
+    } catch (err) {
+      console.error("Lỗi loadCheckinDataForDate:", err);
+      showToast("Lỗi tải điểm danh: " + err.message, "error");
+    }
+  }
+
+  function switchAttViewMode(mode) {
+    currentAttViewMode = mode;
+    document.querySelectorAll('.att-mode-btn').forEach(btn => btn.classList.remove('active'));
+    if (mode === 'frequent') {
+      const b = document.getElementById('btnAttModeFrequent');
+      if (b) b.classList.add('active');
+    } else if (mode === 'group') {
+      const b = document.getElementById('btnAttModeGroup');
+      if (b) b.classList.add('active');
+    } else if (mode === 'abc') {
+      const b = document.getElementById('btnAttModeAbc');
+      if (b) b.classList.add('active');
+    }
+    renderAttendanceList();
+  }
+
+  function renderAttendanceList() {
+    const container = document.getElementById('attCardsContainer');
+    if (!container) return;
+
+    if (!currentAttendanceRecords || currentAttendanceRecords.length === 0) {
+      container.innerHTML = `<div class="empty-state">Chưa có danh sách thành viên điểm danh.</div>`;
+      return;
+    }
+
+    const searchQuery = (document.getElementById('attSearchInput')?.value || '').toLowerCase().trim();
+    const groupFilter = document.getElementById('checkinGroupFilterSelect')?.value || 'ALL';
+
+    // Lọc theo tìm kiếm & Tổ
+    let filtered = currentAttendanceRecords.filter(r => {
+      const matchSearch = !searchQuery || (
+        r.fullName.toLowerCase().includes(searchQuery) ||
+        (r.groupName && r.groupName.toLowerCase().includes(searchQuery)) ||
+        (r.position && r.position.toLowerCase().includes(searchQuery))
+      );
+      const matchGroup = groupFilter === 'ALL' || r.groupId === groupFilter || r.groupName === groupFilter;
+      return matchSearch && matchGroup;
+    });
+
+    if (filtered.length === 0) {
+      container.innerHTML = `<div class="empty-state">Không tìm thấy ban viên nào phù hợp bộ lọc đã chọn.</div>`;
+      return;
+    }
+
+    if (currentAttViewMode === 'frequent') {
+      // Tách 2 nhóm: Thường Xuyên & Khác
+      const frequentList = filtered.filter(r => r.isFrequent);
+      const otherList = filtered.filter(r => !r.isFrequent);
+
+      let html = '';
+      if (frequentList.length > 0) {
+        html += `
+          <div style="font-size: 13px; font-weight: 800; color: #b45309; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+            <span>🌟</span> BAN VIÊN THƯỜNG XUYÊN NHÓM (${frequentList.length})
+          </div>
+          <div class="att-compact-list" style="margin-bottom: 20px;">
+            ${frequentList.map(r => buildAttendanceRowHTML(r)).join('')}
+          </div>
+        `;
+      }
+
+      if (otherList.length > 0) {
+        html += `
+          <div style="font-size: 13px; font-weight: 800; color: #475569; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+            <span>⚪</span> BAN VIÊN KHÁC (${otherList.length})
+          </div>
+          <div class="att-compact-list">
+            ${otherList.map(r => buildAttendanceRowHTML(r)).join('')}
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    } else if (currentAttViewMode === 'group') {
+      // Phân nhóm theo Tổ
+      const groupsMap = {};
+      filtered.forEach(r => {
+        const gName = r.groupName || 'Chưa xếp tổ';
+        if (!groupsMap[gName]) groupsMap[gName] = [];
+        groupsMap[gName].push(r);
+      });
+
+      const groupNames = Object.keys(groupsMap).sort();
+      let html = '';
+
+      groupNames.forEach(gName => {
+        const items = groupsMap[gName];
+        const presentCount = items.filter(x => x.status === 'Có mặt').length;
+
+        html += `
+          <div class="att-group-section">
+            <div class="att-group-header">
+              <div>
+                🏢 <span>${escapeHtml(gName)}</span>
+                <span class="badge badge-group" style="margin-left: 8px;">${presentCount}/${items.length} có mặt</span>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); bulkSetGroupStatus('${escapeHtml(gName)}', true)">
+                ⚡ Tổ Có Mặt
+              </button>
+            </div>
+            <div class="att-compact-list" style="padding: 10px;">
+              ${items.map(r => buildAttendanceRowHTML(r)).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    } else {
+      // Theo TÊN ABC chuẩn Tiếng Việt
+      const sorted = sortMembersByVietnameseName(filtered);
+      container.innerHTML = `<div class="att-compact-list">${sorted.map(r => buildAttendanceRowHTML(r)).join('')}</div>`;
+    }
+
+    renderAttendanceLiveStats();
+  }
+
+  function buildAttendanceRowHTML(r) {
+    const isPresent = r.status === 'Có mặt';
+    const isVerse = r.isVerseMemorized;
+    const quizCount = Math.min(Math.max(Number(r.bibleQuizCount || r.bibleScore || 0), 0), 5);
+
+    return `
+      <div class="att-card-item ${!isPresent ? 'is-absent' : ''} ${r.isFrequent ? 'is-frequent' : ''}" id="attRow_${r.memberId}">
+        <!-- HÀNG 1: HỌ TÊN BAN VIÊN (100% HIỂN THỊ ĐẦY ĐỦ KHÔNG BỊ CẮT CHỮ/TRUNCATE) -->
+        <div class="att-card-top">
+          <button class="att-slim-check-btn ${isPresent ? 'present' : 'absent'}"
+                  title="${isPresent ? 'Đã điểm danh: CÓ MẶT (Bấm để chuyển VẮNG)' : 'Đã điểm danh: VẮNG (Bấm để chuyển CÓ MẶT)'}"
+                  onclick="toggleMemberAttendanceStatus('${r.memberId}')">
+            ${isPresent ? '✓' : '✕'}
+          </button>
+
+          <div class="att-card-name-block" onclick="toggleMemberAttendanceStatus('${r.memberId}')">
+            <div class="att-card-fullname">
+              ${escapeHtml(r.fullName)}
+              ${r.isFrequent ? '<span style="color:#f59e0b; font-size:12px;" title="Thường đi nhóm">🌟</span>' : ''}
+            </div>
+            <div class="att-card-subinfo">
+              <span class="badge badge-group" style="font-size: 10.5px;">${escapeHtml(r.groupName)}</span>
+              <span>${getPositionBadge(r.position)}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- HÀNG 2: CÁC NÚT ĐIỀU KHIỂN (CÂU GỐC & CÂU ĐỐ KT) -->
+        <div class="att-card-bottom">
+          <button class="att-slim-verse-btn ${isVerse ? 'active' : ''}"
+                  ${!isPresent ? 'disabled style="opacity: 0.3;"' : ''}
+                  onclick="toggleMemberVerseStatus('${r.memberId}')">
+            📖 ${isVerse ? 'Thuộc câu gốc' : 'Chưa thuộc'}
+          </button>
+
+          <div class="quiz-stepper" ${!isPresent ? 'style="opacity: 0.3; pointer-events: none;"' : ''}>
+            <button class="quiz-step-btn" onclick="adjustMemberQuizCount('${r.memberId}', -1)">-</button>
+            <div class="quiz-count-val" onclick="openScorePadModal('${r.memberId}')" title="Bấm để chọn số câu trả lời">
+              🧩 ${quizCount} câu
+            </div>
+            <button class="quiz-step-btn" onclick="adjustMemberQuizCount('${r.memberId}', 1)">+</button>
+          </div>
+        </div>
+
+        ${!isPresent ? `
+          <div style="margin-top: 6px;">
+            <input type="text" class="input-control" style="width: 100%; font-size: 12px; padding: 4px 8px; height: 30px;"
+                   value="${escapeHtml(r.notes || '')}"
+                   placeholder="Ghi chú vắng (ví dụ: Đi công tác, có xin phép...)"
+                   onchange="updateMemberNotes('${r.memberId}', this.value)">
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  function adjustMemberQuizCount(memberId, delta) {
+    const item = currentAttendanceRecords.find(x => x.memberId === memberId);
+    if (!item || item.status !== 'Có mặt') return;
+    let current = Number(item.bibleQuizCount || item.bibleScore || 0);
+    current = Math.min(Math.max(current + delta, 0), 5);
+    item.bibleQuizCount = current;
+    item.bibleScore = current;
+    renderAttendanceList();
+  }
+
+  function toggleMemberAttendanceStatus(memberId) {
+    const item = currentAttendanceRecords.find(x => x.memberId === memberId);
+    if (!item) return;
+
+    if (item.status === 'Có mặt') {
+      item.status = 'Vắng';
+      item.isVerseMemorized = false;
+      item.bibleQuizCount = 0;
+      item.bibleScore = 0;
+    } else {
+      item.status = 'Có mặt';
+      item.isVerseMemorized = true;
+      item.bibleQuizCount = 1;
+      item.bibleScore = 1;
+    }
+
+    renderAttendanceList();
+  }
+
+  function toggleMemberVerseStatus(memberId) {
+    const item = currentAttendanceRecords.find(x => x.memberId === memberId);
+    if (!item || item.status !== 'Có mặt') return;
+    item.isVerseMemorized = !item.isVerseMemorized;
+    renderAttendanceList();
+  }
+
+  function updateMemberNotes(memberId, val) {
+    const item = currentAttendanceRecords.find(x => x.memberId === memberId);
+    if (item) {
+      item.notes = val.trim();
+    }
+  }
+
+  // BULK ACTIONS
+  function bulkSetAttendanceStatus(isPresent) {
+    if (!currentAttendanceRecords) return;
+    const searchQuery = (document.getElementById('attSearchInput')?.value || '').toLowerCase().trim();
+    currentAttendanceRecords.forEach(r => {
+      if (searchQuery && !r.fullName.toLowerCase().includes(searchQuery)) return;
+      r.status = isPresent ? 'Có mặt' : 'Vắng';
+      if (isPresent) {
+        r.isVerseMemorized = true;
+        r.bibleQuizCount = 1;
+      } else {
+        r.isVerseMemorized = false;
+        r.bibleQuizCount = 0;
+      }
+    });
+    renderAttendanceList();
+    showToast(isPresent ? "Đã chuyển tất cả thành CÓ MẶT!" : "Đã chuyển tất cả thành VẮNG!", "info");
+  }
+
+  function bulkSetAttendanceAbsent() {
+    if (!currentAttendanceRecords) return;
+    const searchQuery = (document.getElementById('attSearchInput')?.value || '').toLowerCase().trim();
+    const groupFilter = document.getElementById('checkinGroupFilterSelect')?.value || 'ALL';
+
+    currentAttendanceRecords.forEach(r => {
+      if (searchQuery && !r.fullName.toLowerCase().includes(searchQuery)) return;
+      if (groupFilter !== 'ALL' && r.groupId !== groupFilter) return;
+
+      r.status = 'Vắng';
+      r.isVerseMemorized = false;
+      r.bibleQuizCount = 0;
+    });
+
+    renderAttendanceList();
+    showToast("❌ Đã chuyển tất cả ban viên sang trạng thái VẮNG!", "warning");
+  }
+
+  function openCheckinBatchGroupModal() {
+    if (selectedMemberIds.size === 0) {
+      showToast("Vui lòng tích chọn các ban viên cần đổi Tổ (qua tab Thành Viên hoặc dùng bộ lọc)!", "warning");
+      return;
+    }
+    promptBatchChangeGroup();
+  }
+
+  async function bulkDeleteSelectedAttendance() {
+    if (selectedMemberIds.size === 0) {
+      showToast("Vui lòng tích chọn các ban viên cần xóa lượt điểm danh!", "warning");
+      return;
+    }
+    const dateStr = document.getElementById('checkinMeetingDate')?.value;
+    if (!dateStr) {
+      showToast("Vui lòng chọn ngày điểm danh!", "error");
+      return;
+    }
+
+    if (!confirm(`Bạn có chắc chắn muốn XÓA lượt điểm danh ngày ${formatDisplayDate(dateStr)} của ${selectedMemberIds.size} ban viên đã chọn không?`)) return;
+
+    try {
+      showToast("Đang xóa lượt điểm danh...", "info");
+      const res = await runGAS("bulkDeleteWeeklyAttendanceRecords", Array.from(selectedMemberIds), dateStr);
+      if (res.success) {
+        showToast(res.error || "Đã xóa lượt điểm danh thành công!", "success");
+        selectedMemberIds.clear();
+        loadCheckinDataForDate();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi xóa: " + err.message, "error");
+    }
+  }
+
+  async function triggerArchiveYearlyData() {
+    const targetYear = prompt("Nhập Năm bạn muốn kết chuyển dữ liệu sang sheet lưu trữ riêng (ví dụ: 2025):", "2025");
+    if (!targetYear) return;
+
+    if (!confirm(`XÁC NHẬN KẾT CHUYỂN DỮ LIỆU NĂM ${targetYear}?\n\n- Tất cả lượt điểm danh thuộc năm ${targetYear} sẽ được chép sang sheet riêng "Attendance_Archive_${targetYear}".\n- Sheet điểm danh chính sẽ được dọn dẹp để giữ nguyên tốc độ siêu nhanh <100ms.`)) return;
+
+    try {
+      showToast(`Đang kết chuyển dữ liệu năm ${targetYear}...`, "info");
+      const res = await runGAS("archiveYearlyAttendance", targetYear);
+      if (res.success) {
+        showToast(res.error, "success");
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi kết chuyển: " + err.message, "error");
+    }
+  }
+
+  function bulkSetVerseStatus(isMemorized) {
+    if (!currentAttendanceRecords) return;
+    currentAttendanceRecords.forEach(r => {
+      if (r.status === 'Có mặt') {
+        r.isVerseMemorized = isMemorized;
+      }
+    });
+    renderAttendanceList();
+    showToast("Đã cập nhật trạng thái thuộc bài cho tất cả ban viên có mặt!", "info");
+  }
+
+  function bulkSetScore(score) {
+    if (!currentAttendanceRecords) return;
+    currentAttendanceRecords.forEach(r => {
+      if (r.status === 'Có mặt') {
+        r.bibleScore = score;
+      }
+    });
+    renderAttendanceList();
+    showToast(`Đã chấm ${score} điểm cho tất cả ban viên có mặt!`, "info");
+  }
+
+  function bulkSetGroupStatus(groupName, isPresent) {
+    if (!currentAttendanceRecords) return;
+    currentAttendanceRecords.forEach(r => {
+      if (r.groupName === groupName) {
+        r.status = isPresent ? 'Có mặt' : 'Vắng';
+        if (isPresent) {
+          r.isVerseMemorized = true;
+          r.bibleScore = 10;
+        }
+      }
+    });
+    renderAttendanceList();
+    showToast(`Đã cập nhật tất cả ban viên của ${groupName} thành CÓ MẶT!`, "success");
+  }
+
+  // SCORE PAD POPUP (0 - 5 CÂU)
+  function openScorePadModal(memberId) {
+    const item = currentAttendanceRecords.find(x => x.memberId === memberId);
+    if (!item) return;
+    currentActiveScoreMemberId = memberId;
+    
+    const nameEl = document.getElementById('scorePadMemberName');
+    if (nameEl) nameEl.innerText = `Số câu đố KT cho: ${item.fullName}`;
+
+    const currentCount = Number(item.bibleQuizCount || item.bibleScore || 0);
+
+    // Highlight nút điểm hiện tại
+    document.querySelectorAll('.score-pad-item').forEach(btn => {
+      const val = parseInt(btn.innerText);
+      if (val === currentCount) {
+        btn.classList.add('selected');
+      } else {
+        btn.classList.remove('selected');
+      }
+    });
+
+    const overlay = document.getElementById('scorePadOverlay');
+    if (overlay) overlay.style.display = 'flex';
+  }
+
+  function closeScorePadOverlay() {
+    const overlay = document.getElementById('scorePadOverlay');
+    if (overlay) overlay.style.display = 'none';
+    currentActiveScoreMemberId = null;
+  }
+
+  function selectScoreFromPad(count) {
+    if (!currentActiveScoreMemberId) return;
+    const item = currentAttendanceRecords.find(x => x.memberId === currentActiveScoreMemberId);
+    if (item) {
+      item.bibleQuizCount = count;
+      item.bibleScore = count;
+    }
+    closeScorePadOverlay();
+    renderAttendanceList();
+  }
+
+  // LIVE STATS RENDERER
+  function renderAttendanceLiveStats() {
+    const container = document.getElementById('groupAnalyticsContainer');
+    if (!container || !currentAttendanceRecords || currentAttendanceRecords.length === 0) return;
+
+    const total = currentAttendanceRecords.length;
+    const presentCount = currentAttendanceRecords.filter(r => r.status === 'Có mặt').length;
+    const verseCount = currentAttendanceRecords.filter(r => r.status === 'Có mặt' && r.isVerseMemorized).length;
+    
+    const presentMembers = currentAttendanceRecords.filter(r => r.status === 'Có mặt');
+    const totalQuizAnswers = presentMembers.reduce((sum, r) => sum + (Number(r.bibleQuizCount || r.bibleScore) || 0), 0);
+
+    const presentRate = Math.round((presentCount / total) * 100);
+
+    container.innerHTML = `
+      <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-md); padding: 10px 14px; box-shadow: var(--shadow-sm);">
+        <div style="font-size: 10.5px; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;">SĨ SỐ CÓ MẶT</div>
+        <div style="font-size: 20px; font-weight: 800; color: var(--accent-teal); line-height: 1.2;">${presentCount}/${total}</div>
+        <div style="font-size: 11.5px; color: var(--text-muted);">Tỷ lệ: <strong style="color: var(--text-primary);">${presentRate}%</strong></div>
+      </div>
+
+      <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-md); padding: 10px 14px; box-shadow: var(--shadow-sm);">
+        <div style="font-size: 10.5px; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;">THUỘC CÂU GỐC</div>
+        <div style="font-size: 20px; font-weight: 800; color: var(--accent-orange); line-height: 1.2;">${verseCount}/${presentCount}</div>
+        <div style="font-size: 11.5px; color: var(--text-muted);">Tỷ lệ: <strong style="color: var(--text-primary);">${presentCount > 0 ? Math.round((verseCount/presentCount)*100) : 0}%</strong></div>
+      </div>
+
+      <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-md); padding: 10px 14px; box-shadow: var(--shadow-sm);">
+        <div style="font-size: 10.5px; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;">TỔNG CÂU ĐỐ KT</div>
+        <div style="font-size: 20px; font-weight: 800; color: var(--accent); line-height: 1.2;">${totalQuizAnswers} câu</div>
+        <div style="font-size: 11.5px; color: var(--text-muted);">Của <strong style="color: var(--text-primary);">${presentCount} ban viên</strong></div>
+      </div>
+    `;
+  }
+
+  async function saveCheckinSheetBatch() {
+    const btn = document.getElementById('btnSaveCheckinBatch');
+    const dateStr = document.getElementById('checkinMeetingDate').value;
+
+    if (!dateStr) {
+      showToast("Vui lòng chọn ngày điểm danh!", "error");
+      return;
+    }
+
+    if (!currentAttendanceRecords || currentAttendanceRecords.length === 0) {
+      showToast("Chưa có danh sách thành viên để lưu!", "error");
+      return;
+    }
+
+    setButtonLoading(btn, true, "Đang lưu...");
+
+    try {
+      const res = await runGAS("saveWeeklyAttendanceBatch", currentAttendanceRecords, dateStr);
+      if (res.success) {
+        showToast(res.error || "Lưu điểm danh tuần thành công!", "success");
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi lưu điểm danh: " + err.message, "error");
+    } finally {
+      setButtonLoading(btn, false, "💾 Lưu Điểm Danh");
+    }
+  }
+
+  // =========================================================================
+  // 10. XUẤT EXCEL / CSV
+  // =========================================================================
+  function exportMembersToCSV() {
+    if (allMembers.length === 0) {
+      showToast("Không có dữ liệu thành viên để xuất!", "error");
+      return;
+    }
+
+    let csv = "Mã Thành Viên,Họ và Tên,Chức Danh,Nhiệm Kỳ,Ngày Sinh,Số Điện Thoại,Địa Chỉ,Tổ,Ngày Sinh Hoạt,Lần Nhóm Cuối,Trạng Thái,Tên Vợ Chồng,Ngày Báp Têm,Ghi Chú\n";
+    allMembers.forEach(m => {
+      csv += `"${m.memberId}","${m.fullName}","${m.position}","${m.tenure}","${m.dateOfBirth}","${m.phone}","${m.address}","${m.groupName}","${m.joinDate}","${m.lastAttendanceDate}","${m.status}","${m.spouseName}","${m.baptismDate}","${m.notes}"\n`;
+    });
+
+    downloadCSV(csv, `Danh_Sach_Thanh_Vien_${new Date().toISOString().split('T')[0]}.csv`);
+    showToast("📊 Đã xuất file CSV Danh sách Thành viên thành công!", "success");
+  }
+
+  function exportSchedulesToCSV() {
+    const year = document.getElementById('scheduleYearSelect').value || '2026';
+    const quarter = document.getElementById('scheduleQuarterSelect').value || 'Quý I';
+
+    const rows = document.querySelectorAll('tr.sch-row');
+    if (rows.length === 0) {
+      showToast("Không có dữ liệu lịch để xuất!", "error");
+      return;
+    }
+
+    let csv = `LỊCH CHƯƠNG TRÌNH ${quarter.toUpperCase()} NĂM ${year}\n`;
+    csv += "STT,NGÀY,ĐỀ TÀI,CÂU GỐC,ĐỐ KT,TỔ PHỤ TRÁCH,PHỤ TRÁCH\n";
+
+    rows.forEach((r, idx) => {
+      const dateVal = r.querySelector('.sch-date').value;
+      const topic = r.querySelector('.sch-topic').value;
+      const keyverse = r.querySelector('.sch-keyverse').value;
+      const quiz = r.querySelector('.sch-quiz').value;
+      const group = r.querySelector('.sch-group').value;
+      const speaker = r.querySelector('.sch-speaker').value;
+
+      csv += `"${idx + 1}","${dateVal}","${topic}","${keyverse}","${quiz}","${group}","${speaker}"\n`;
+    });
+
+    downloadCSV(csv, `Lich_Chuong_Trinh_${year}_${quarter.replace(/\s+/g, '')}.csv`);
+    showToast("📊 Đã xuất file CSV Lịch Chương Trình thành công!", "success");
+  }
+
+  function downloadCSV(csvContent, filename) {
+    const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  // =========================================================================
+  // 11. LOGIC CHƯƠNG TRÌNH NHÓM QUÝ
+  // =========================================================================
+  async function loadScheduleTab() {
+    const year = document.getElementById('scheduleYearSelect').value || '2026';
+    const quarter = document.getElementById('scheduleQuarterSelect').value || 'Quý I';
+
+    populateMonthDropdownForQuarter(quarter);
+
+    try {
+      const res = await runGAS("getWeeklySchedules", year, quarter);
+      if (res && res.success) {
+        currentSchedules = res.data || [];
+        renderSchedulesTable(currentSchedules);
+      }
+    } catch (err) {
+      console.error("Lỗi loadScheduleTab:", err);
+    }
+  }
+
+  function populateMonthDropdownForQuarter(quarterStr) {
+    const monthSelect = document.getElementById('scheduleMonthSelect');
+    if (!monthSelect) return;
+
+    let monthOptions = '<option value="ALL">🗓️ Tất Cả Tháng Trong Quý</option>';
+
+    if (quarterStr === 'Quý I') {
+      monthOptions += `
+        <option value="1">Tháng 1</option>
+        <option value="2">Tháng 2</option>
+        <option value="3">Tháng 3</option>
+      `;
+    } else if (quarterStr === 'Quý II') {
+      monthOptions += `
+        <option value="4">Tháng 4</option>
+        <option value="5">Tháng 5</option>
+        <option value="6">Tháng 6</option>
+      `;
+    } else if (quarterStr === 'Quý III') {
+      monthOptions += `
+        <option value="7">Tháng 7</option>
+        <option value="8">Tháng 8</option>
+        <option value="9">Tháng 9</option>
+      `;
+    } else if (quarterStr === 'Quý IV') {
+      monthOptions += `
+        <option value="10">Tháng 10</option>
+        <option value="11">Tháng 11</option>
+        <option value="12">Tháng 12</option>
+      `;
+    }
+
+    monthSelect.innerHTML = monthOptions;
+    monthSelect.value = 'ALL';
+  }
+
+  function onScheduleMonthFilterChange() {
+    renderSchedulesTable(currentSchedules);
+  }
+
+  let isScheduleDirectEditMode = false;
+  let expandedScheduleIds = new Set();
+
+  function toggleScheduleEditMode(isDirectEdit) {
+    isScheduleDirectEditMode = isDirectEdit;
+    document.getElementById('btnSchModeView')?.classList.toggle('active', !isDirectEdit);
+    document.getElementById('btnSchModeEdit')?.classList.toggle('active', isDirectEdit);
+    renderSchedulesTable(currentSchedules);
+  }
+
+  function toggleScheduleRowExpand(scheduleId) {
+    if (expandedScheduleIds.has(scheduleId)) {
+      expandedScheduleIds.delete(scheduleId);
+    } else {
+      expandedScheduleIds.add(scheduleId);
+    }
+    renderSchedulesTable(currentSchedules);
+  }
+
+  function renderSchedulesTable(schedules) {
+    const tbody = document.getElementById('schedulesTableBody');
+    const thead = document.getElementById('schedulesTableHead');
+    if (!tbody) return;
+
+    // Lọc theo Tháng được chọn
+    const monthVal = document.getElementById('scheduleMonthSelect')?.value || 'ALL';
+    let filtered = schedules || [];
+    if (monthVal !== 'ALL') {
+      const mInt = parseInt(monthVal, 10);
+      filtered = filtered.filter(s => {
+        if (!s.meetingDate) return false;
+        const parts = s.meetingDate.split('-');
+        if (parts.length >= 2) {
+          return parseInt(parts[1], 10) === mInt;
+        }
+        return false;
+      });
+    }
+
+    // Kiểm tra kích thước khung chứa hoặc màn hình di động
+    const containerWidth = document.getElementById('tab-schedules')?.clientWidth || window.innerWidth;
+    const isMobileScreen = containerWidth <= 768 || window.innerWidth <= 768;
+
+    if (isScheduleDirectEditMode) {
+      if (thead) {
+        thead.style.display = '';
+        thead.innerHTML = `
+          <tr style="background-color: #fce5cd;">
+            <th style="width: 40px; text-align: center;">STT</th>
+            <th style="width: 85px;">NGÀY</th>
+            <th style="min-width: 160px;">ĐỀ TÀI BÀI HỌC</th>
+            <th style="min-width: 120px;">CÂU GỐC TUẦN</th>
+            <th style="min-width: 130px;">ĐỐ KINH THÁNH</th>
+            <th style="min-width: 110px;">TỔ PHỤ TRÁCH</th>
+            <th style="min-width: 130px;">PHỤ TRÁCH (DIỄN GIẢ)</th>
+            <th style="width: 60px; text-align: center;">XÓA</th>
+          </tr>
+        `;
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="empty-state">Chưa có lịch tuần nào trong tháng/quý này.</td></tr>`;
+        return;
+      }
+
+      // CHẾ ĐỘ NHẬP BẢNG TRỰC TIẾP (GRID EDIT MODE FOR DESKTOP BULK TYPING)
+      tbody.innerHTML = filtered.map((s, idx) => {
+        let displayDate = formatDisplayDate(s.meetingDate);
+        const isSpecial = s.isSpecial || s.topic.toUpperCase().includes('NGHỈ');
+
+        return `
+          <tr class="sch-row ${isSpecial ? 'special-row' : ''}" data-id="${s.scheduleId}">
+            <td style="text-align: center; font-weight: 700;">${idx + 1}</td>
+            <td>
+              <input type="text" class="input-control sch-date" value="${escapeHtml(displayDate)}" 
+                     placeholder="DD/MM" style="width: 85px; text-align: center; font-weight: 700;">
+            </td>
+            <td>
+              <input type="text" class="input-control sch-topic" value="${escapeHtml(s.topic)}" 
+                     placeholder="Đề tài bài học" style="width: 100%; font-weight: ${isSpecial ? 'bold' : 'normal'};">
+            </td>
+            <td>
+              <input type="text" class="input-control sch-keyverse" value="${escapeHtml(s.keyVerse)}" 
+                     placeholder="Câu gốc" style="width: 100%;">
+            </td>
+            <td>
+              <input type="text" class="input-control sch-quiz" value="${escapeHtml(s.bibleQuiz)}" 
+                     placeholder="Đố Kinh Thánh" style="width: 100%;">
+            </td>
+            <td>
+              <input type="text" class="input-control sch-group" value="${escapeHtml(s.assignedGroup)}" 
+                     placeholder="Tổ phụ trách" style="width: 100%;">
+            </td>
+            <td>
+              <input type="text" class="input-control sch-speaker" value="${escapeHtml(s.speakerLeader)}" 
+                     placeholder="Phụ trách / Diễn giả" style="width: 100%;">
+            </td>
+            <td style="text-align: center;">
+              <button class="btn btn-danger btn-sm" title="Xóa dòng" onclick="removeScheduleRow(this)">✕</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    } else {
+      // VIEW MODE (TỐI ƯU TOÀN DIỆN CHO CẢ DI ĐỘNG & MÁY TÍNH)
+      if (filtered.length === 0) {
+        if (thead) thead.style.display = 'none';
+        tbody.innerHTML = `<tr><td colspan="4" class="empty-state">Chưa có lịch tuần nào phù hợp với bộ lọc tháng này.</td></tr>`;
+        return;
+      }
+
+      if (isMobileScreen) {
+        // GIAO DIỆN DI ĐỘNG (MOBILE ACCORDION CARDS - SIÊU SANG TRỌNG & RÕ NÉT)
+        if (thead) thead.style.display = 'none'; // Ẩn header bảng thô cứng trên điện thoại
+
+        let html = '<div class="sch-mobile-container">';
+        filtered.forEach((s, idx) => {
+          let displayDate = formatDisplayDate(s.meetingDate);
+          const isSpecial = s.isSpecial || s.topic.toUpperCase().includes('NGHỈ');
+          const isExpanded = expandedScheduleIds.has(s.scheduleId);
+
+          let dateStr = displayDate;
+          if (s.meetingDate && s.meetingDate.includes('-')) {
+            const p = s.meetingDate.split('-');
+            if (p.length === 3) dateStr = `${p[2]}/${p[1]}`;
+          }
+
+          html += `
+            <div class="sch-mobile-card ${isSpecial ? 'special-card' : ''}">
+              <div class="sch-mobile-header" onclick="toggleScheduleRowExpand('${s.scheduleId}')">
+                <div class="sch-mobile-date-badge">
+                  <div class="day-str">${escapeHtml(dateStr)}</div>
+                  <div class="year-str">Tuần ${idx + 1}</div>
+                </div>
+
+                <div class="sch-mobile-info-col">
+                  <div class="sch-mobile-topic-text">
+                    ${escapeHtml(s.topic)}
+                    ${isSpecial ? '<span class="badge badge-warning" style="font-size: 10px; padding: 2px 5px; margin-left: 4px;">NGHỈ</span>' : ''}
+                  </div>
+                  <div class="sch-mobile-sub-text">
+                    ${s.assignedGroup ? `<span class="badge badge-group" style="font-size: 10px;">${escapeHtml(s.assignedGroup)}</span>` : ''}
+                    ${s.speakerLeader ? `<span>👤 ${escapeHtml(s.speakerLeader)}</span>` : ''}
+                  </div>
+                </div>
+
+                <div class="sch-mobile-actions-col" onclick="event.stopPropagation()">
+                  <button class="btn-zalo-pill" onclick="openSingleWeekZaloModal('${s.scheduleId}')" title="Xuất thông báo Zalo tuần này">
+                    📋 Zalo
+                  </button>
+                  <div class="sch-mobile-expand-toggle" onclick="toggleScheduleRowExpand('${s.scheduleId}')">
+                    ${isExpanded ? '▲' : '▼'}
+                  </div>
+                </div>
+              </div>
+
+              ${isExpanded ? `
+                <div class="sch-sub-details">
+                  <div class="sch-detail-item">
+                    <strong>📖 Câu gốc tuần:</strong> ${escapeHtml(s.keyVerse || 'Chưa cập nhật')}
+                  </div>
+                  <div class="sch-detail-item">
+                    <strong>🧩 Đố Kinh Thánh:</strong> ${escapeHtml(s.bibleQuiz || 'Chưa cập nhật')}
+                  </div>
+                  <div class="sch-detail-item">
+                    <strong>🏢 Tổ phụ trách:</strong> ${s.assignedGroup ? `<span class="badge badge-group">${escapeHtml(s.assignedGroup)}</span>` : 'Chưa xếp'}
+                  </div>
+                  <div class="sch-detail-item">
+                    <strong>👤 Diễn giả / Phụ trách:</strong> ${s.speakerLeader ? `<span class="badge badge-pos-phoban">${escapeHtml(s.speakerLeader)}</span>` : 'Chưa cập nhật'}
+                  </div>
+
+                  <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
+                    <button class="btn btn-primary btn-sm" onclick="openSingleWeekZaloModal('${s.scheduleId}')">
+                      📋 Copy Mẫu Zalo Tuần Này
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="openScheduleSingleEditModal('${s.scheduleId}')">
+                      ✏️ Chỉnh Sửa Buổi Nhóm
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="confirmDeleteScheduleSingle('${s.scheduleId}')">
+                      🗑️ Xóa
+                    </button>
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        });
+        html += '</div>';
+
+        tbody.innerHTML = `<tr><td colspan="4" style="padding: 0; border: none;">${html}</td></tr>`;
+      } else {
+        // GIAO DIỆN MÁY TÍNH (DESKTOP VIEW TABLE - RỘNG RÃI & SANG TRỌNG)
+        if (thead) {
+          thead.style.display = '';
+          thead.innerHTML = `
+            <tr style="background-color: #fce5cd;">
+              <th style="width: 60px; text-align: center;">STT</th>
+              <th style="width: 100px;">NGÀY</th>
+              <th>ĐỀ TÀI BÀI HỌC</th>
+              <th style="width: 120px; text-align: center;">THAO TÁC</th>
+            </tr>
+          `;
+        }
+
+        let html = '';
+        filtered.forEach((s, idx) => {
+          let displayDate = formatDisplayDate(s.meetingDate);
+          const isSpecial = s.isSpecial || s.topic.toUpperCase().includes('NGHỈ');
+          const isExpanded = expandedScheduleIds.has(s.scheduleId);
+
+          html += `
+            <tr class="sch-row ${isSpecial ? 'special-row' : ''}" data-id="${s.scheduleId}">
+              <td style="text-align: center; font-weight: 700; white-space: nowrap;">
+                <button class="sch-expand-btn" onclick="toggleScheduleRowExpand('${s.scheduleId}')" title="${isExpanded ? 'Thu gọn' : 'Bấm dấu [+] để mở chi tiết'}">
+                  ${isExpanded ? '−' : '+'}
+                </button>
+                ${idx + 1}
+              </td>
+              <td style="font-weight: 800; color: var(--primary-color); white-space: nowrap;">
+                ${escapeHtml(displayDate)}
+              </td>
+              <td style="font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                ${escapeHtml(s.topic)}
+                ${isSpecial ? '<span class="badge badge-warning" style="margin-left: 6px; font-size: 11px;">NGHỈ</span>' : ''}
+              </td>
+              <td style="text-align: center; white-space: nowrap;">
+                <div style="display: flex; gap: 4px; justify-content: center;">
+                  <button class="btn btn-primary btn-sm" style="padding: 4px 8px; font-size: 12px;" title="Xuất thông báo Zalo tuần này" onclick="openSingleWeekZaloModal('${s.scheduleId}')">
+                    📋 Zalo
+                  </button>
+                  <button class="btn btn-secondary btn-sm" style="padding: 4px 8px; font-size: 12px;" title="Chỉnh sửa buổi nhóm" onclick="openScheduleSingleEditModal('${s.scheduleId}')">
+                    ✏️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+
+          if (isExpanded) {
+            html += `
+              <tr style="background-color: #f8fafc;">
+                <td colspan="4" style="padding: 0; white-space: normal;">
+                  <div class="sch-sub-details">
+                    <div class="sch-detail-item">
+                      <strong>📖 Câu gốc tuần:</strong> ${escapeHtml(s.keyVerse || 'Chưa cập nhật')}
+                    </div>
+                    <div class="sch-detail-item">
+                      <strong>🧩 Đố Kinh Thánh:</strong> ${escapeHtml(s.bibleQuiz || 'Chưa cập nhật')}
+                    </div>
+                    <div class="sch-detail-item">
+                      <strong>🏢 Tổ phụ trách:</strong> ${s.assignedGroup ? `<span class="badge badge-group">${escapeHtml(s.assignedGroup)}</span>` : 'Chưa xếp'}
+                    </div>
+                    <div class="sch-detail-item">
+                      <strong>👤 Diễn giả / Phụ trách:</strong> ${s.speakerLeader ? `<span class="badge badge-pos-phoban">${escapeHtml(s.speakerLeader)}</span>` : 'Chưa cập nhật'}
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
+                      <button class="btn btn-primary btn-sm" onclick="openSingleWeekZaloModal('${s.scheduleId}')">
+                        📋 Copy Mẫu Zalo Tuần Này
+                      </button>
+                      <button class="btn btn-secondary btn-sm" onclick="openScheduleSingleEditModal('${s.scheduleId}')">
+                        ✏️ Chỉnh Sửa Buổi Nhóm
+                      </button>
+                      <button class="btn btn-danger btn-sm" onclick="confirmDeleteScheduleSingle('${s.scheduleId}')">
+                        🗑️ Xóa Buổi Nhóm
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            `;
+          }
+        });
+
+        tbody.innerHTML = html;
+      }
+    }
+  }
+
+  function addNewScheduleRow() {
+    const year = document.getElementById('scheduleYearSelect').value || '2026';
+    const quarter = document.getElementById('scheduleQuarterSelect').value || 'Quý I';
+    const schId = `SCH_${year}_${quarter.replace(/\s+/g, '')}_${Date.now().toString().slice(-4)}`;
+
+    const newObj = {
+      scheduleId: schId,
+      year: year,
+      quarter: quarter,
+      meetingDate: '',
+      topic: 'ĐỀ TÀI BÀI HỌC MỚI',
+      keyVerse: '',
+      bibleQuiz: '',
+      assignedGroup: '',
+      speakerLeader: '',
+      isSpecial: false
+    };
+
+    currentSchedules.push(newObj);
+    renderSchedulesTable(currentSchedules);
+    openScheduleSingleEditModal(schId);
+  }
+
+  function removeScheduleRow(btn) {
+    const row = btn.closest('tr');
+    const schId = row.getAttribute('data-id');
+    currentSchedules = currentSchedules.filter(x => x.scheduleId !== schId);
+    row.remove();
+  }
+
+  function confirmDeleteScheduleSingle(scheduleId) {
+    if (!confirm("Bạn có chắc chắn muốn xóa buổi nhóm này khỏi lịch Quý?")) return;
+    currentSchedules = currentSchedules.filter(x => x.scheduleId !== scheduleId);
+    renderSchedulesTable(currentSchedules);
+    showToast("Đã xóa buổi nhóm khỏi danh sách. Hãy bấm 'Lưu Thay Đổi Cả Quý' để xác nhận!", "warning");
+  }
+
+  // SINGLE SCHEDULE EDIT MODAL
+  function openScheduleSingleEditModal(scheduleId) {
+    const s = currentSchedules.find(x => x.scheduleId === scheduleId);
+    if (!s) return;
+
+    document.getElementById('editSchId').value = s.scheduleId;
+    document.getElementById('editSchDate').value = s.meetingDate || '';
+    document.getElementById('editSchTopic').value = s.topic || '';
+    document.getElementById('editSchKeyVerse').value = s.keyVerse || '';
+    document.getElementById('editSchQuiz').value = s.bibleQuiz || '';
+    document.getElementById('editSchGroup').value = s.assignedGroup || '';
+    document.getElementById('editSchSpeaker').value = s.speakerLeader || '';
+
+    const modal = document.getElementById('scheduleSingleEditModal');
+    if (modal) modal.classList.add('active');
+  }
+
+  function closeScheduleSingleEditModal() {
+    const modal = document.getElementById('scheduleSingleEditModal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  async function handleSaveSingleSchedule(e) {
+    e.preventDefault();
+    const schId = document.getElementById('editSchId').value;
+    const s = currentSchedules.find(x => x.scheduleId === schId);
+    if (!s) return;
+
+    s.meetingDate = document.getElementById('editSchDate').value;
+    s.topic = document.getElementById('editSchTopic').value.trim();
+    s.keyVerse = document.getElementById('editSchKeyVerse').value.trim();
+    s.bibleQuiz = document.getElementById('editSchQuiz').value.trim();
+    s.assignedGroup = document.getElementById('editSchGroup').value.trim();
+    s.speakerLeader = document.getElementById('editSchSpeaker').value.trim();
+    s.isSpecial = s.topic.toUpperCase().includes('NGHỈ');
+
+    closeScheduleSingleEditModal();
+    renderSchedulesTable(currentSchedules);
+
+    // Save batch to cloud
+    showToast("Đang lưu thay đổi buổi nhóm...", "info");
+    try {
+      const res = await runGAS("saveAllWeeklySchedulesBatch", currentSchedules);
+      if (res.success) {
+        showToast("Đã lưu buổi nhóm thành công!", "success");
+      } else {
+        showToast("Lỗi lưu: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi lưu: " + err.message, "error");
+    }
+  }
+
+  // SINGLE WEEK ZALO ANNOUNCEMENT MODAL & COPY
+  function generateSingleWeekZaloText(scheduleId) {
+    const s = currentSchedules.find(x => x.scheduleId === scheduleId);
+    if (!s) return '';
+
+    const selectedYear = document.getElementById('scheduleYearSelect')?.value || '2026';
+    const selectedQuarter = document.getElementById('scheduleQuarterSelect')?.value || 'Quý I';
+
+    // Lấy chủ đề năm & quý từ allThemes
+    const yearTheme = allThemes.find(t => String(t.year) === String(selectedYear) && (t.quarter === 'Cả năm' || t.quarter === 'Năm'));
+    const quarterTheme = allThemes.find(t => String(t.year) === String(selectedYear) && t.quarter === selectedQuarter);
+
+    // Format ngày nhóm dạng DD/MM/YYYY
+    let formattedDateStr = s.meetingDate;
+    if (s.meetingDate && s.meetingDate.includes('-')) {
+      const parts = s.meetingDate.split('-');
+      if (parts.length === 3) formattedDateStr = `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    const meetingDayName = deptConfig.meetingDay || 'Chúa Nhật';
+    const meetingTimeStr = deptConfig.meetingTime || '16h00 chiều';
+    const deptNameStr = deptConfig.departmentName || 'BAN THANH TRÁNG';
+
+    let text = `📣 THÔNG BÁO CHƯƠNG TRÌNH NHÓM 📣\n`;
+    text += `Kính gửi các Anh/Chị/Em trong ${deptNameStr}\n`;
+    text += `Chương trình sinh hoạt: ${meetingDayName}, ngày ${formattedDateStr}\n\n`;
+
+    if (yearTheme) {
+      text += `🌟 CHỦ ĐỀ CẢ NĂM: ${(yearTheme.themeTitle || '').toUpperCase()}\n`;
+      if (yearTheme.keyVerse) text += `📖 Câu gốc năm: ${yearTheme.keyVerse}\n`;
+      if (yearTheme.verseContent) text += `"${yearTheme.verseContent}"\n`;
+      text += `\n`;
+    }
+
+    if (quarterTheme) {
+      text += `📖 CHỦ ĐỀ ${selectedQuarter.toUpperCase()}/${selectedYear}: ${(quarterTheme.themeTitle || '').toUpperCase()}\n`;
+      if (quarterTheme.keyVerse) text += `📖 Câu gốc quý: ${quarterTheme.keyVerse}\n`;
+      if (quarterTheme.verseContent) text += `"${quarterTheme.verseContent}"\n`;
+      text += `\n`;
+    }
+
+    text += `---------------------------------------\n`;
+    text += `💒 07h30: HỌC TRƯỜNG CHÚA NHẬT\n`;
+    text += `💒 08h30: THỜ PHƯỢNG CHÚA\n`;
+    text += `💒 ${meetingTimeStr.toUpperCase()}: CHƯƠNG TRÌNH THỜ PHƯỢNG - SINH HOẠT ${deptNameStr}\n\n`;
+
+    text += `- Đề tài: ${s.topic || 'Chưa cập nhật'}\n`;
+    text += `- Diễn giả / Phụ trách: ${s.speakerLeader || 'Chưa cập nhật'}\n`;
+    text += `- Tổ phụ trách: ${s.assignedGroup || 'Chưa xếp'}\n`;
+    if (s.speakerLeader) text += `- HDCT / Tôn vinh: ${s.speakerLeader}\n`;
+    if (s.bibleQuiz) text += `- Đố Kinh Thánh: ${s.bibleQuiz}\n`;
+    if (s.keyVerse) {
+      text += `- Câu gốc tuần: ${s.keyVerse}\n`;
+    }
+    text += `---------------------------------------\n`;
+    text += `Chúc các Anh/Chị/Em một ngày cuối tuần tràn ngập phước hạnh và niềm vui! ❤️`;
+
+    return text;
+  }
+
+  function openSingleWeekZaloModal(scheduleId) {
+    const text = generateSingleWeekZaloText(scheduleId);
+    const box = document.getElementById('zaloSinglePreviewText');
+    if (box) box.innerText = text;
+
+    const modal = document.getElementById('zaloSinglePreviewModal');
+    if (modal) modal.classList.add('active');
+  }
+
+  function closeZaloSinglePreviewModal() {
+    const modal = document.getElementById('zaloSinglePreviewModal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  function copyZaloTextFromModal() {
+    const text = document.getElementById('zaloSinglePreviewText')?.innerText || '';
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+      showToast("Đã sao chép nội dung Zalo tuần này vào bộ nhớ tạm!", "success");
+      closeZaloSinglePreviewModal();
+    }).catch(err => {
+      showToast("Lỗi sao chép: " + err.message, "error");
+    });
+  }
+
+  async function saveAllSchedulesBatch() {
+    const btn = document.getElementById('btnSaveScheduleBatch');
+
+    if (isScheduleDirectEditMode) {
+      const rows = document.querySelectorAll('tr.sch-row');
+      const year = document.getElementById('scheduleYearSelect').value || '2026';
+      const quarter = document.getElementById('scheduleQuarterSelect').value || 'Quý I';
+
+      const list = [];
+      rows.forEach((row, idx) => {
+        let dateVal = row.querySelector('.sch-date').value.trim();
+        if (dateVal && dateVal.includes('/')) {
+          const parts = dateVal.split('/');
+          if (parts.length === 2) {
+            dateVal = `${year}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+          }
+        }
+
+        const topic = row.querySelector('.sch-topic').value.trim();
+        list.push({
+          scheduleId: row.getAttribute('data-id') || `SCH_${year}_${idx}`,
+          year: year,
+          quarter: quarter,
+          meetingDate: dateVal,
+          topic: topic,
+          keyVerse: row.querySelector('.sch-keyverse').value.trim(),
+          bibleQuiz: row.querySelector('.sch-quiz').value.trim(),
+          assignedGroup: row.querySelector('.sch-group').value.trim(),
+          speakerLeader: row.querySelector('.sch-speaker').value.trim(),
+          isSpecial: topic.toUpperCase().includes('NGHỈ')
+        });
+      });
+      currentSchedules = list;
+    }
+
+    if (btn) setButtonLoading(btn, true, "Đang lưu...");
+
+    try {
+      const res = await runGAS("saveAllWeeklySchedulesBatch", currentSchedules);
+      if (res.success) {
+        showToast(res.error || "Lưu chương trình Quý thành công!", "success");
+        loadScheduleTab();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi lưu lịch Quý: " + err.message, "error");
+    } finally {
+      if (btn) setButtonLoading(btn, false, "💾 Lưu Thay Đổi Cả Quý");
+    }
+  }
+
+  async function saveDepartmentConfigUI() {
+    deptConfig.departmentName = document.getElementById('cfgDepartmentName').value.trim() || 'BAN THANH TRÁNG';
+    deptConfig.meetingDay = document.getElementById('cfgMeetingDay').value || 'Chúa Nhật';
+    deptConfig.meetingTime = document.getElementById('cfgMeetingTime').value.trim() || '16h00 chiều';
+
+    try {
+      await runGAS("saveDepartmentConfig", deptConfig);
+      showToast("Đã lưu cấu hình Ban Ngành!", "success");
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // =========================================================================
+  // 12. DASHBOARD & BẢNG CẢNH BÁO
+  // =========================================================================
+  function renderDashboard(stats) {
+    document.getElementById('statTotalMembers').innerText = stats.totalMembers || 0;
+    document.getElementById('statAbsentAlert').innerText = stats.absentAlertMembers || 0;
+    document.getElementById('statBirthday').innerText = stats.birthdayMembers || 0;
+    document.getElementById('statTotalGroups').innerText = stats.totalGroups || 0;
+
+    const alertBadge = document.getElementById('alertCountBadge');
+    const gridBadge = document.getElementById('gridBadgeVisitations');
+    if (stats.absentAlertMembers > 0) {
+      alertBadge.innerText = stats.absentAlertMembers;
+      alertBadge.style.display = 'inline-block';
+      if (gridBadge) {
+        gridBadge.innerText = stats.absentAlertMembers;
+        gridBadge.style.display = 'inline-block';
+      }
+    } else {
+      alertBadge.style.display = 'none';
+      if (gridBadge) gridBadge.style.display = 'none';
+    }
+  }
+
+  function renderDashboardThemeBanners(themes) {
+    const currentYear = new Date().getFullYear().toString();
+    const currentMonth = new Date().getMonth() + 1;
+
+    let currentQuarterName = 'Quý I';
+    if (currentMonth >= 4 && currentMonth <= 6) currentQuarterName = 'Quý II';
+    else if (currentMonth >= 7 && currentMonth <= 9) currentQuarterName = 'Quý III';
+    else if (currentMonth >= 10 && currentMonth <= 12) currentQuarterName = 'Quý IV';
+
+    const yearTheme = themes.find(t => t.year === currentYear && t.quarter === 'Cả Năm');
+    const quarterTheme = themes.find(t => t.year === currentYear && t.quarter === currentQuarterName);
+
+    if (yearTheme) {
+      document.getElementById('dashYearThemeTitle').innerText = yearTheme.themeName;
+      document.getElementById('dashYearThemeVerse').innerText = yearTheme.keyVerse ? `${yearTheme.keyVerse}: "${yearTheme.keyVerseContent}"` : 'Kỷ luật thuộc linh xuyên suốt năm';
+    } else {
+      document.getElementById('dashYearThemeTitle').innerText = 'Chưa cập nhật';
+      document.getElementById('dashYearThemeVerse').innerText = '--';
+    }
+
+    if (quarterTheme) {
+      document.getElementById('dashQuarterThemeTitle').innerText = `${currentQuarterName}: ${quarterTheme.themeName}`;
+      document.getElementById('dashQuarterThemeVerse').innerText = quarterTheme.keyVerse ? `${quarterTheme.keyVerse}: "${quarterTheme.keyVerseContent}"` : '--';
+    } else {
+      document.getElementById('dashQuarterThemeTitle').innerText = `${currentQuarterName}: Chưa cập nhật`;
+      document.getElementById('dashQuarterThemeVerse').innerText = '--';
+    }
+  }
+
+  // =========================================================================
+  // 13. CHỦ ĐỀ QUÝ & NĂM
+  // =========================================================================
+  function populateThemeYearFilter(themes) {
+    const select = document.getElementById('themeYearFilter');
+    const yearsSet = new Set(themes.map(t => t.year));
+    const currentYearStr = new Date().getFullYear().toString();
+    yearsSet.add(currentYearStr);
+
+    const sortedYears = Array.from(yearsSet).sort((a, b) => b - a);
+    const currentVal = select.value || currentYearStr;
+    select.innerHTML = sortedYears.map(y => `<option value="${y}">Năm ${y}</option>`).join('');
+    select.value = currentVal;
+  }
+
+  function filterThemesByYear() {
+    const selectedYear = document.getElementById('themeYearFilter').value || new Date().getFullYear().toString();
+    const filtered = allThemes.filter(t => t.year === selectedYear);
+    renderThemesTable(filtered);
+  }
+
+  function renderThemesTable(themes) {
+    const tbody = document.getElementById('themesTableBody');
+    if (!tbody) return;
+
+    if (themes.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Chưa có chủ đề nào cho năm đã chọn. Bấm "Thêm Chủ Đề" để tạo mới!</td></tr>`;
+      return;
+    }
+
+    const containerWidth = document.getElementById('tab-themes')?.clientWidth || window.innerWidth;
+    const isMobile = containerWidth <= 768 || window.innerWidth <= 768;
+
+    const thead = document.querySelector('#tab-themes thead');
+    if (isMobile) {
+      if (thead) thead.style.display = 'none';
+      let html = '<div class="mob-card-container">';
+      themes.forEach(t => {
+        const isExpanded = expandedThemeIds.has(t.themeId);
+        const isYear = t.quarter === 'Cả Năm' || t.quarter === 'Năm';
+
+        html += `
+          <div class="mob-card ${isYear ? 'bday-card' : ''}">
+            <div class="mob-card-header" onclick="toggleThemeRowExpand('${t.themeId}')">
+              <div class="mob-card-badge ${isYear ? 'bday' : 'group'}">
+                <div class="badge-main">${escapeHtml(t.quarter)}</div>
+                <div class="badge-sub">${t.year}</div>
+              </div>
+
+              <div class="mob-card-info">
+                <div class="mob-card-title">${escapeHtml(t.themeName)}</div>
+                <div class="mob-card-sub">
+                  <span>📖 ${escapeHtml(t.keyVerse || 'Chưa cập nhật')}</span>
+                </div>
+              </div>
+
+              <div class="mob-card-actions" onclick="event.stopPropagation()">
+                <button class="btn btn-secondary btn-sm" style="padding: 4px 8px; font-size: 11px;" onclick="editTheme('${t.themeId}')">
+                  ✏️
+                </button>
+                <div class="mob-card-toggle" onclick="toggleThemeRowExpand('${t.themeId}')">
+                  ${isExpanded ? '▲' : '▼'}
+                </div>
+              </div>
+            </div>
+
+            ${isExpanded ? `
+              <div class="mob-card-body">
+                <div class="mob-card-item">
+                  <strong>📖 Câu gốc:</strong> ${escapeHtml(t.keyVerse || 'Chưa cập nhật')}
+                </div>
+                ${t.keyVerseContent ? `
+                  <div class="mob-card-item">
+                    <strong>✝️ Nội dung câu gốc:</strong> "${escapeHtml(t.keyVerseContent)}"
+                  </div>
+                ` : ''}
+                ${t.themeSong ? `
+                  <div class="mob-card-item">
+                    <strong>🎵 Bài hát chủ đề:</strong> ${escapeHtml(t.themeSong)}
+                  </div>
+                ` : ''}
+                ${t.notes ? `
+                  <div class="mob-card-item">
+                    <strong>📝 Ghi chú:</strong> ${escapeHtml(t.notes)}
+                  </div>
+                ` : ''}
+
+                <div style="display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap;">
+                  <button class="btn btn-secondary btn-sm" onclick="editTheme('${t.themeId}')">
+                    ✏️ Chỉnh Sửa
+                  </button>
+                  <button class="btn btn-danger btn-sm" onclick="confirmDeleteTheme('${t.themeId}', '${escapeHtml(t.themeName)}')">
+                    🗑️ Xóa
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      });
+      html += '</div>';
+      tbody.innerHTML = `<tr><td colspan="7" style="padding: 0; border: none;">${html}</td></tr>`;
+    } else {
+      if (thead) thead.style.display = '';
+      tbody.innerHTML = themes.map((t, idx) => `
+        <tr style="${t.quarter === 'Cả Năm' ? 'background: rgba(255,159,10,0.12); font-weight: 600;' : ''}">
+          <td style="text-align: center; font-weight: 700;">${idx + 1}</td>
+          <td><span class="badge ${t.quarter === 'Cả Năm' ? 'badge-birthday' : 'badge-quarter'}">${escapeHtml(t.quarter)}</span></td>
+          <td><strong style="color: var(--accent); font-size: 14.5px;">${escapeHtml(t.themeName)}</strong></td>
+          <td><strong>${escapeHtml(t.keyVerse || '-')}</strong></td>
+          <td style="line-height: 1.4; font-size: 13px;">${escapeHtml(t.keyVerseContent || '-')}</td>
+          <td>${escapeHtml(t.themeSong || '-')}</td>
+          <td>
+            <div style="display: flex; gap: 6px;">
+              <button class="btn btn-secondary btn-sm" onclick="editTheme('${t.themeId}')">✏️ Sửa</button>
+              <button class="btn btn-danger btn-sm" onclick="confirmDeleteTheme('${t.themeId}', '${escapeHtml(t.themeName)}')">🗑️ Xóa</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  function openThemeModal() {
+    document.getElementById('themeForm').reset();
+    document.getElementById('formThemeId').value = '';
+    document.getElementById('formThemeYear').value = document.getElementById('themeYearFilter').value || new Date().getFullYear();
+    document.getElementById('themeModalTitle').innerText = 'Thêm Chủ Đề Quý / Năm Mới';
+    document.getElementById('themeModal').classList.add('active');
+  }
+
+  function editTheme(themeId) {
+    const t = allThemes.find(item => item.themeId === themeId);
+    if (!t) return;
+
+    document.getElementById('formThemeId').value = t.themeId;
+    document.getElementById('formThemeYear').value = t.year;
+    document.getElementById('formThemeQuarter').value = t.quarter;
+    document.getElementById('formThemeName').value = t.themeName;
+    document.getElementById('formKeyVerse').value = t.keyVerse;
+    document.getElementById('formKeyVerseContent').value = t.keyVerseContent;
+    document.getElementById('formThemeSong').value = t.themeSong;
+    document.getElementById('formThemeNotes').value = t.notes;
+
+    document.getElementById('themeModalTitle').innerText = 'Chỉnh Sửa Chủ Đề';
+    document.getElementById('themeModal').classList.add('active');
+  }
+
+  function closeThemeModal() {
+    document.getElementById('themeModal').classList.remove('active');
+  }
+
+  async function handleSaveTheme(event) {
+    event.preventDefault();
+    const btn = document.getElementById('btnSaveTheme');
+    setButtonLoading(btn, true, "Đang lưu...");
+
+    const themeData = {
+      themeId: document.getElementById('formThemeId').value,
+      year: document.getElementById('formThemeYear').value,
+      quarter: document.getElementById('formThemeQuarter').value,
+      themeName: document.getElementById('formThemeName').value.trim(),
+      keyVerse: document.getElementById('formKeyVerse').value.trim(),
+      keyVerseContent: document.getElementById('formKeyVerseContent').value.trim(),
+      themeSong: document.getElementById('formThemeSong').value.trim(),
+      notes: document.getElementById('formThemeNotes').value.trim()
+    };
+
+    try {
+      const res = await runGAS("saveQuarterlyTheme", themeData);
+      if (res.success) {
+        showToast(res.error || "Lưu chủ đề thành công!", "success");
+        closeThemeModal();
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi lưu chủ đề: " + err.message, "error");
+    } finally {
+      setButtonLoading(btn, false, "Lưu Chủ Đề");
+    }
+  }
+
+  async function confirmDeleteTheme(themeId, name) {
+    if (!confirm(`Bạn có chắc chắn muốn xóa chủ đề "${name}" không?`)) return;
+    try {
+      showToast("Đang xóa chủ đề...", "info");
+      const res = await runGAS("deleteQuarterlyTheme", themeId);
+      if (res.success) {
+        showToast("Đã xóa chủ đề thành công!", "success");
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi xóa chủ đề: " + err.message, "error");
+    }
+  }
+
+  // =========================================================================
+  // 14. BẢNG CẢNH BÁO VẮNG & SINH NHẬT
+  // =========================================================================
+  function renderAbsentAlertTable(members) {
+    const tbody = document.getElementById('absentAlertTableBody');
+    if (!tbody) return;
+    const absentList = members.filter(m => m.isAbsentAlert || m.status === 'Cần thăm viếng' || m.status === 'Đang thăm viếng');
+
+    if (absentList.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="8" class="empty-state">
+            <div class="empty-icon">🎉</div>
+            <p>Tuyệt vời! Không có thành viên nào vắng quá 3-4 tuần.</p>
+          </td>
+        </tr>`;
+      return;
+    }
+
+    const containerWidth = document.getElementById('tab-dashboard')?.clientWidth || window.innerWidth;
+    const isMobile = containerWidth <= 768 || window.innerWidth <= 768;
+
+    const thead = document.querySelector('#tab-dashboard thead');
+    if (isMobile) {
+      if (thead) thead.style.display = 'none';
+      let html = '<div class="mob-card-container">';
+      absentList.forEach(m => {
+        const isExpanded = expandedAbsentIds.has(m.memberId);
+        const weeksAbsent = Math.floor(m.daysAbsent / 7);
+
+        html += `
+          <div class="mob-card alert-card">
+            <div class="mob-card-header" onclick="toggleAbsentRowExpand('${m.memberId}')">
+              <div class="mob-card-badge alert">
+                <div class="badge-main">Vắng</div>
+                <div class="badge-sub">~${weeksAbsent} tuần</div>
+              </div>
+
+              <div class="mob-card-info">
+                <div class="mob-card-title">${escapeHtml(m.fullName)}</div>
+                <div class="mob-card-sub">
+                  <span class="badge badge-group" style="font-size: 10px;">${escapeHtml(m.groupName || 'Chưa xếp tổ')}</span>
+                  <span>${getPositionBadge(m.position)}</span>
+                </div>
+              </div>
+
+              <div class="mob-card-actions" onclick="event.stopPropagation()">
+                <button class="btn btn-warning btn-sm" style="padding: 4px 8px; font-size: 11px;" onclick="openAddVisitationModal('${m.memberId}')">
+                  📝 Thăm
+                </button>
+                <div class="mob-card-toggle" onclick="toggleAbsentRowExpand('${m.memberId}')">
+                  ${isExpanded ? '▲' : '▼'}
+                </div>
+              </div>
+            </div>
+
+            ${isExpanded ? `
+              <div class="mob-card-body">
+                <div class="mob-card-item">
+                  <strong>📞 Số điện thoại:</strong> ${m.phone ? `<a href="tel:${escapeHtml(m.phone)}" style="color: var(--accent); font-weight:700; text-decoration:none;">${escapeHtml(m.phone)}</a>` : 'Chưa có'}
+                </div>
+                <div class="mob-card-item">
+                  <strong>🗓️ Lần nhóm cuối:</strong> ${escapeHtml(formatDisplayDate(m.lastAttendanceDate))} (${m.daysAbsent} ngày vắng)
+                </div>
+                <div class="mob-card-item">
+                  <strong>📍 Địa chỉ:</strong> ${escapeHtml(m.address || 'Chưa cập nhật')}
+                </div>
+
+                <div style="display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap;">
+                  <button class="btn btn-warning btn-sm" onclick="openAddVisitationModal('${m.memberId}')">
+                    📝 Ghi nhận thăm
+                  </button>
+                  <button class="btn btn-primary btn-sm" onclick="quickUpdateSingleAttendance('${m.memberId}')">
+                    ✅ Đã đi nhóm lại
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      });
+      html += '</div>';
+      tbody.innerHTML = `<tr><td colspan="8" style="padding: 0; border: none;">${html}</td></tr>`;
+    } else {
+      if (thead) thead.style.display = '';
+      tbody.innerHTML = absentList.map(m => `
+        <tr>
+          <td><strong>${escapeHtml(m.fullName)}</strong></td>
+          <td>${getPositionBadge(m.position)}</td>
+          <td><span class="badge badge-group">${escapeHtml(m.groupName || 'Chưa xếp tổ')}</span></td>
+          <td><a href="tel:${escapeHtml(m.phone)}" style="color: var(--accent); text-decoration: none; font-weight:600;">📞 ${escapeHtml(m.phone || 'Chưa có')}</a></td>
+          <td>${escapeHtml(formatDisplayDate(m.lastAttendanceDate))}</td>
+          <td>
+            <span class="badge badge-alert">
+              🚑 Vắng ${m.daysAbsent} ngày (~${Math.floor(m.daysAbsent / 7)} tuần)
+            </span>
+          </td>
+          <td>${escapeHtml(m.address || 'Chưa cập nhật')}</td>
+          <td>
+            <div style="display: flex; gap: 6px;">
+              <button class="btn btn-warning btn-sm" onclick="openAddVisitationModal('${m.memberId}')">
+                📝 Ghi nhận thăm
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="quickUpdateSingleAttendance('${m.memberId}')">
+                ✅ Đã đi nhóm lại
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  function renderBirthdayTable(members) {
+    const tbody = document.getElementById('birthdayTableBody');
+    if (!tbody) return;
+    const birthdayList = members.filter(m => m.isBirthdayThisMonth);
+
+    if (birthdayList.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="empty-state">
+            <p>Không có thành viên nào có sinh nhật trong tháng này.</p>
+          </td>
+        </tr>`;
+      return;
+    }
+
+    const containerWidth = document.getElementById('tab-dashboard')?.clientWidth || window.innerWidth;
+    const isMobile = containerWidth <= 768 || window.innerWidth <= 768;
+
+    if (isMobile) {
+      let html = '<div class="mob-card-container">';
+      birthdayList.forEach(m => {
+        let dobDisplay = formatDisplayDate(m.dateOfBirth);
+        html += `
+          <div class="mob-card bday-card">
+            <div class="mob-card-header">
+              <div class="mob-card-badge bday">
+                <div class="badge-main">🎂</div>
+                <div class="badge-sub">${dobDisplay}</div>
+              </div>
+
+              <div class="mob-card-info">
+                <div class="mob-card-title">${escapeHtml(m.fullName)} (${m.age ? m.age + 't' : ''})</div>
+                <div class="mob-card-sub">
+                  <span class="badge badge-group" style="font-size: 10px;">${escapeHtml(m.groupName || 'Chưa xếp tổ')}</span>
+                  <span>${getPositionBadge(m.position)}</span>
+                </div>
+              </div>
+
+              <div class="mob-card-actions">
+                ${m.phone ? `<a href="tel:${escapeHtml(m.phone)}" class="btn btn-secondary btn-sm" style="padding: 4px 8px; font-size: 11px;">📞</a>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      html += '</div>';
+      tbody.innerHTML = `<tr><td colspan="6" style="padding: 0; border: none;">${html}</td></tr>`;
+    } else {
+      tbody.innerHTML = birthdayList.map(m => `
+        <tr>
+          <td><strong>${escapeHtml(m.fullName)}</strong></td>
+          <td><span class="badge badge-birthday">🎂 ${escapeHtml(formatDisplayDate(m.dateOfBirth))}</span></td>
+          <td><strong>${m.age ? m.age + ' tuổi' : 'N/A'}</strong></td>
+          <td>${getPositionBadge(m.position)}</td>
+          <td><span class="badge badge-group">${escapeHtml(m.groupName || 'Chưa xếp tổ')}</span></td>
+          <td>${escapeHtml(m.phone || 'Chưa có')}</td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  function getPositionBadge(pos) {
+    pos = pos || 'Ban viên';
+    let cls = 'badge-pos-banvien';
+    if (pos === 'Trưởng ban') cls = 'badge-pos-truongban';
+    if (pos === 'Phó ban') cls = 'badge-pos-phoban';
+    if (pos === 'Thư ký') cls = 'badge-pos-thuky';
+    if (pos === 'Thủ quỹ') cls = 'badge-pos-thuquy';
+    if (pos === 'Nghị viên') cls = 'badge-pos-nghivien';
+
+    return `<span class="badge ${cls}">${escapeHtml(pos)}</span>`;
+  }
+
+  // =========================================================================
+  // 15. BẢNG THÀNH VIÊN MAIN (XUẤT RA DỮ LIỆU ĐÚNG 100% CỘT)
+  // =========================================================================
+  let currentMemberViewMode = 'abc'; // 'abc' | 'group' | 'position' | 'birthday'
+
+  function switchMemberViewMode(mode) {
+    currentMemberViewMode = mode;
+    document.querySelectorAll('#tab-members .att-mode-btn').forEach(btn => btn.classList.remove('active'));
+    if (mode === 'abc') document.getElementById('btnMemberModeAbc')?.classList.add('active');
+    else if (mode === 'group') document.getElementById('btnMemberModeGroup')?.classList.add('active');
+    else if (mode === 'position') document.getElementById('btnMemberModePosition')?.classList.add('active');
+    else if (mode === 'birthday') document.getElementById('btnMemberModeBirthday')?.classList.add('active');
+    
+    filterMembers();
+  }
+
+  function filterMembers() {
+    const search = document.getElementById('memberSearchInput').value.toLowerCase().trim();
+    const positionFilter = document.getElementById('memberPositionFilter').value;
+    const groupFilter = document.getElementById('memberGroupFilter').value;
+    const statusFilter = document.getElementById('memberStatusFilter').value;
+
+    let filtered = allMembers.filter(m => {
+      const matchSearch = !search || 
+        m.fullName.toLowerCase().includes(search) || 
+        m.phone.includes(search) || 
+        m.position.toLowerCase().includes(search) ||
+        m.address.toLowerCase().includes(search);
+      const matchPosition = !positionFilter || m.position === positionFilter;
+      const matchGroup = !groupFilter || m.groupId === groupFilter;
+      const matchStatus = !statusFilter || m.status === statusFilter;
+      return matchSearch && matchPosition && matchGroup && matchStatus;
+    });
+
+    renderMembersTable(filtered);
+  }
+
+  function sortMembersByVietnameseName(membersList) {
+    return [...membersList].sort((a, b) => {
+      const getFirstName = name => {
+        const parts = name.trim().split(/\s+/);
+        return parts[parts.length - 1];
+      };
+      const fnA = getFirstName(a.fullName);
+      const fnB = getFirstName(b.fullName);
+      const comp = fnA.localeCompare(fnB, 'vi');
+      return comp !== 0 ? comp : a.fullName.localeCompare(b.fullName, 'vi');
+    });
+  }
+
+  function renderMembersTable(members) {
+    const tbody = document.getElementById('membersTableBody');
+    if (!tbody) return;
+
+    if (members.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="9" class="empty-state">Không tìm thấy thành viên nào phù hợp.</td></tr>`;
+      return;
+    }
+
+    let processedMembers = members;
+
+    if (currentMemberViewMode === 'abc') {
+      processedMembers = sortMembersByVietnameseName(members);
+    } else if (currentMemberViewMode === 'birthday') {
+      processedMembers = [...members].sort((a, b) => {
+        const mA = a.dateOfBirth ? new Date(a.dateOfBirth).getMonth() : 99;
+        const mB = b.dateOfBirth ? new Date(b.dateOfBirth).getMonth() : 99;
+        return mA - mB;
+      });
+    } else if (currentMemberViewMode === 'position') {
+      const posOrder = { 'Trưởng ban': 1, 'Phó ban': 2, 'Thư ký': 3, 'Thủ quỹ': 4, 'Nghị viên': 5, 'Ban viên': 6 };
+      processedMembers = [...members].sort((a, b) => (posOrder[a.position] || 99) - (posOrder[b.position] || 99));
+    } else if (currentMemberViewMode === 'group') {
+      processedMembers = [...members].sort((a, b) => (a.groupName || '').localeCompare(b.groupName || '', 'vi'));
+    }
+
+    const containerWidth = document.getElementById('tab-members')?.clientWidth || window.innerWidth;
+    const isMobile = containerWidth <= 768 || window.innerWidth <= 768;
+
+    const thead = document.querySelector('#tab-members thead');
+    if (isMobile) {
+      if (thead) thead.style.display = 'none';
+      let html = '<div class="mob-card-container">';
+      processedMembers.forEach((m, idx) => {
+        const isChecked = selectedMemberIds.has(m.memberId);
+        const isExpanded = expandedMemberIds.has(m.memberId);
+        
+        let statusBadge = `<span class="badge badge-active" style="font-size: 10px;">🟢 ${escapeHtml(m.status)}</span>`;
+        if (m.status === 'Cần thăm viếng' || m.isAbsentAlert) {
+          statusBadge = `<span class="badge badge-alert" style="font-size: 10px;">🚑 Cần thăm (${m.daysAbsent}d)</span>`;
+        } else if (m.status === 'Đang thăm viếng') {
+          statusBadge = `<span class="badge badge-warning" style="font-size: 10px;">📝 Đang thăm</span>`;
+        } else if (m.status === 'Tạm ngưng') {
+          statusBadge = `<span class="badge badge-warning" style="font-size: 10px;">⚪ Tạm ngưng</span>`;
+        }
+
+        let dobDisplay = formatDisplayDate(m.dateOfBirth);
+        let ageInfo = m.age !== null ? `${m.age}t (${dobDisplay})` : dobDisplay;
+
+        html += `
+          <div class="mob-card ${m.isAbsentAlert ? 'alert-card' : ''}">
+            <div class="mob-card-header" onclick="toggleMemberRowExpand('${m.memberId}')">
+              <div style="display: flex; align-items: center; gap: 8px;" onclick="event.stopPropagation()">
+                <input type="checkbox" class="member-checkbox" value="${m.memberId}" 
+                       ${isChecked ? 'checked' : ''} onchange="toggleMemberSelect('${m.memberId}', this.checked)">
+              </div>
+
+              <div class="mob-card-info">
+                <div class="mob-card-title">
+                  ${escapeHtml(m.fullName)}
+                  ${m.isBirthdayThisMonth ? '<span title="Sinh nhật tháng này"> 🎂</span>' : ''}
+                </div>
+                <div class="mob-card-sub">
+                  <span class="badge badge-group" style="font-size: 10px;">${escapeHtml(m.groupName || 'Chưa xếp')}</span>
+                  <span>${getPositionBadge(m.position)}</span>
+                  <span>${statusBadge}</span>
+                </div>
+              </div>
+
+              <div class="mob-card-actions" onclick="event.stopPropagation()">
+                <button class="btn btn-secondary btn-sm" style="padding: 4px 8px; font-size: 11.5px;" onclick="openMemberProfileModal('${m.memberId}')" title="Xem Hồ Sơ">
+                  👁️
+                </button>
+                <div class="mob-card-toggle" onclick="toggleMemberRowExpand('${m.memberId}')">
+                  ${isExpanded ? '▲' : '▼'}
+                </div>
+              </div>
+            </div>
+
+            ${isExpanded ? `
+              <div class="mob-card-body">
+                <div class="mob-card-item">
+                  <strong>📞 Số điện thoại:</strong> ${m.phone ? `<a href="tel:${escapeHtml(m.phone)}" style="color: var(--accent); font-weight: 700; text-decoration: none;">${escapeHtml(m.phone)}</a>` : 'Chưa có'}
+                </div>
+                <div class="mob-card-item">
+                  <strong>🎂 Tuổi / Ngày sinh:</strong> ${ageInfo}
+                </div>
+                <div class="mob-card-item">
+                  <strong>📍 Địa chỉ:</strong> ${escapeHtml(m.address || 'Chưa cập nhật')}
+                </div>
+                <div class="mob-card-item">
+                  <strong>🗓️ Lần nhóm cuối:</strong> ${escapeHtml(formatDisplayDate(m.lastAttendanceDate))}
+                </div>
+                ${m.spouseName ? `
+                  <div class="mob-card-item">
+                    <strong>❤️ Vợ / Chồng:</strong> ${escapeHtml(m.spouseName)}
+                  </div>
+                ` : ''}
+                ${m.notes ? `
+                  <div class="mob-card-item">
+                    <strong>📝 Ghi chú:</strong> ${escapeHtml(m.notes)}
+                  </div>
+                ` : ''}
+
+                <div style="display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap;">
+                  <button class="btn btn-primary btn-sm" onclick="openMemberProfileModal('${m.memberId}')">
+                    👁️ Thẻ Hồ Sơ
+                  </button>
+                  <button class="btn btn-warning btn-sm" onclick="openAddVisitationModal('${m.memberId}')">
+                    📝 Tạo Lượt Thăm
+                  </button>
+                  <button class="btn btn-secondary btn-sm" onclick="editMember('${m.memberId}')">
+                    ✏️ Sửa
+                  </button>
+                  <button class="btn btn-danger btn-sm" onclick="confirmDeleteMember('${m.memberId}', '${escapeHtml(m.fullName)}')">
+                    🗑️ Xóa
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      });
+      html += '</div>';
+      tbody.innerHTML = `<tr><td colspan="9" style="padding: 0; border: none;">${html}</td></tr>`;
+    } else {
+      if (thead) thead.style.display = '';
+      tbody.innerHTML = processedMembers.map(m => {
+        const isChecked = selectedMemberIds.has(m.memberId);
+        const isExpanded = expandedMemberIds.has(m.memberId);
+        
+        let statusBadge = `<span class="badge badge-active">🟢 ${escapeHtml(m.status)}</span>`;
+        if (m.status === 'Cần thăm viếng' || m.isAbsentAlert) {
+          statusBadge = `<span class="badge badge-alert">🚑 Cần thăm (${m.daysAbsent}d)</span>`;
+        } else if (m.status === 'Đang thăm viếng') {
+          statusBadge = `<span class="badge badge-warning">📝 Đang thăm</span>`;
+        } else if (m.status === 'Tạm ngưng') {
+          statusBadge = `<span class="badge badge-warning">⚪ Tạm ngưng</span>`;
+        }
+
+        let dobDisplay = formatDisplayDate(m.dateOfBirth);
+        let ageInfo = m.age !== null ? `<strong>${m.age} tuổi</strong> (${dobDisplay})` : dobDisplay;
+
+        let rowHtml = `
+          <tr class="master-row ${isExpanded ? 'expanded' : ''}" onclick="toggleMemberRowExpand('${m.memberId}')">
+            <td style="text-align: center;" onclick="event.stopPropagation()">
+              <input type="checkbox" class="member-checkbox" value="${m.memberId}" 
+                     ${isChecked ? 'checked' : ''} onchange="toggleMemberSelect('${m.memberId}', this.checked)">
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <button class="btn-expand-toggle" title="Mở rộng chi tiết">${isExpanded ? '▲' : '▼'}</button>
+                <a href="javascript:void(0)" style="color: var(--accent); font-weight: 700; text-decoration: none;"
+                   onclick="event.stopPropagation(); openMemberProfileModal('${m.memberId}')">
+                  ${escapeHtml(m.fullName)}
+                </a>
+                ${m.isBirthdayThisMonth ? '<span title="Sinh nhật tháng này"> 🎂</span>' : ''}
+              </div>
+            </td>
+            <td>${getPositionBadge(m.position)}</td>
+            <td>${ageInfo}</td>
+            <td>${m.phone ? `<a href="tel:${escapeHtml(m.phone)}" onclick="event.stopPropagation()" style="color: var(--accent); font-weight:700; text-decoration:none;">${escapeHtml(m.phone)}</a>` : '-'}</td>
+            <td><span class="badge badge-group">${escapeHtml(m.groupName || 'Chưa xếp')}</span></td>
+            <td>${escapeHtml(formatDisplayDate(m.lastAttendanceDate))}</td>
+            <td>${statusBadge}</td>
+            <td onclick="event.stopPropagation()">
+              <div style="display: flex; gap: 4px;">
+                <button class="btn btn-secondary btn-sm" title="Xem Thẻ Hồ Sơ" onclick="openMemberProfileModal('${m.memberId}')">👁️ Hồ sơ</button>
+                <button class="btn btn-warning btn-sm" title="Tạo Lượt Thăm" onclick="openAddVisitationModal('${m.memberId}')">📝 Thăm</button>
+                <button class="btn btn-secondary btn-sm" title="Sửa" onclick="editMember('${m.memberId}')">✏️</button>
+                <button class="btn btn-danger btn-sm" title="Xóa" onclick="confirmDeleteMember('${m.memberId}', '${escapeHtml(m.fullName)}')">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        `;
+
+        if (isExpanded) {
+          rowHtml += `
+            <tr class="child-row">
+              <td colspan="9" class="child-row-cell">
+                <div class="child-content-box">
+                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;">
+                    <div><strong>📍 Địa chỉ:</strong> ${escapeHtml(m.address || 'Chưa cập nhật')}</div>
+                    <div><strong>❤️ Vợ / Chồng:</strong> ${escapeHtml(m.spouseName || 'Chưa cập nhật')}</div>
+                    <div><strong>🗓️ Ngày gia nhập:</strong> ${escapeHtml(formatDisplayDate(m.joinDate) || 'Chưa cập nhật')}</div>
+                    <div><strong>📝 Ghi chú:</strong> ${escapeHtml(m.notes || 'Không có')}</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          `;
+        }
+
+        return rowHtml;
+      }).join('');
+    }
+
+    updateBatchBarState();
+  }
+
+  function toggleMemberSelect(memberId, isChecked) {
+    if (isChecked) selectedMemberIds.add(memberId);
+    else selectedMemberIds.delete(memberId);
+    updateBatchBarState();
+  }
+
+  function toggleSelectAllMembers(masterCheckbox) {
+    const checkboxes = document.querySelectorAll('.member-checkbox');
+    checkboxes.forEach(cb => {
+      cb.checked = masterCheckbox.checked;
+      if (masterCheckbox.checked) selectedMemberIds.add(cb.value);
+      else selectedMemberIds.delete(cb.value);
+    });
+    updateBatchBarState();
+  }
+
+  function updateBatchBarState() {
+    const bar = document.getElementById('memberBatchBar');
+    const countEl = document.getElementById('selectedBatchCount');
+    if (!bar) return;
+
+    if (selectedMemberIds.size > 0) {
+      bar.style.display = 'flex';
+      if (countEl) countEl.innerText = selectedMemberIds.size;
+    } else {
+      bar.style.display = 'none';
+    }
+  }
+
+  // BATCH ACTIONS HANDLERS
+  async function promptBatchChangeGroup() {
+    if (selectedMemberIds.size === 0) return;
+    if (allGroups.length === 0) {
+      showToast("Chưa có danh sách các Tổ!", "error");
+      return;
+    }
+
+    const groupOptions = allGroups.map((g, idx) => `${idx + 1}. ${g.groupName}`).join('\n');
+    const input = prompt(`Nhập số thứ tự Tổ muốn chuyển ${selectedMemberIds.size} ban viên sang:\n${groupOptions}`);
+    if (!input) return;
+
+    const idx = parseInt(input.trim()) - 1;
+    if (isNaN(idx) || idx < 0 || idx >= allGroups.length) {
+      showToast("Số thứ tự Tổ không hợp lệ!", "error");
+      return;
+    }
+
+    const targetGroup = allGroups[idx];
+    const memberIds = Array.from(selectedMemberIds);
+
+    showToast("Đang chuyển tổ...", "info");
+    try {
+      const res = await runGAS("batchUpdateMemberGroup", memberIds, targetGroup.groupId, targetGroup.groupName);
+      if (res.success) {
+        showToast(res.error || "Chuyển Tổ thành công!", "success");
+        selectedMemberIds.clear();
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi: " + err.message, "error");
+    }
+  }
+
+  async function promptBatchChangeStatus() {
+    if (selectedMemberIds.size === 0) return;
+
+    const input = prompt(`Chọn trạng thái mới cho ${selectedMemberIds.size} ban viên:\n1. Đang sinh hoạt\n2. Cần thăm viếng\n3. Tạm ngưng`);
+    if (!input) return;
+
+    let newStatus = '';
+    if (input.trim() === '1') newStatus = 'Đang sinh hoạt';
+    else if (input.trim() === '2') newStatus = 'Cần thăm viếng';
+    else if (input.trim() === '3') newStatus = 'Tạm ngưng';
+
+    if (!newStatus) {
+      showToast("Lựa chọn trạng thái không hợp lệ!", "error");
+      return;
+    }
+
+    const memberIds = Array.from(selectedMemberIds);
+    showToast("Đang cập nhật trạng thái...", "info");
+
+    try {
+      const res = await runGAS("batchUpdateMemberStatus", memberIds, newStatus);
+      if (res.success) {
+        showToast(res.error || "Đổi trạng thái thành công!", "success");
+        selectedMemberIds.clear();
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi: " + err.message, "error");
+    }
+  }
+
+  function copySelectedMemberPhones() {
+    if (selectedMemberIds.size === 0) return;
+
+    const phones = [];
+    selectedMemberIds.forEach(id => {
+      const m = allMembers.find(x => x.memberId === id);
+      if (m && m.phone) phones.push(`${m.fullName}: ${m.phone}`);
+    });
+
+    if (phones.length === 0) {
+      showToast("Các ban viên được chọn chưa có số điện thoại!", "warning");
+      return;
+    }
+
+    const textToCopy = phones.join('\n');
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      showToast(`Đã sao chép ${phones.length} số điện thoại vào bộ nhớ tạm!`, "success");
+    }).catch(err => {
+      showToast("Không thể sao chép: " + err.message, "error");
+    });
+  }
+
+  // MEMBER PROFILE MODAL DRAWER
+  async function openMemberProfileModal(memberId) {
+    const modal = document.getElementById('memberProfileModal');
+    const body = document.getElementById('profModalBody');
+    const titleEl = document.getElementById('profFullName');
+    const subTitleEl = document.getElementById('profSubTitle');
+    const btnEdit = document.getElementById('btnEditProfMember');
+
+    if (!modal) return;
+    modal.classList.add('active');
+    body.innerHTML = `<div class="empty-state">Đang tải hồ sơ ban viên...</div>`;
+
+    if (btnEdit) btnEdit.onclick = () => { closeMemberProfileModal(); editMember(memberId); };
+
+    try {
+      const res = await runGAS("getMemberProfileDetail", memberId);
+      if (!res.success || !res.data) {
+        body.innerHTML = `<div class="empty-state" style="color: var(--danger-color);">Lỗi: ${escapeHtml(res.error || 'Không tải được hồ sơ')}</div>`;
+        return;
+      }
+
+      const m = res.data.member;
+      const attHistory = res.data.attendanceHistory || [];
+      const visLogs = res.data.visitationLogs || [];
+
+      if (titleEl) titleEl.innerText = m.fullName;
+      if (subTitleEl) subTitleEl.innerText = `${m.position || 'Ban viên'} • ${m.groupName || 'Chưa xếp tổ'} • Trạng thái: ${m.status}`;
+
+      // Clean SĐT cho đường link call / zalo
+      const cleanPhone = (m.phone || '').replace(/[^0-9]/g, '');
+      const zaloUrl = cleanPhone ? `https://zalo.me/${cleanPhone}` : 'javascript:void(0)';
+      const callUrl = cleanPhone ? `tel:${cleanPhone}` : 'javascript:void(0)';
+      const mapsUrl = m.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(m.address)}` : 'javascript:void(0)';
+
+      body.innerHTML = `
+        <!-- QUICK ACTIONS BUTTONS (1-TAP) -->
+        <div class="profile-quick-actions">
+          <a href="${callUrl}" class="btn-quick-action call" ${!cleanPhone ? 'style="opacity:0.4; pointer-events:none;"' : ''}>
+            <span class="action-icon">📞</span>
+            <span>Gọi Điện</span>
+          </a>
+          <a href="${zaloUrl}" target="_blank" class="btn-quick-action zalo" ${!cleanPhone ? 'style="opacity:0.4; pointer-events:none;"' : ''}>
+            <span class="action-icon">💬</span>
+            <span>Nhắn Zalo</span>
+          </a>
+          <a href="${mapsUrl}" target="_blank" class="btn-quick-action maps" ${!m.address ? 'style="opacity:0.4; pointer-events:none;"' : ''}>
+            <span class="action-icon">📍</span>
+            <span>Chỉ Đường</span>
+          </a>
+          <button class="btn-quick-action visitation" onclick="closeMemberProfileModal(); openAddVisitationModal('${m.memberId}');">
+            <span class="action-icon">📝</span>
+            <span>Tạo Lượt Thăm</span>
+          </button>
+        </div>
+
+        <!-- THÔNG TIN CHI TIẾT -->
+        <div style="background-color: #f8fafc; border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px; border: 1px solid #e2e8f0;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; font-size: 13px;">
+            <div><strong>📱 Số điện thoại:</strong> ${escapeHtml(m.phone || 'Chưa có')}</div>
+            <div><strong>🎂 Tuổi (Ngày sinh):</strong> ${m.age !== null ? m.age + ' tuổi' : ''} (${formatDisplayDate(m.dateOfBirth)})</div>
+            <div><strong>🏡 Địa chỉ nhà:</strong> ${escapeHtml(m.address || 'Chưa cập nhật')}</div>
+            <div><strong>❤️ Tên vợ/chồng:</strong> ${escapeHtml(m.spouseName || 'Chưa ghi nhận')}</div>
+            <div><strong>💧 Ngày báp-têm:</strong> ${formatDisplayDate(m.baptismDate)}</div>
+            <div><strong>📅 Ngày bắt đầu sinh hoạt:</strong> ${formatDisplayDate(m.joinDate)}</div>
+            <div><strong>🟢 Lần nhóm gần nhất:</strong> ${formatDisplayDate(m.lastAttendanceDate)}</div>
+          </div>
+          ${m.notes ? `<div style="margin-top: 8px; font-size: 13px; color: #b45309; background: #fffbebf; padding: 6px 10px; border-radius: 4px;"><strong>📌 Ghi chú:</strong> ${escapeHtml(m.notes)}</div>` : ''}
+        </div>
+
+        <!-- LỊCH SỬ ĐIỂM DANH 12 TUẦN GẦN NHẤT -->
+        <div style="margin-bottom: 16px;">
+          <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 800; color: var(--primary-color);">
+            📊 Lịch Sử Chuyên Cần 12 Tuần Gần Nhất
+          </h4>
+          ${attHistory.length > 0 ? `
+            <div class="att-timeline-grid">
+              ${attHistory.map(h => `
+                <div class="att-timeline-box ${h.status === 'Có mặt' ? 'present' : 'absent'}">
+                  <div class="att-timeline-date">${formatDisplayDate(h.date)}</div>
+                  <div class="att-timeline-status">${h.status === 'Có mặt' ? '🟢 Có' : '🔴 Vắng'}</div>
+                  <div style="font-size: 10px; opacity: 0.9; margin-top: 2px;">
+                    ${h.status === 'Có mặt' ? (h.isVerse ? '📖 Thuộc' : '📖 Chưa') + ` • ${h.score}đ` : ''}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          ` : '<div style="font-size: 13px; color: var(--text-muted);">Chưa có dữ liệu điểm danh.</div>'}
+        </div>
+
+        <!-- NHẬT KÝ THĂM VIẾNG CÁ NHÂN -->
+        <div>
+          <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 800; color: var(--primary-color);">
+            📝 Nhật Ký Chăm Sóc & Thăm Viếng (${visLogs.length})
+          </h4>
+          ${visLogs.length > 0 ? `
+            <div class="timeline-list">
+              ${visLogs.map(v => `
+                <div class="timeline-item" style="padding: 10px 12px;">
+                  <div class="timeline-header" style="font-size: 12.5px;">
+                    <span>👤 Người thăm: <strong>${escapeHtml(v.visitorName)}</strong></span>
+                    <span>📅 ${formatDisplayDate(v.visitDate)} (${escapeHtml(v.visitType)})</span>
+                  </div>
+                  <div class="timeline-body" style="font-size: 12.5px; margin-top: 4px;">
+                    ${v.prayerRequests ? `<div><strong>🙏 Cầu nguyện:</strong> ${escapeHtml(v.prayerRequests)}</div>` : ''}
+                    ${v.resultNotes ? `<div><strong>📌 Kết quả:</strong> ${escapeHtml(v.resultNotes)}</div>` : ''}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          ` : '<div style="font-size: 13px; color: var(--text-muted);">Chưa có nhật ký thăm viếng nào cho ban viên này.</div>'}
+        </div>
+      `;
+
+    } catch (err) {
+      body.innerHTML = `<div class="empty-state" style="color: var(--danger-color);">Lỗi: ${escapeHtml(err.message)}</div>`;
+    }
+  }
+
+  function closeMemberProfileModal() {
+    const modal = document.getElementById('memberProfileModal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  // =========================================================================
+  // 16. NHẬT KÝ THĂM VIẾNG & BỘ LỌC CHUYÊN SÂU (FULL CRUD & MASTER-DETAIL DRAWER)
+  // =========================================================================
+  let expandedVisLogIds = new Set();
+
+  function toggleVisLogExpand(logId) {
+    if (expandedVisLogIds.has(logId)) expandedVisLogIds.delete(logId);
+    else expandedVisLogIds.add(logId);
+    filterVisitations();
+  }
+
+  function filterVisitations() {
+    if (!allVisitations || allVisitations.length === 0) {
+      renderVisitationTimeline([]);
+      return;
+    }
+
+    const typeFilter = document.getElementById('visTypeFilter')?.value || 'ALL';
+    const timeFilter = document.getElementById('visTimeFilter')?.value || 'ALL';
+    const groupFilter = document.getElementById('visGroupFilter')?.value || 'ALL';
+    const searchQuery = (document.getElementById('visSearchInput')?.value || '').toLowerCase().trim();
+
+    const now = new Date();
+    const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+    let filtered = allVisitations.filter(v => {
+      const matchType = typeFilter === 'ALL' || v.visitType === typeFilter;
+
+      let matchTime = true;
+      if (timeFilter === 'THIS_MONTH') {
+        matchTime = v.visitDate && v.visitDate.startsWith(currentMonthStr);
+      } else if (timeFilter === '30_DAYS') {
+        matchTime = v.visitDate && v.visitDate >= thirtyDaysAgo;
+      } else if (timeFilter === '2026') {
+        matchTime = v.visitDate && v.visitDate.startsWith('2026');
+      }
+
+      let matchGroup = true;
+      if (groupFilter !== 'ALL') {
+        const mem = allMembers.find(m => m.memberId === v.memberId || m.fullName === v.memberName);
+        matchGroup = mem && (mem.groupId === groupFilter || mem.groupName === groupFilter);
+      }
+
+      const matchSearch = !searchQuery || (
+        v.memberName.toLowerCase().includes(searchQuery) ||
+        v.visitorName.toLowerCase().includes(searchQuery) ||
+        (v.prayerRequests && v.prayerRequests.toLowerCase().includes(searchQuery)) ||
+        (v.resultNotes && v.resultNotes.toLowerCase().includes(searchQuery))
+      );
+
+      return matchType && matchTime && matchGroup && matchSearch;
+    });
+
+    renderVisitationTimeline(filtered);
+  }
+
+  function renderVisitationTimeline(visitations) {
+    const container = document.getElementById('visitationTimelineContainer');
+    if (!container) return;
+
+    if (visitations.length === 0) {
+      container.innerHTML = `<div class="empty-state">Chưa có nhật ký thăm viếng nào phù hợp bộ lọc.</div>`;
+      return;
+    }
+
+    container.innerHTML = `
+      <div class="timeline-list">
+        ${visitations.map(v => {
+          const isExpanded = expandedVisLogIds.has(v.logId);
+          const isBdhVisitor = v.visitorName && (
+            v.visitorName.toLowerCase().includes('trưởng') ||
+            v.visitorName.toLowerCase().includes('phó') ||
+            v.visitorName.toLowerCase().includes('thư ký') ||
+            v.visitorName.toLowerCase().includes('thủ quỹ') ||
+            v.visitorName.toLowerCase().includes('tổ trưởng') ||
+            v.visitorName.toLowerCase().includes('binh') ||
+            v.visitorName.toLowerCase().includes('yen') ||
+            v.visitorName.toLowerCase().includes('duen')
+          );
+
+          return `
+            <div class="timeline-item mob-card ${isExpanded ? 'expanded' : ''}" style="margin-bottom: 10px;">
+              <div class="timeline-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; cursor: pointer;" onclick="toggleVisLogExpand('${v.logId}')">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <button class="btn-expand-toggle" title="Mở rộng chi tiết" onclick="event.stopPropagation(); toggleVisLogExpand('${v.logId}')">${isExpanded ? '▲' : '▼'}</button>
+                  <div>
+                    <strong style="color: var(--accent); font-size: 14.5px;">👤 ${escapeHtml(v.memberName)}</strong>
+                    <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">
+                      Người thăm: <strong style="color: var(--text-primary);">${escapeHtml(v.visitorName)}</strong>
+                      ${isBdhVisitor ? '<span class="badge badge-active" style="font-size: 10px; margin-left: 4px;">👑 BDH</span>' : ''}
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span class="badge badge-birthday" style="font-size: 11px;">📅 ${escapeHtml(formatDisplayDate(v.visitDate))}</span>
+                  <span class="badge badge-group" style="font-size: 11px;">${escapeHtml(v.visitType)}</span>
+                </div>
+              </div>
+
+              ${isExpanded ? `
+                <div class="child-content-box" style="margin-top: 10px; background: rgba(0, 0, 0, 0.2); border-radius: 12px; padding: 12px;">
+                  ${v.prayerRequests ? `<p style="margin-bottom: 6px; font-size: 13px;"><strong>🙏 Nhu cầu cầu nguyện:</strong> ${escapeHtml(v.prayerRequests)}</p>` : ''}
+                  ${v.resultNotes ? `<p style="color: var(--text-primary); font-size: 13px; margin-bottom: 8px;"><strong>📌 Kết quả & Thỏa nguyện:</strong> ${escapeHtml(v.resultNotes)}</p>` : ''}
+                  
+                  <div style="display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; justify-content: flex-end;">
+                    <button class="btn btn-secondary btn-sm" title="Xem Thẻ Hồ Sơ Ban Viên" onclick="openMemberProfileModal('${v.memberId}')">👁️ Hồ Sơ</button>
+                    <button class="btn btn-warning btn-sm" title="Chỉnh Sửa Lượt Thăm" onclick="editVisitationLog('${v.logId}')">✏️ Sửa Lượt Thăm</button>
+                    <button class="btn btn-danger btn-sm" title="Xóa Lượt Thăm" onclick="confirmDeleteVisitationLog('${v.logId}', '${escapeHtml(v.memberName)}')">🗑️ Xóa</button>
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  function renderQuickVisitorChips() {
+    const container = document.getElementById('quickVisitorChips');
+    if (!container) return;
+
+    // Filter BDH members & Group Leaders from allMembers
+    const bdhMembers = allMembers.filter(m => 
+      m.position && (
+        m.position.includes('Trưởng') || 
+        m.position.includes('Phó') || 
+        m.position.includes('Thư ký') || 
+        m.position.includes('Thủ quỹ') || 
+        m.position.includes('Nghị viên') || 
+        m.position.includes('Tổ trưởng')
+      )
+    );
+
+    let html = `
+      <span class="quick-acc-tag" onclick="quickAddVisitorName('Bình (Trưởng ban)')">👤 Bình (Trưởng ban)</span>
+      <span class="quick-acc-tag" onclick="quickAddVisitorName('Yến (Phó ban)')">👤 Yến (Phó ban)</span>
+      <span class="quick-acc-tag" onclick="quickAddVisitorName('Duyên (Thư ký)')">👤 Duyên (Thư ký)</span>
+      <span class="quick-acc-tag" onclick="quickAddVisitorName('Tuấn (Thủ quỹ)')">👤 Tuấn (Thủ quỹ)</span>
+    `;
+
+    bdhMembers.forEach(m => {
+      html += `<span class="quick-acc-tag" onclick="quickAddVisitorName('${escapeHtml(m.fullName)}')">👤 ${escapeHtml(m.fullName)} (${escapeHtml(m.position)})</span>`;
+    });
+
+    container.innerHTML = html;
+  }
+
+  function quickAddVisitorName(name) {
+    const input = document.getElementById('formVisitorName');
+    if (!input) return;
+    if (input.value.trim() === '') {
+      input.value = name;
+    } else if (!input.value.includes(name)) {
+      input.value += `, ${name}`;
+    }
+  }
+
+  function populateVisMemberDropdown(members) {
+    const select = document.getElementById('formVisMemberId');
+    if (!select) return;
+    select.innerHTML = '<option value="">-- Chọn thành viên --</option>';
+    members.forEach(m => {
+      select.innerHTML += `<option value="${m.memberId}">${escapeHtml(m.fullName)} (${escapeHtml(m.groupName || 'Chưa xếp tổ')})</option>`;
+    });
+  }
+
+  function updateVisMemberName() {
+    const select = document.getElementById('formVisMemberId');
+    const m = allMembers.find(item => item.memberId === select.value);
+    const hiddenInput = document.getElementById('formVisMemberName');
+    if (hiddenInput) hiddenInput.value = m ? m.fullName : '';
+  }
+
+  function openAddVisitationModal(memberId = null) {
+    document.getElementById('visitationForm').reset();
+    document.getElementById('formVisLogId').value = '';
+    
+    const titleEl = document.getElementById('visitationModalTitle');
+    if (titleEl) titleEl.innerText = "📝 Ghi Nhận Lượt Thăm Viếng Mới";
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('formVisitDate').value = todayStr;
+
+    if (memberId) {
+      document.getElementById('formVisMemberId').value = memberId;
+      updateVisMemberName();
+    }
+
+    renderQuickVisitorChips();
+    document.getElementById('visitationModal').classList.add('active');
+  }
+
+  function editVisitationLog(logId) {
+    const log = allVisitations.find(v => v.logId === logId);
+    if (!log) {
+      showToast("Không tìm thấy dữ liệu lượt thăm!", "error");
+      return;
+    }
+
+    document.getElementById('visitationForm').reset();
+    document.getElementById('formVisLogId').value = log.logId;
+    document.getElementById('formVisMemberId').value = log.memberId;
+    document.getElementById('formVisMemberName').value = log.memberName;
+    document.getElementById('formVisitorName').value = log.visitorName;
+    document.getElementById('formVisitDate').value = log.visitDate;
+    document.getElementById('formVisitType').value = log.visitType;
+    document.getElementById('formPrayerRequests').value = log.prayerRequests || '';
+    document.getElementById('formResultNotes').value = log.resultNotes || '';
+
+    const titleEl = document.getElementById('visitationModalTitle');
+    if (titleEl) titleEl.innerText = "✏️ Chỉnh Sửa Lượt Thăm Viếng";
+
+    renderQuickVisitorChips();
+    document.getElementById('visitationModal').classList.add('active');
+  }
+
+  async function confirmDeleteVisitationLog(logId, memberName) {
+    if (!confirm(`Bạn có chắc chắn muốn xóa lượt thăm viếng của ban viên "${memberName}"?`)) return;
+
+    showToast("Đang xóa lượt thăm...", "info");
+    try {
+      const res = await runGAS("deleteVisitationLog", logId);
+      if (res.success) {
+        showToast("Đã xóa lượt thăm viếng thành công!", "success");
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi xóa lượt thăm: " + err.message, "error");
+    }
+  }
+
+  function closeVisitationModal() {
+    document.getElementById('visitationModal').classList.remove('active');
+  }
+
+  async function handleSaveVisitation(event) {
+    event.preventDefault();
+    const btn = document.getElementById('btnSaveVisitation');
+    setButtonLoading(btn, true, "Đang lưu nhật ký...");
+
+    const logData = {
+      logId: document.getElementById('formVisLogId').value,
+      memberId: document.getElementById('formVisMemberId').value,
+      memberName: document.getElementById('formVisMemberName').value,
+      visitorName: document.getElementById('formVisitorName').value.trim(),
+      visitDate: document.getElementById('formVisitDate').value,
+      visitType: document.getElementById('formVisitType').value,
+      prayerRequests: document.getElementById('formPrayerRequests').value.trim(),
+      resultNotes: document.getElementById('formResultNotes').value.trim(),
+      updateAttendance: document.getElementById('formUpdateAttendance').checked
+    };
+
+    try {
+      const res = await runGAS("saveVisitationLog", logData);
+      if (res.success) {
+        showToast(res.error || "Lưu nhật ký thăm viếng thành công!", "success");
+        closeVisitationModal();
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi lưu nhật ký: " + err.message, "error");
+    } finally {
+      setButtonLoading(btn, false, "Lưu Nhật Ký Thăm Viếng");
+    }
+  }
+
+  // =========================================================================
+  // 17. BẢNG TỔ
+  // =========================================================================
+  function renderGroupsTable(groups) {
+    const tbody = document.getElementById('groupsTableBody');
+    if (!tbody) return;
+
+    if (groups.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Chưa có Tổ nào được tạo.</td></tr>`;
+      return;
+    }
+
+    const containerWidth = document.getElementById('tab-groups')?.clientWidth || window.innerWidth;
+    const isMobile = containerWidth <= 768 || window.innerWidth <= 768;
+
+    const thead = document.querySelector('#tab-groups thead');
+    if (isMobile) {
+      if (thead) thead.style.display = 'none';
+      let html = '<div class="mob-card-container">';
+      groups.forEach(g => {
+        const isExpanded = expandedGroupIds.has(g.groupId);
+        html += `
+          <div class="mob-card">
+            <div class="mob-card-header" onclick="toggleGroupRowExpand('${g.groupId}')">
+              <div class="mob-card-badge group">
+                <div class="badge-main">${escapeHtml(g.groupName)}</div>
+                <div class="badge-sub">${g.memberCount} tv</div>
+              </div>
+
+              <div class="mob-card-info">
+                <div class="mob-card-title">${escapeHtml(g.groupName)}</div>
+                <div class="mob-card-sub">
+                  <span>👤 Tổ trưởng: ${escapeHtml(g.leaderName || 'Chưa phân công')}</span>
+                </div>
+              </div>
+
+              <div class="mob-card-actions" onclick="event.stopPropagation()">
+                <button class="btn btn-secondary btn-sm" style="padding: 4px 8px; font-size: 11px;" onclick="editGroup('${g.groupId}')">
+                  ✏️
+                </button>
+                <div class="mob-card-toggle" onclick="toggleGroupRowExpand('${g.groupId}')">
+                  ${isExpanded ? '▲' : '▼'}
+                </div>
+              </div>
+            </div>
+
+            ${isExpanded ? `
+              <div class="mob-card-body">
+                <div class="mob-card-item">
+                  <strong>🆔 Mã Tổ:</strong> ${escapeHtml(g.groupId)}
+                </div>
+                <div class="mob-card-item">
+                  <strong>📞 SĐT Tổ trưởng:</strong> ${g.leaderPhone ? `<a href="tel:${escapeHtml(g.leaderPhone)}" style="color: var(--accent); font-weight:700; text-decoration:none;">${escapeHtml(g.leaderPhone)}</a>` : 'Chưa có'}
+                </div>
+                <div class="mob-card-item">
+                  <strong>👥 Sĩ số:</strong> ${g.memberCount} thành viên
+                </div>
+                ${g.notes ? `
+                  <div class="mob-card-item">
+                    <strong>📝 Ghi chú:</strong> ${escapeHtml(g.notes)}
+                  </div>
+                ` : ''}
+
+                <div style="display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap;">
+                  <button class="btn btn-secondary btn-sm" onclick="editGroup('${g.groupId}')">
+                    ✏️ Chỉnh Sửa Tổ
+                  </button>
+                  <button class="btn btn-danger btn-sm" onclick="confirmDeleteGroup('${g.groupId}', '${escapeHtml(g.groupName)}')">
+                    🗑️ Xóa Tổ
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      });
+      html += '</div>';
+      tbody.innerHTML = `<tr><td colspan="7" style="padding: 0; border: none;">${html}</td></tr>`;
+    } else {
+      if (thead) thead.style.display = '';
+      tbody.innerHTML = groups.map(g => `
+        <tr>
+          <td><strong>${escapeHtml(g.groupId)}</strong></td>
+          <td><strong style="color: var(--accent);">${escapeHtml(g.groupName)}</strong></td>
+          <td>👤 ${escapeHtml(g.leaderName || 'Chưa có')}</td>
+          <td>${escapeHtml(g.leaderPhone || '-')}</td>
+          <td><span class="badge badge-active">👥 ${g.memberCount} thành viên</span></td>
+          <td>${escapeHtml(g.notes || '-')}</td>
+          <td>
+            <div style="display: flex; gap: 6px;">
+              <button class="btn btn-secondary btn-sm" onclick="editGroup('${g.groupId}')">✏️ Sửa</button>
+              <button class="btn btn-danger btn-sm" onclick="confirmDeleteGroup('${g.groupId}', '${escapeHtml(g.groupName)}')">🗑️ Xóa</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  function populateGroupDropdowns(groups) {
+    const filterSelect = document.getElementById('memberGroupFilter');
+    const formSelect = document.getElementById('formGroupId');
+    const checkinGroupSelect = document.getElementById('checkinGroupFilterSelect');
+    const visGroupSelect = document.getElementById('visGroupFilter');
+
+    const currentFilterVal = filterSelect ? filterSelect.value : '';
+    const currentFormVal = formSelect ? formSelect.value : '';
+    const currentCheckinGroupVal = checkinGroupSelect ? checkinGroupSelect.value : 'ALL';
+    const currentVisGroupVal = visGroupSelect ? visGroupSelect.value : 'ALL';
+
+    if (filterSelect) filterSelect.innerHTML = '<option value="">-- Tất cả các Tổ --</option>';
+    if (formSelect) formSelect.innerHTML = '<option value="">-- Chọn Tổ --</option>';
+    if (checkinGroupSelect) checkinGroupSelect.innerHTML = '<option value="ALL">🏢 Tất Cả Các Tổ</option>';
+    if (visGroupSelect) visGroupSelect.innerHTML = '<option value="ALL">🏢 Tất Cả Các Tổ</option>';
+
+    groups.forEach(g => {
+      if (filterSelect) filterSelect.innerHTML += `<option value="${g.groupId}">${escapeHtml(g.groupName)}</option>`;
+      if (formSelect) formSelect.innerHTML += `<option value="${g.groupId}">${escapeHtml(g.groupName)}</option>`;
+      if (checkinGroupSelect) checkinGroupSelect.innerHTML += `<option value="${g.groupId}">${escapeHtml(g.groupName)}</option>`;
+      if (visGroupSelect) visGroupSelect.innerHTML += `<option value="${g.groupId}">${escapeHtml(g.groupName)}</option>`;
+    });
+
+    if (filterSelect) filterSelect.value = currentFilterVal;
+    if (formSelect) formSelect.value = currentFormVal;
+    if (checkinGroupSelect) checkinGroupSelect.value = currentCheckinGroupVal;
+    if (visGroupSelect) visGroupSelect.value = currentVisGroupVal;
+  }
+
+  // =========================================================================
+  // 18. MEMBER MODAL CRUD
+  // =========================================================================
+  function openMemberModal() {
+    document.getElementById('memberForm').reset();
+    document.getElementById('formMemberId').value = '';
+    document.getElementById('memberModalTitle').innerText = 'Thêm Thành Viên Mới';
+    
+    const todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('formLastAttendanceDate').value = todayStr;
+    document.getElementById('formJoinDate').value = todayStr;
+    document.getElementById('formTenure').value = '2025-2027';
+
+    document.getElementById('memberModal').classList.add('active');
+  }
+
+  function editMember(memberId) {
+    const m = allMembers.find(item => item.memberId === memberId);
+    if (!m) return;
+
+    document.getElementById('formMemberId').value = m.memberId;
+    document.getElementById('formFullName').value = m.fullName;
+    document.getElementById('formPosition').value = m.position || 'Ban viên';
+    document.getElementById('formTenure').value = m.tenure || '2025-2027';
+    document.getElementById('formDateOfBirth').value = m.dateOfBirth;
+    document.getElementById('formPhone').value = m.phone;
+    document.getElementById('formAddress').value = m.address;
+    document.getElementById('formGroupId').value = m.groupId;
+    document.getElementById('formStatus').value = m.status;
+    document.getElementById('formBaptismDate').value = m.baptismDate || '';
+    document.getElementById('formSpouseName').value = m.spouseName || '';
+    document.getElementById('formJoinDate').value = m.joinDate;
+    document.getElementById('formLastAttendanceDate').value = m.lastAttendanceDate;
+    document.getElementById('formNotes').value = m.notes;
+
+    document.getElementById('memberModalTitle').innerText = 'Chỉnh Sửa Thành Viên & Chức Danh';
+    document.getElementById('memberModal').classList.add('active');
+  }
+
+  function closeMemberModal() {
+    document.getElementById('memberModal').classList.remove('active');
+  }
+
+  async function handleSaveMember(event) {
+    event.preventDefault();
+    const btn = document.getElementById('btnSaveMember');
+    setButtonLoading(btn, true, "Đang lưu...");
+
+    const groupId = document.getElementById('formGroupId').value;
+    const selectedGroup = allGroups.find(g => g.groupId === groupId);
+
+    const memberData = {
+      memberId: document.getElementById('formMemberId').value,
+      fullName: document.getElementById('formFullName').value.trim(),
+      position: document.getElementById('formPosition').value,
+      tenure: document.getElementById('formTenure').value.trim(),
+      dateOfBirth: document.getElementById('formDateOfBirth').value,
+      phone: document.getElementById('formPhone').value.trim(),
+      address: document.getElementById('formAddress').value.trim(),
+      groupId: groupId,
+      groupName: selectedGroup ? selectedGroup.groupName : '',
+      status: document.getElementById('formStatus').value,
+      baptismDate: document.getElementById('formBaptismDate').value,
+      spouseName: document.getElementById('formSpouseName').value.trim(),
+      joinDate: document.getElementById('formJoinDate').value,
+      lastAttendanceDate: document.getElementById('formLastAttendanceDate').value,
+      notes: document.getElementById('formNotes').value.trim()
+    };
+
+    try {
+      const res = await runGAS("saveMember", memberData);
+      if (res.success) {
+        showToast(res.error || "Lưu thông tin thành công!", "success");
+        closeMemberModal();
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi lưu thành viên: " + err.message, "error");
+    } finally {
+      setButtonLoading(btn, false, "Lưu Thành Viên");
+    }
+  }
+
+  async function confirmDeleteMember(memberId, name) {
+    if (!confirm(`Bạn có chắc chắn muốn xóa thành viên "${name}" không?`)) return;
+    try {
+      showToast("Đang xóa thành viên...", "info");
+      const res = await runGAS("deleteMember", memberId);
+      if (res.success) {
+        showToast(res.error || "Đã xóa thành công!", "success");
+        selectedMemberIds.delete(memberId);
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi xóa: " + err.message, "error");
+    }
+  }
+
+  // =========================================================================
+  // 19. GROUP MODAL CRUD
+  // =========================================================================
+  function openGroupModal() {
+    document.getElementById('groupForm').reset();
+    document.getElementById('formGroupIdInput').value = '';
+    document.getElementById('groupModalTitle').innerText = 'Tạo Tổ Mới';
+    document.getElementById('groupModal').classList.add('active');
+  }
+
+  function editGroup(groupId) {
+    const g = allGroups.find(item => item.groupId === groupId);
+    if (!g) return;
+
+    document.getElementById('formGroupIdInput').value = g.groupId;
+    document.getElementById('formGroupName').value = g.groupName;
+    document.getElementById('formLeaderName').value = g.leaderName;
+    document.getElementById('formLeaderPhone').value = g.leaderPhone;
+    document.getElementById('formGroupNotes').value = g.notes;
+
+    document.getElementById('groupModalTitle').innerText = 'Chỉnh Sửa Thông Tin Tổ';
+    document.getElementById('groupModal').classList.add('active');
+  }
+
+  function closeGroupModal() {
+    document.getElementById('groupModal').classList.remove('active');
+  }
+
+  async function handleSaveGroup(event) {
+    event.preventDefault();
+    const btn = document.getElementById('btnSaveGroup');
+    setButtonLoading(btn, true, "Đang lưu...");
+
+    const groupData = {
+      groupId: document.getElementById('formGroupIdInput').value,
+      groupName: document.getElementById('formGroupName').value.trim(),
+      leaderName: document.getElementById('formLeaderName').value.trim(),
+      leaderPhone: document.getElementById('formLeaderPhone').value.trim(),
+      notes: document.getElementById('formGroupNotes').value.trim()
+    };
+
+    try {
+      const res = await runGAS("saveGroup", groupData);
+      if (res.success) {
+        showToast(res.error || "Lưu Tổ thành công!", "success");
+        closeGroupModal();
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi lưu Tổ: " + err.message, "error");
+    } finally {
+      setButtonLoading(btn, false, "Lưu Tổ");
+    }
+  }
+
+  async function confirmDeleteGroup(groupId, name) {
+    if (!confirm(`Bạn có chắc chắn muốn xóa "${name}" không?`)) return;
+    try {
+      showToast("Đang xóa Tổ...", "info");
+      const res = await runGAS("deleteGroup", groupId);
+      if (res.success) {
+        showToast("Xóa Tổ thành công!", "success");
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi xóa: " + err.message, "error");
+    }
+  }
+
+  // =========================================================================
+  // 20. ĐIỂM DANH NHANH
+  // =========================================================================
+  function openQuickAttendanceModal() {
+    if (selectedMemberIds.size === 0) {
+      showToast("Vui lòng tích chọn ít nhất 1 thành viên ở Bảng để điểm danh!", "error");
+      return;
+    }
+    document.getElementById('selectedMemberCount').innerText = selectedMemberIds.size;
+    document.getElementById('quickAttModal').classList.add('active');
+  }
+
+  function closeQuickAttModal() {
+    document.getElementById('quickAttModal').classList.remove('active');
+  }
+
+  async function handleQuickAttendanceSubmit() {
+    const btn = document.getElementById('btnSubmitQuickAtt');
+    const attDate = document.getElementById('quickAttDate').value;
+    const memberIds = Array.from(selectedMemberIds);
+
+    if (!attDate) {
+      showToast("Vui lòng chọn ngày đi nhóm!", "error");
+      return;
+    }
+
+    setButtonLoading(btn, true, "Đang cập nhật...");
+
+    try {
+      const res = await runGAS("updateQuickAttendance", memberIds, attDate);
+      if (res.success) {
+        showToast(res.error || "Cập nhật ngày đi nhóm thành công!", "success");
+        closeQuickAttModal();
+        selectedMemberIds.clear();
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi cập nhật: " + err.message, "error");
+    } finally {
+      setButtonLoading(btn, false, "Xác Nhận Cập Nhật");
+    }
+  }
+
+  async function quickUpdateSingleAttendance(memberId) {
+    const todayStr = new Date().toISOString().split('T')[0];
+    try {
+      showToast("Đang cập nhật ngày nhóm cho thành viên...", "info");
+      const res = await runGAS("updateQuickAttendance", [memberId], todayStr);
+      if (res.success) {
+        showToast("Đã ghi nhận đi nhóm lại hôm nay!", "success");
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi: " + err.message, "error");
+    }
+  }
+
+  // =========================================================================
+  // 21. UI UTILS & FORMATTERS
+  // =========================================================================
+  function switchTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.mobile-nav-item').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+
+    const targetPane = document.getElementById(`tab-${tabName}`);
+    if (targetPane) targetPane.classList.add('active');
+
+    const activeNavBtn = document.getElementById(`tabNav${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+    if (activeNavBtn) activeNavBtn.classList.add('active');
+
+    const activeMobileBtn = document.getElementById(`mNav${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+    if (activeMobileBtn) activeMobileBtn.classList.add('active');
+
+    if (tabName === 'schedules') {
+      loadScheduleTab();
+    } else if (tabName === 'checkin') {
+      loadCheckinDataForDate();
+    } else if (tabName === 'accounts') {
+      loadAccountsTab();
+    }
+  }
+
+  function openMiniAppGridDashboard() {
+    document.querySelectorAll('.mobile-nav-item').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('mNavGrid')?.classList.add('active');
+    const navBar = document.getElementById('mainNavTabsBar');
+    if (navBar) navBar.style.display = 'none';
+    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+    document.getElementById('tab-grid-dashboard')?.classList.add('active');
+    // Ensure bottom nav stays visible
+    const bottomNav = document.getElementById('mainMobileBottomNav');
+    if (bottomNav && currentUser) bottomNav.classList.add('visible');
+  }
+
+  function formatDisplayDate(dateStr) {
+    if (!dateStr) return '-';
+    dateStr = String(dateStr).trim();
+    if (dateStr.includes('GMT') || dateStr.includes('00:00:00')) {
+      const d = new Date(dateStr);
+      if (!isNaN(d.getTime())) {
+        const day = String(d.getDate()).padStart(2, '0');
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const y = d.getFullYear();
+        return `${day}/${m}/${y}`;
+      }
+    }
+    if (dateStr.includes('-')) {
+      const parts = dateStr.split('-');
+      if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    return dateStr;
+  }
+
+  function setButtonLoading(btn, isLoading, originalText) {
+    if (isLoading) {
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner"></span> ${originalText}`;
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }
+  }
+
+  function showToast(message, type = "info") {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    let icon = "ℹ️";
+    if (type === "success") icon = "✅";
+    if (type === "error") icon = "❌";
+
+    toast.innerHTML = `<span>${icon}</span> <span>${escapeHtml(message)}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(100%)';
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+</script>

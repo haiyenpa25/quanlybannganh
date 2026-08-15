@@ -1,0 +1,40 @@
+<script>
+/**
+ * JS_Components.html - Polymorphic View Component Hierarchy
+ */
+class UIComponent {
+  constructor(containerId) {
+    this.containerId = containerId;
+  }
+
+  getContainer() {
+    return document.getElementById(this.containerId);
+  }
+
+  render(data) {
+    throw new Error("Abstract method render() must be implemented by subclass");
+  }
+}
+
+class MasterDetailRowRenderer {
+  static createMasterRowMarkup(id, columnsHtml, isExpanded, onToggleClickStr) {
+    return `
+      <tr class="master-row ${isExpanded ? 'expanded' : ''}" onclick="${onToggleClickStr}">
+        ${columnsHtml}
+      </tr>
+    `;
+  }
+
+  static createChildDrawerMarkup(colspan, innerContentHtml) {
+    return `
+      <tr class="child-row">
+        <td colspan="${colspan}" class="child-row-cell">
+          <div class="child-content-box">
+            ${innerContentHtml}
+          </div>
+        </td>
+      </tr>
+    `;
+  }
+}
+</script>

@@ -1,0 +1,87 @@
+<script>
+/**
+ * JS_Core.html - Central Application OOP State & RPC ApiService
+ */
+class ApiService {
+  static runGAS(functionName, ...args) {
+    return new Promise((resolve, reject) => {
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        console.warn(`[Mock Local RPC] Calling: ${functionName}`, args);
+        setTimeout(() => resolve({ success: true, data: [] }), 500);
+        return;
+      }
+
+      google.script.run
+        .withSuccessHandler(response => resolve(response))
+        .withFailureHandler(error => reject(error))
+        [functionName](...args);
+    });
+  }
+}
+
+class ToastManager {
+  static show(message, type = "info") {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    let icon = "ℹ️";
+    if (type === "success") icon = "✅";
+    if (type === "error") icon = "❌";
+
+    toast.innerHTML = `<span>${icon}</span> <span>${escapeHtml(message)}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(100%)';
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
+  }
+}
+
+class AppState {
+  constructor() {
+    this.currentUser = null;
+    this.allMembers = [];
+    this.allGroups = [];
+    this.allSchedules = [];
+    this.allThemes = [];
+    this.allVisitations = [];
+    this.currentAttendanceRecords = [];
+    this.expandedMemberIds = new Set();
+    this.selectedMemberIds = new Set();
+  }
+}
+
+class ThemeManager {
+  static init() {
+    const savedTheme = localStorage.getItem('mt_app_theme') || 'dark';
+    this.applyTheme(savedTheme);
+  }
+
+  static toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'dark';
+    const next = current === 'dark' ? 'light' : 'dark';
+    this.applyTheme(next);
+  }
+
+  static applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('mt_app_theme', theme);
+    
+    const themeBtn = document.getElementById('btnThemeToggle');
+    if (themeBtn) {
+      themeBtn.innerHTML = theme === 'dark' ? '☀️' : '🌙';
+      themeBtn.title = theme === 'dark' ? 'Chuyển sang giao diện Sáng' : 'Chuyển sang giao diện Tối';
+    }
+  }
+}
+
+// Auto init theme on script load
+ThemeManager.init();
+
+const gAppState = new AppState();
+</script>
