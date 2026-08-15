@@ -8,27 +8,29 @@
 /* --- DESIGN TOKENS ---------------------------------------------------------------- */
 :root {
   /* Surfaces */
-  --bg-base:       #0f172a;
-  --bg-elevated:   #1e293b;
-  --bg-card:       #243047;
-  --bg-surface2:   #2d3a50;
-  --bg-input:      #1a2744;
+  --bg-base:       #141c2e;
+  --bg-elevated:   #1a243a;
+  --bg-card:       #1d273f;
+  --bg-surface2:   #23304c;
+  --bg-input:      #121929;
 
   /* Accent */
-  --accent:        #0a84ff;
-  --accent-dim:    rgba(10, 132, 255, 0.18);
-  --accent-glow:   0 0 20px rgba(10,132,255,0.35);
+  --accent:        #e58c67;
+  --accent-hover:  #d97b54;
+  --accent-dim:    rgba(229, 140, 103, 0.18);
+  --accent-glow:   0 0 20px rgba(229, 140, 103, 0.35);
   --accent-teal:   #30d158;
   --accent-orange: #ff9f0a;
   --accent-red:    #ff453a;
   --accent-purple: #bf5af2;
   --accent-pink:   #ff375f;
+  --accent-tag:    #d48866;
 
   /* Text */
-  --text-primary:  #f1f5f9;
-  --text-secondary:#94a3b8;
-  --text-muted:    #64748b;
-  --text-inverse:  #0f172a;
+  --text-primary:  #ffffff;
+  --text-secondary:#8e9cb5;
+  --text-muted:    #657591;
+  --text-inverse:  #141c2e;
 
   /* Borders */
   --border:        rgba(255,255,255,0.08);
@@ -36,7 +38,7 @@
   --divider:       rgba(255,255,255,0.05);
 
   /* Glass */
-  --glass-bg:     rgba(30, 41, 59, 0.80);
+  --glass-bg:     rgba(26, 36, 58, 0.92);
   --glass-border: rgba(255, 255, 255, 0.10);
 
   /* Radii */
@@ -57,14 +59,14 @@
   --t-normal: all 0.25s cubic-bezier(0.4,0,0.2,1);
 
   /* Bottom Nav */
-  --bottom-nav-h: 72px;
+  --bottom-nav-h: 68px;
 
   /* Legacy aliases */
-  --primary-color:   #0a84ff;
-  --primary-hover:   #007adb;
-  --primary-light:   rgba(10,132,255,0.15);
+  --primary-color:   #e58c67;
+  --primary-hover:   #d97b54;
+  --primary-light:   rgba(229,140,103,0.15);
   --secondary-color: #30d158;
-  --accent-color:    #ff9f0a;
+  --accent-color:    #e58c67;
   --danger-color:    #ff453a;
   --danger-light:    rgba(255,69,58,0.15);
   --warning-color:   #ff9f0a;
@@ -1095,4 +1097,209 @@ select.input-control {
   .form-grid { grid-template-columns: 1fr; }
   .form-group.full-width { grid-column: span 1; }
 }
+/* =====================================================================
+   MINIMALIST NATIVE MOBILE DESIGN SYSTEM (SCREENSHOTS SPECIFICATION)
+   ===================================================================== */
+.screen-header-block {
+  padding: 18px 16px 10px;
+  position: relative;
+}
+
+.screen-tag-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #d48866;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.screen-main-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+  margin-bottom: 4px;
+  letter-spacing: -0.5px;
+}
+
+.screen-sub-desc {
+  font-size: 13px;
+  color: #8e9cb5;
+  line-height: 1.45;
+  margin-bottom: 14px;
+}
+
+.floating-add-btn {
+  position: absolute;
+  top: 18px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e58c67;
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 400;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(229, 140, 103, 0.45);
+  transition: transform 0.15s ease, background 0.15s ease;
+  z-index: 10;
+}
+.floating-add-btn:active {
+  transform: scale(0.90);
+  background: #d97b54;
+}
+
+/* Selector Pills (Viên thuốc chọn nhanh) */
+.pill-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  margin-bottom: 12px;
+}
+
+.pill-chip {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: #23304c;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #8e9cb5;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.pill-chip.active, .pill-chip:active {
+  background: #e58c67 !important;
+  color: #141c2e !important;
+  border-color: #e58c67 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 14px rgba(229, 140, 103, 0.35);
+}
+
+/* Bottom Sheet Modal Drawer (Ngăn kéo trượt từ dưới lên) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 26, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-box {
+  width: 100%;
+  max-width: 520px;
+  max-height: 92vh;
+  background: #1a243a;
+  border-radius: 24px 24px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px 20px calc(24px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  animation: slideUpDrawer 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 -16px 40px rgba(0, 0, 0, 0.65);
+}
+
+@keyframes slideUpDrawer {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.drawer-handle {
+  width: 40px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  margin: 0 auto 14px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modal-header h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.3px;
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #ffffff;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Full-width Big Terracotta CTA Button */
+.btn-submit-cta {
+  background: #e58c67;
+  color: #141c2e;
+  font-size: 15px;
+  font-weight: 800;
+  height: 48px;
+  border-radius: 24px;
+  border: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(229, 140, 103, 0.35);
+  margin-top: 20px;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.btn-submit-cta:active {
+  transform: scale(0.97);
+  background: #d97b54;
+}
+
+/* Clean Card Items */
+.mob-card {
+  background: #1d273f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  transition: background 0.15s ease;
+}
+
+.mob-card.active-card {
+  background: #e58c67;
+  color: #141c2e !important;
+  border-color: #e58c67;
+}
+
+.mob-card.active-card * {
+  color: #141c2e !important;
+}
+
 </style>

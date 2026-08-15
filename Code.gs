@@ -1581,3 +1581,12 @@ function bulkDeleteWeeklyAttendanceRecords(memberIds, dateStr) {
     return { success: false, error: err.message };
   }
 }
+
+function saveSingleSchedule(schData) {
+  try {
+    const repo = new AttendanceRepository();
+    return repo.saveSingleSchedule(schData);
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}

@@ -335,7 +335,14 @@
 
     <!-- ================= TAB 2: ĐIỂM DANH NHANH TRÊN ĐIỆN THOẠI ================= -->
     <div id="tab-checkin" class="tab-pane">
-      <div class="card">
+      <div class="screen-header-block">
+        <div class="screen-tag-label">MỖI CHÚA NHẬT · 19:30</div>
+        <h2 class="screen-main-title">Buổi nhóm</h2>
+        <p class="screen-sub-desc">Lịch nhóm và điểm danh theo từng tuần.</p>
+        <button class="floating-add-btn" onclick="openScheduleModal()" title="Tạo buổi nhóm">+</button>
+      </div>
+      
+      <div class="card" style="display: none;">
         <div class="card-header">
           <div class="card-title">
             <span>⚡</span> Điểm Danh Nhanh Buổi Nhóm
@@ -348,6 +355,8 @@
               💾 Lưu Điểm Danh
             </button>
           </div>
+        </div>
+      </div>
         </div>
 
         <!-- MULTI-LEVEL FILTER BAR (NĂM -> QUÝ -> THÁNG -> TỔ -> BUỔI NHÓM) -->
@@ -589,7 +598,19 @@
 
     <!-- ================= TAB 5: QUẢN LÝ THÀNH VIÊN ================= -->
     <div id="tab-members" class="tab-pane">
-      <div class="card">
+      <div class="screen-header-block">
+        <div class="screen-tag-label" id="memberCountTag">6 BAN VIÊN</div>
+        <h2 class="screen-main-title">Ban viên</h2>
+        <p class="screen-sub-desc">Hồ sơ và vai trò phục vụ trong ban ngành.</p>
+        <button class="floating-add-btn" onclick="openAddMemberModal()" title="Thêm ban viên">+</button>
+
+        <div style="position: relative; margin-bottom: 12px;">
+          <input type="text" id="memberSearchInput" class="input-control" placeholder="Tìm theo tên..." onkeyup="filterMembers()" style="border-radius: 14px; background: #121929; padding-left: 36px;">
+          <span style="position: absolute; left: 12px; top: 12px; color: #8e9cb5;">🔍</span>
+        </div>
+      </div>
+      
+      <div class="card" style="display: none;">
         <div class="card-header">
           <div class="card-title">
             <span>👥</span> Quản Lý Danh Sách Thành Viên & Chức Danh Ban
@@ -598,14 +619,9 @@
             <button class="btn btn-secondary" onclick="exportMembersToCSV()">
               📊 Xuất CSV
             </button>
-            <button class="btn btn-success" onclick="openMemberModal()">
-              ➕ Thêm Mới
-            </button>
-            <button class="btn btn-primary" onclick="openQuickAttendanceModal()">
-              ⚡ Điểm Danh
-            </button>
           </div>
         </div>
+      </div>
 
         <!-- MEMBER VIEW MODE BAR -->
         <div class="att-mode-bar" style="margin-bottom: 12px;">
@@ -697,15 +713,27 @@
 
     <!-- ================= TAB 6: NHẬT KÝ THĂM VIẾNG ================= -->
     <div id="tab-visitations" class="tab-pane">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <span>📝</span> Nhật Ký Thăm Viếng & Chăm Sóc Thành Viên
+      <div class="screen-header-block">
+        <div class="screen-tag-label">ĐỒNG HÀNH TRONG YÊU THƯƠNG</div>
+        <h2 class="screen-main-title">Thăm viếng</h2>
+        <p class="screen-sub-desc">Ghi nhận các lần chăm sóc và nan đề cầu nguyện.</p>
+        <button class="floating-add-btn" onclick="openAddVisitationModal()" title="Thăm viếng mới">+</button>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 14px;">
+          <div style="flex: 1; background: #23304c; border-radius: 16px; padding: 14px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-size: 26px; font-weight: 800; color: #ffffff;" id="visStatUpcoming">1</div>
+              <div style="font-size: 12px; font-weight: 600; color: #8e9cb5;">Lịch hẹn</div>
+            </div>
           </div>
-          <button class="btn btn-warning" onclick="openAddVisitationModal()">
-            ➕ Ghi Nhận Lượt Thăm Mới
-          </button>
+          <div style="flex: 1; background: #1d273f; border-radius: 16px; padding: 14px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-size: 26px; font-weight: 800; color: #ffffff;" id="visStatDone">1</div>
+              <div style="font-size: 12px; font-weight: 600; color: #8e9cb5;">Đã hoàn tất</div>
+            </div>
+          </div>
         </div>
+      </div>
 
         <!-- MULTI-LEVEL FILTER BAR FOR VISITATIONS -->
         <div class="filter-bar" style="margin-bottom: 14px; gap: 8px;">
@@ -1165,101 +1193,114 @@
     </div>
   </div>
 
-  <!-- ================= MODAL: THÊM / SỬA THÀNH VIÊN ================= -->
+  <!-- ================= MODAL: THÊM / SỬA THÀNH VIÊN (BOTTOM SHEET DRAWER) ================= -->
   <div id="memberModal" class="modal-overlay">
     <div class="modal-box">
+      <div class="drawer-handle"></div>
       <div class="modal-header">
-        <h3 id="memberModalTitle">Thêm Thành Viên Mới</h3>
-        <button class="modal-close" onclick="closeMemberModal()">&times;</button>
+        <h3 id="memberModalTitle">Thêm ban viên</h3>
+        <button type="button" class="modal-close" onclick="closeMemberModal()">&times;</button>
       </div>
       <form id="memberForm" onsubmit="handleSaveMember(event)">
         <div class="modal-body">
           <input type="hidden" id="formMemberId">
+          <input type="hidden" id="formGroupId">
+          <input type="hidden" id="formPosition" value="Ban viên">
+          <input type="hidden" id="formMaritalStatus" value="Đã tin Chúa">
 
-          <div class="form-grid">
-            <div class="form-group full-width">
-              <label class="form-label">Họ và Tên <span class="required">*</span></label>
-              <input type="text" id="formFullName" class="input-control" required placeholder="Nhập họ và tên đầy đủ">
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="form-group">
+              <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: #8e9cb5;">Họ và tên</label>
+              <input type="text" id="formFullName" class="input-control" required placeholder="Nguyễn Văn A" style="border-radius: 12px; background: #121929;">
             </div>
 
             <div class="form-group">
-              <label class="form-label">Chức Danh Ban Điều Hành</label>
-              <select id="formPosition" class="input-control">
-                <option value="Ban viên">Ban viên</option>
-                <option value="Trưởng ban">Trưởng ban</option>
-                <option value="Phó ban">Phó ban</option>
-                <option value="Thư ký">Thư ký</option>
-                <option value="Thủ quỹ">Thủ quỹ</option>
-                <option value="Nghị viên">Nghị viên</option>
-              </select>
+              <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: #8e9cb5;">Ngày sinh</label>
+              <input type="text" id="formDateOfBirth" class="input-control" placeholder="YYYY-MM-DD" style="border-radius: 12px; background: #121929;">
             </div>
 
             <div class="form-group">
-              <label class="form-label">Nhiệm Kỳ</label>
-              <input type="text" id="formTenure" class="input-control" placeholder="2025-2027">
+              <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: #8e9cb5;">Số điện thoại</label>
+              <input type="tel" id="formPhone" class="input-control" placeholder="090 000 0000" style="border-radius: 12px; background: #121929;">
             </div>
 
             <div class="form-group">
-              <label class="form-label">Ngày Sinh (YYYY-MM-DD)</label>
-              <input type="date" id="formDateOfBirth" class="input-control">
+              <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: #8e9cb5;">Tổ (nhóm nhỏ)</label>
+              <div id="memberGroupPills" class="pill-container">
+                <!-- Group Pills populated dynamically -->
+              </div>
             </div>
 
             <div class="form-group">
-              <label class="form-label">Số Điện Thoại</label>
-              <input type="tel" id="formPhone" class="input-control" placeholder="0901234567">
-            </div>
-
-            <div class="form-group full-width">
-              <label class="form-label">Địa Chỉ Nhà</label>
-              <input type="text" id="formAddress" class="input-control" placeholder="Số nhà, Tên đường, Quận/Huyện">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Thuộc Tổ (Nhóm Nhỏ)</label>
-              <select id="formGroupId" class="input-control">
-                <option value="">-- Chọn Tổ --</option>
-              </select>
+              <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: #8e9cb5;">Chức danh</label>
+              <div id="memberPositionPills" class="pill-container">
+                <span class="pill-chip active" onclick="selectMemberPosition(this, 'Ban viên')">Ban viên</span>
+                <span class="pill-chip" onclick="selectMemberPosition(this, 'Trưởng ban')">Trưởng ban</span>
+                <span class="pill-chip" onclick="selectMemberPosition(this, 'Phó ban')">Phó ban</span>
+                <span class="pill-chip" onclick="selectMemberPosition(this, 'Thư ký')">Thư ký</span>
+                <span class="pill-chip" onclick="selectMemberPosition(this, 'Thủ quỹ')">Thủ quỹ</span>
+                <span class="pill-chip" onclick="selectMemberPosition(this, 'Nghị viên')">Nghị viên</span>
+              </div>
             </div>
 
             <div class="form-group">
-              <label class="form-label">Trạng Thái Sinh Hoạt</label>
-              <select id="formStatus" class="input-control">
-                <option value="Đang sinh hoạt">Đang sinh hoạt</option>
-                <option value="Cần thăm viếng">Cần thăm viếng</option>
-                <option value="Tạm ngưng">Tạm ngưng</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Ngày Báp-têm</label>
-              <input type="date" id="formBaptismDate" class="input-control">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Tên Vợ / Chồng</label>
-              <input type="text" id="formSpouseName" class="input-control" placeholder="Họ tên vợ hoặc chồng">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Ngày Bắt Đầu Sinh Hoạt</label>
-              <input type="date" id="formJoinDate" class="input-control">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Ngày Đi Nhóm Gần Nhất</label>
-              <input type="date" id="formLastAttendanceDate" class="input-control">
-            </div>
-
-            <div class="form-group full-width">
-              <label class="form-label">Ghi Chú Đặc Biệt</label>
-              <textarea id="formNotes" class="input-control" rows="3" placeholder="Nhu cầu cầu nguyện, sức khỏe, thăm viếng..."></textarea>
+              <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: #8e9cb5;">Hôn nhân / Đã tin Chúa</label>
+              <div id="memberMaritalPills" class="pill-container">
+                <span class="pill-chip active" onclick="selectMemberMarital(this, 'Đã tin Chúa')">Đã tin Chúa</span>
+                <span class="pill-chip" onclick="selectMemberMarital(this, 'Chưa rõ')">Chưa rõ</span>
+              </div>
             </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="closeMemberModal()">Hủy</button>
-          <button type="submit" id="btnSaveMember" class="btn btn-primary">Lưu Thành Viên</button>
+        <button type="submit" id="btnSaveMember" class="btn-submit-cta">Lưu thông tin</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: TẠO BUỔI NHÓM (BOTTOM SHEET DRAWER) ================= -->
+  <div id="scheduleModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="drawer-handle"></div>
+      <div class="modal-header">
+        <h3 id="scheduleModalTitle">Tạo buổi nhóm</h3>
+        <button type="button" class="modal-close" onclick="closeScheduleModal()">&times;</button>
+      </div>
+      <form id="scheduleForm" onsubmit="handleSaveScheduleModal(event)">
+        <div class="modal-body">
+          <input type="hidden" id="formSchId">
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="form-group">
+              <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: #8e9cb5;">Ngày nhóm</label>
+              <input type="date" id="formSchDate" class="input-control" required style="border-radius: 12px; background: #121929;">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: #8e9cb5;">Đề tài</label>
+              <input type="text" id="formSchTopic" class="input-control" required placeholder="Nhập đề tài buổi nhóm" style="border-radius: 12px; background: #121929;">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: #8e9cb5;">Câu gốc</label>
+              <input type="text" id="formSchVerse" class="input-control" placeholder="Ví dụ: Giăng 3:16" style="border-radius: 12px; background: #121929;">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: #8e9cb5;">Người hướng dẫn</label>
+              <input type="text" id="formSchSpeaker" class="input-control" placeholder="Tên người hướng dẫn" style="border-radius: 12px; background: #121929;">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: #8e9cb5;">Người đỡ Kinh Thánh</label>
+              <input type="text" id="formSchQuizGroup" class="input-control" placeholder="Tên người phụ trách" style="border-radius: 12px; background: #121929;">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" style="font-size: 12.5px; font-weight: 700; color: #8e9cb5;">Ghi chú</label>
+              <textarea id="formSchNotes" class="input-control" rows="2" placeholder="Nội dung cần chuẩn bị..." style="border-radius: 12px; background: #121929;"></textarea>
+            </div>
+          </div>
         </div>
+        <button type="submit" id="btnSaveScheduleModal" class="btn-submit-cta">Lưu thông tin</button>
       </form>
     </div>
   </div>

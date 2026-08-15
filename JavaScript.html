@@ -2825,6 +2825,152 @@
     if (modal) modal.classList.remove('active');
   }
 
+  // SELECTOR PILLS HANDLERS FOR MEMBER MODAL
+  function selectMemberPosition(chipEl, pos) {
+    document.querySelectorAll('#memberPositionPills .pill-chip').forEach(c => c.classList.remove('active'));
+    chipEl.classList.add('active');
+    const input = document.getElementById('formPosition');
+    if (input) input.value = pos;
+  }
+
+  function selectMemberMarital(chipEl, status) {
+    document.querySelectorAll('#memberMaritalPills .pill-chip').forEach(c => c.classList.remove('active'));
+    chipEl.classList.add('active');
+    const input = document.getElementById('formMaritalStatus');
+    if (input) input.value = status;
+  }
+
+  function selectMemberGroup(chipEl, groupId) {
+    document.querySelectorAll('#memberGroupPills .pill-chip').forEach(c => c.classList.remove('active'));
+    chipEl.classList.add('active');
+    const input = document.getElementById('formGroupId');
+    if (input) input.value = groupId;
+  }
+
+  function renderMemberGroupPills(selectedGroupId = '') {
+    const container = document.getElementById('memberGroupPills');
+    if (!container) return;
+
+    if (!allGroups || allGroups.length === 0) {
+      container.innerHTML = `<span class="pill-chip active" onclick="selectMemberGroup(this, '')">Si-lô-ê</span><span class="pill-chip" onclick="selectMemberGroup(this, '')">Bê-ết</span><span class="pill-chip" onclick="selectMemberGroup(this, '')">Giô-đanh</span>`;
+      return;
+    }
+
+    let html = '';
+    allGroups.forEach((g, idx) => {
+      const isActive = (selectedGroupId && g.groupId === selectedGroupId) || (!selectedGroupId && idx === 0);
+      if (isActive) {
+        document.getElementById('formGroupId').value = g.groupId;
+      }
+      html += `<span class="pill-chip ${isActive ? 'active' : ''}" onclick="selectMemberGroup(this, '${g.groupId}')">${escapeHtml(g.groupName)}</span>`;
+    });
+
+    container.innerHTML = html;
+  }
+
+  function openAddMemberModal() {
+    const modal = document.getElementById('memberModal');
+    if (!modal) return;
+    document.getElementById('memberForm').reset();
+    document.getElementById('formMemberId').value = '';
+    document.getElementById('memberModalTitle').innerText = 'Thêm ban viên';
+    renderMemberGroupPills();
+    modal.classList.add('active');
+  }
+
+  function closeMemberModal() {
+    const modal = document.getElementById('memberModal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  function editMember(memberId) {
+    const m = allMembers.find(item => item.memberId === memberId);
+    if (!m) return;
+
+    document.getElementById('memberForm').reset();
+    document.getElementById('formMemberId').value = m.memberId;
+    document.getElementById('formFullName').value = m.fullName || '';
+    document.getElementById('formDateOfBirth').value = m.dateOfBirth || '';
+    document.getElementById('formPhone').value = m.phone || '';
+    
+    document.getElementById('memberModalTitle').innerText = 'Sửa ban viên';
+    
+    renderMemberGroupPills(m.groupId);
+
+    const pos = m.position || 'Ban viên';
+    document.querySelectorAll('#memberPositionPills .pill-chip').forEach(c => {
+      if (c.innerText.trim() === pos) {
+        selectMemberPosition(c, pos);
+      }
+    });
+
+    const modal = document.getElementById('memberModal');
+    if (modal) modal.classList.add('active');
+  }
+
+  // SCHEDULE MODAL HANDLERS
+  function openScheduleModal(schId = null) {
+    const modal = document.getElementById('scheduleModal');
+    if (!modal) return;
+    document.getElementById('scheduleForm').reset();
+    document.getElementById('formSchId').value = schId || '';
+    
+    if (schId) {
+      const sch = allSchedules.find(s => s.scheduleId === schId);
+      if (sch) {
+        document.getElementById('formSchDate').value = sch.date || '';
+        document.getElementById('formSchTopic').value = sch.topic || '';
+        document.getElementById('formSchVerse').value = sch.keyVerse || '';
+        document.getElementById('formSchSpeaker').value = sch.speaker || '';
+        document.getElementById('formSchQuizGroup').value = sch.quizGroup || '';
+        document.getElementById('formSchNotes').value = sch.notes || '';
+      }
+      document.getElementById('scheduleModalTitle').innerText = 'Sửa buổi nhóm';
+    } else {
+      const todayStr = new Date().toISOString().split('T')[0];
+      document.getElementById('formSchDate').value = todayStr;
+      document.getElementById('scheduleModalTitle').innerText = 'Tạo buổi nhóm';
+    }
+
+    modal.classList.add('active');
+  }
+
+  function closeScheduleModal() {
+    const modal = document.getElementById('scheduleModal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  async function handleSaveScheduleModal(event) {
+    event.preventDefault();
+    const btn = document.getElementById('btnSaveScheduleModal');
+    setButtonLoading(btn, true, "Đang lưu buổi nhóm...");
+
+    const schData = {
+      scheduleId: document.getElementById('formSchId').value,
+      date: document.getElementById('formSchDate').value,
+      topic: document.getElementById('formSchTopic').value.trim(),
+      keyVerse: document.getElementById('formSchVerse').value.trim(),
+      speaker: document.getElementById('formSchSpeaker').value.trim(),
+      quizGroup: document.getElementById('formSchQuizGroup').value.trim(),
+      notes: document.getElementById('formSchNotes').value.trim()
+    };
+
+    try {
+      const res = await runGAS("saveSingleSchedule", schData);
+      if (res.success) {
+        showToast("Lưu buổi nhóm thành công!", "success");
+        closeScheduleModal();
+        loadAllData();
+      } else {
+        showToast("Lỗi: " + res.error, "error");
+      }
+    } catch (err) {
+      showToast("Lỗi lưu buổi nhóm: " + err.message, "error");
+    } finally {
+      setButtonLoading(btn, false, "Lưu thông tin");
+    }
+  }
+
   // =========================================================================
   // 16. NHẬT KÝ THĂM VIẾNG & BỘ LỌC CHUYÊN SÂU (FULL CRUD & MASTER-DETAIL DRAWER)
   // =========================================================================
